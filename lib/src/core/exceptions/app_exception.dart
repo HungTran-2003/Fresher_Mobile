@@ -1,0 +1,47 @@
+abstract class AppException implements Exception {
+  final String message;
+  final String? code;
+  final dynamic originalError;
+
+  AppException({
+    this.message = 'Something went wrong',
+    this.code,
+    this.originalError,
+  });
+
+  @override
+  String toString() => 'AppException(message: $message, code: $code)';
+}
+
+class NetworkException extends AppException {
+  NetworkException({super.message, super.code, super.originalError});
+}
+
+class ServerException extends AppException {
+  ServerException({super.message, super.code, super.originalError});
+}
+
+class UnauthenticatedException extends AppException {
+  UnauthenticatedException({super.message, super.code, super.originalError});
+}
+
+class UnauthorizedException extends AppException {
+  UnauthorizedException({super.message, super.code, super.originalError});
+}
+
+class RequestCancelledException extends AppException {
+  RequestCancelledException({super.message, super.code, super.originalError});
+}
+
+class UnknownException extends AppException {
+  UnknownException({super.message, super.code, super.originalError});
+}
+
+/// Mapper to convert various errors (like DioException) to [AppException]
+class ExceptionMapper {
+  static AppException map(dynamic error) {
+    if (error is AppException) return error;
+
+    return UnknownException(message: error.toString(), originalError: error);
+  }
+}
