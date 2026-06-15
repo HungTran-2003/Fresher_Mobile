@@ -1,5 +1,5 @@
-import 'package:finance/src/core/dimensions/app_color.dart';
-import 'package:finance/src/core/theme/app_typography.dart';
+import 'package:crud_app/src/core/dimensions/app_color.dart';
+import 'package:crud_app/src/core/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

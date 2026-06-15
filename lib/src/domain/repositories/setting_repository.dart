@@ -1,6 +1,6 @@
 import 'package:dart_either/dart_either.dart';
-import 'package:finance/src/core/exceptions/app_exception.dart';
-import 'package:finance/src/domain/models/enum/language.dart';
+import 'package:crud_app/src/core/exceptions/app_exception.dart';
+import 'package:crud_app/src/domain/models/enum/language.dart';
 import 'package:flutter/material.dart';
 
 abstract class SettingRepository {

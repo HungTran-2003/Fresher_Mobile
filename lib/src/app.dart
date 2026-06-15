@@ -1,13 +1,13 @@
 import 'dart:developer';
 
-import 'package:finance/configs/app_config.dart';
-import 'package:finance/generated/l10n.dart';
-import 'package:finance/src/core/routes/router.dart';
-import 'package:finance/src/data/repositories/auth_repository_impl.dart';
-import 'package:finance/src/presentation/global/app_settings/app_settings_cubit.dart';
-import 'package:finance/src/presentation/global/auth/auth_cubit.dart';
-import 'package:finance/src/presentation/global/user/user_cubit.dart';
-import 'package:finance/src/presentation/widgets/feedback/app_loading_overlay.dart';
+import 'package:crud_app/configs/app_config.dart';
+import 'package:crud_app/generated/l10n.dart';
+import 'package:crud_app/src/core/routes/router.dart';
+import 'package:crud_app/src/data/repositories/auth_repository_impl.dart';
+import 'package:crud_app/src/presentation/global/app_settings/app_settings_cubit.dart';
+import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
+import 'package:crud_app/src/presentation/global/user/user_cubit.dart';
+import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,13 +16,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/theme/app_theme.dart';
 import 'data/repositories/setting_repository_impl.dart';
-import 'data/repositories/transaction_repository_impl.dart';
 import 'data/repositories/user_repository_impl.dart';
 import 'data/services/database/share_preferrences_data_source.dart';
 import 'domain/models/enum/language.dart';
 import 'domain/repositories/auth_repository.dart';
 import 'domain/repositories/setting_repository.dart';
-import 'domain/repositories/transaction_repository.dart';
 import 'domain/repositories/user_repository.dart';
 
 class MyApp extends StatefulWidget {
@@ -53,9 +51,6 @@ class _MyAppState extends State<MyApp> {
         ),
         RepositoryProvider<UserRepository>(
           create: (context) => UserRepositoryImpl(),
-        ),
-        RepositoryProvider<TransactionRepository>(
-          create: (context) => TransactionRepositoryImpl(),
         ),
 
         RepositoryProvider<SettingRepository>(

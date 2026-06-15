@@ -1,7 +1,7 @@
-import 'package:finance/src/core/assets/app_vectors.dart';
-import 'package:finance/src/core/theme/app_theme.dart';
-import 'package:finance/src/core/utils/extensions/context_extensions.dart';
-import 'package:finance/src/presentation/widgets/images/app_svg_image.dart';
+import 'package:crud_app/src/core/assets/app_vectors.dart';
+import 'package:crud_app/src/core/theme/app_theme.dart';
+import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
+import 'package:crud_app/src/presentation/widgets/images/app_svg_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

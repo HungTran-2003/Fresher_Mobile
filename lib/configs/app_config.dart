@@ -1,4 +1,4 @@
-import 'package:finance/src/domain/models/enum/language.dart';
+import 'package:crud_app/src/domain/models/enum/language.dart';
 
 class AppConfigs {
   AppConfigs._();

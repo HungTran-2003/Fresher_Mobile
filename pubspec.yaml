@@ -1,4 +1,4 @@
-name: finance
+name: crud_app
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -43,24 +43,19 @@ dependencies:
 
   # Dialog, etc
   cached_network_image: ^3.4.1
-  image_picker: ^1.2.1
 
   # Localization & Intl
-  flutter_localization: ^0.3.3
-  flutter_local_notifications: ^19.3.1
   intl: ^0.20.2
   flutter_localizations:
     sdk: flutter
 
   # Backend & Local settings
-  supabase_flutter: ^2.6.0
-  shared_preferences: ^2.2.3
+  shared_preferences: ^2.5.5
   flutter_secure_storage: ^9.2.4
 
 
   # Premium UI components
-  fl_chart: ^0.70.0
-  flutter_animate: ^4.5.0
+
   google_fonts: ^6.2.0
   lucide_icons_flutter: ^3.0.0
   shimmer: ^3.0.0
@@ -71,7 +66,6 @@ dependencies:
   dart_either: ^2.0.0
   logger: ^2.6.2
   pretty_dio_logger: ^1.4.0
-  google_sign_in: ^7.2.0
 
   #NetWork
   json_annotation: ^4.12.0

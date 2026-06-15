@@ -1,5 +1,5 @@
-import 'package:finance/src/core/routes/base_navigator.dart';
-import 'package:finance/src/core/routes/router.dart';
+import 'package:crud_app/src/core/routes/base_navigator.dart';
+import 'package:crud_app/src/core/routes/router.dart';
 
 class SplashNavigator extends BaseNavigator {
   SplashNavigator(super.context);

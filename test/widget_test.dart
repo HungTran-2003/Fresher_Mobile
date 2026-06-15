@@ -1,15 +1,10 @@
-import 'package:finance/src/app.dart';
+import 'package:crud_app/src/app.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
-    await Supabase.initialize(
-      url: 'https://mock.supabase.co',
-      anonKey: 'sb_publishable_mock',
-    );
   });
 
   testWidgets('App basic initialization smoke test', (WidgetTester tester) async {

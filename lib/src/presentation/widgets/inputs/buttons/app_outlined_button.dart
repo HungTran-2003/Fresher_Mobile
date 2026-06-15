@@ -1,5 +1,5 @@
-import 'package:finance/src/core/theme/app_theme.dart';
-import 'package:finance/src/presentation/widgets/feedback/app_circular_process_indicator.dart';
+import 'package:crud_app/src/core/theme/app_theme.dart';
+import 'package:crud_app/src/presentation/widgets/feedback/app_circular_process_indicator.dart';
 import 'package:flutter/material.dart';
 
 class AppOutlinedButton extends StatelessWidget {

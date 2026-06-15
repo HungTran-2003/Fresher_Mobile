@@ -1,4 +1,4 @@
-import 'package:finance/src/core/theme/app_theme.dart';
+import 'package:crud_app/src/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class AppCircularProgressIndicator extends StatelessWidget {

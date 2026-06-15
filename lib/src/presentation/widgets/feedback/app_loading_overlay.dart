@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:finance/src/presentation/widgets/feedback/app_circular_process_indicator.dart';
+import 'package:crud_app/src/presentation/widgets/feedback/app_circular_process_indicator.dart';
 import 'package:flutter/material.dart';
 
 class AppLoadingOverlay {

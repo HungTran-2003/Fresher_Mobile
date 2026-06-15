@@ -93,11 +93,11 @@ The business logic brain of the screen, mediating between the UI presentation la
 
 ```dart
 import 'package:equatable/equatable.dart';
-import 'package:finance/src/domain/models/enum/load_status.dart';
-import 'package:finance/src/domain/repositories/setting_repository.dart';
-import 'package:finance/src/presentation/global/auth/auth_cubit.dart';
-import 'package:finance/src/presentation/global/user/user_cubit.dart';
-import 'package:finance/src/presentation/screens/splash/splash_navigator.dart';
+import 'package:crud_app/src/domain/models/enum/load_status.dart';
+import 'package:crud_app/src/domain/repositories/setting_repository.dart';
+import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
+import 'package:crud_app/src/presentation/global/user/user_cubit.dart';
+import 'package:crud_app/src/presentation/screens/splash/splash_navigator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'splash_state.dart';
@@ -152,12 +152,12 @@ The visual representation layer executing premium styling.
     5.  **separate sub-assemblies of widgets with the same functionality into sub-widgets starting with _build.....
 
 ```dart
-import 'package:finance/src/core/utils/extensions/context_extensions.dart';
-import 'package:finance/src/domain/repositories/auth_repository.dart';
-import 'package:finance/src/presentation/global/auth/auth_cubit.dart';
-import 'package:finance/src/presentation/screens/auth/create_account/widget/create_account_form.dart';
-import 'package:finance/src/presentation/screens/auth/create_account/widget/create_account_header.dart';
-import 'package:finance/src/presentation/widgets/feedback/app_loading_overlay.dart';
+import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
+import 'package:crud_app/src/domain/repositories/auth_repository.dart';
+import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
+import 'package:crud_app/src/presentation/screens/auth/create_account/widget/create_account_form.dart';
+import 'package:crud_app/src/presentation/screens/auth/create_account/widget/create_account_header.dart';
+import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'create_account_cubit.dart';

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:finance/src/core/theme/app_theme.dart';
-import 'package:finance/src/core/utils/extensions/context_extensions.dart';
-import 'package:finance/src/presentation/widgets/inputs/buttons/app_filled_button.dart';
+import 'package:crud_app/src/core/theme/app_theme.dart';
+import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
+import 'package:crud_app/src/presentation/widgets/inputs/buttons/app_filled_button.dart';
 import 'package:flutter/material.dart';
 
 enum DialogType {

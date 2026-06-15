@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:dart_either/dart_either.dart';
 import 'package:equatable/equatable.dart';
-import 'package:finance/configs/app_config.dart';
-import 'package:finance/src/core/utils/extensions/either_extension.dart';
-import 'package:finance/src/domain/models/enum/language.dart';
-import 'package:finance/src/domain/models/enum/load_status.dart';
-import 'package:finance/src/domain/repositories/setting_repository.dart';
+import 'package:crud_app/configs/app_config.dart';
+import 'package:crud_app/src/core/utils/extensions/either_extension.dart';
+import 'package:crud_app/src/domain/models/enum/language.dart';
+import 'package:crud_app/src/domain/models/enum/load_status.dart';
+import 'package:crud_app/src/domain/repositories/setting_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

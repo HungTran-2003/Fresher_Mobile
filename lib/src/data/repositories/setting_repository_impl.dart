@@ -1,8 +1,8 @@
 import 'package:dart_either/dart_either.dart';
-import 'package:finance/src/core/exceptions/app_exception.dart';
-import 'package:finance/src/data/services/database/share_preferrences_data_source.dart';
-import 'package:finance/src/domain/models/enum/language.dart';
-import 'package:finance/src/domain/repositories/setting_repository.dart';
+import 'package:crud_app/src/core/exceptions/app_exception.dart';
+import 'package:crud_app/src/data/services/database/share_preferrences_data_source.dart';
+import 'package:crud_app/src/domain/models/enum/language.dart';
+import 'package:crud_app/src/domain/repositories/setting_repository.dart';
 import 'package:flutter/material.dart';
 
 class SettingRepositoryImpl extends SettingRepository {

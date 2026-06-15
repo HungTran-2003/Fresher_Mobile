@@ -1,5 +1,5 @@
-import 'package:finance/src/core/routes/router.dart';
-import 'package:finance/src/presentation/widgets/feedback/app_dialog.dart';
+import 'package:crud_app/src/core/routes/router.dart';
+import 'package:crud_app/src/presentation/widgets/feedback/app_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
