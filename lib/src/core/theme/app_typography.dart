@@ -9,7 +9,7 @@ class AppTypography {
     double? letterSpacing,
     Color? color,
   }) {
-    return GoogleFonts.poppins(
+    return GoogleFonts.nunitoSans(
       fontSize: fontSize,
       fontWeight: fontWeight,
       letterSpacing: letterSpacing,
@@ -49,4 +49,16 @@ class AppTypography {
 
   static TextStyle get bodyTiny =>
       _skeleton(fontSize: 10, fontWeight: FontWeight.w500);
+
+  static TextStyle get body16Bo =>
+      _skeleton(fontSize: 16, fontWeight: FontWeight.w600);
+
+  static TextStyle get body16Semi =>
+      _skeleton(fontSize: 16, fontWeight: FontWeight.w500);
+
+  static TextStyle get des12Re =>
+      _skeleton(fontSize: 12, fontWeight: FontWeight.w400);
+
+  static TextStyle get des12Semi =>
+      _skeleton(fontSize: 12, fontWeight: FontWeight.w500);
 }

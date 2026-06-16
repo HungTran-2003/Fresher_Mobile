@@ -17,12 +17,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/theme/app_theme.dart';
 import 'data/repositories/setting_repository_impl.dart';
 import 'data/repositories/user_repository_impl.dart';
+import 'data/services/database/secure_storage_data_source.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'data/services/database/share_preferrences_data_source.dart';
 import 'domain/models/enum/language.dart';
 import 'domain/repositories/auth_repository.dart';
 import 'domain/repositories/setting_repository.dart';
 import 'domain/repositories/user_repository.dart';
-
 class MyApp extends StatefulWidget {
   final SharedPreferences sharedPreferences;
   const MyApp({super.key, required this.sharedPreferences});
@@ -46,8 +47,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<SecureStorageDataSource>(
+          create: (context) => SecureStorageDataSource(const FlutterSecureStorage()),
+        ),
         RepositoryProvider<AuthRepository>(
-          create: (context) => AuthRepositoryImpl(),
+          create: (context) => AuthRepositoryImpl(
+            secureStorageDataSource: context.read<SecureStorageDataSource>(),
+          ),
         ),
         RepositoryProvider<UserRepository>(
           create: (context) => UserRepositoryImpl(),

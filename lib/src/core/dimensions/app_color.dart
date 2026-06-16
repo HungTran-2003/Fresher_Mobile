@@ -21,13 +21,13 @@ class AppColor {
   static const Color surfaceContainerLight = Color(0xFFF8F9FA);
   static const Color surfaceContainerHighLight = Color(0xFFF1F3F5);
   static const Color surfaceContainerHighestLight = Color(0xFFE9ECEF);
-  static const Color onSurfaceLight = Color(0xFF0E3E3E);
+  static const Color onSurfaceLight = Color(0xFF000000);
 
   static const Color surfaceDark = Color(0xFF153352);
   static const Color surfaceContainerDark = Color(0xFF1B3B5E);
   static const Color surfaceContainerHighDark = Color(0xFF22446B);
   static const Color surfaceContainerHighestDark = Color(0xFF2A4D78);
-  static const Color onSurfaceDark = Color(0xFFDFF7E2);
+  static const Color onSurfaceDark = Color(0xFF000000);
 
   // Outline
   static const Color outlineLight = Color(0xFF0E3E3E);
@@ -41,10 +41,10 @@ class AppColor {
   static const Color outlineStrongDark = Color(0xFFD1D5DB);
 
   // Status
-  static const Color error = Color(0xFFD32F2F);
+  static const Color error = Color(0xFFFF0000);
   static const Color onError = Color(0xFFFFFFFF);
   static const Color errorContainerLight = Color(0xFFD32F2F);
-  static const Color errorContainerDark = Color(0xFFD32F2F);
+  static const Color errorContainerDark = Color(0xFFFF0000);
 
   static const Color success = Color(0xFF388E3C);
   static const Color onSuccess = Color(0xFFFFFFFF);
@@ -64,4 +64,14 @@ class AppColor {
 
   static const Color filterBarLight = Color(0xFFDFF7E2);
   static const Color filterBarDark = Color(0xFF0E3E3E);
+
+  static const Color primaryLight2 = Color(0xFFF24E1E);
+  static const Color grayLight1 = Color(0xFF242E37);
+  static const Color grayLight2 = Color(0xFF33414E);
+  static const Color grayLight3 = Color(0xFF5C6771);
+  static const Color grayLight6 = Color(0xFFC0C4C8);
+  static const Color grayLight7 = Color(0xFFEBECED);
+  static const Color btnShadow = Color(0xFFE95626);
+
+  static const Color black0 = Color(0xFF000000);
 }

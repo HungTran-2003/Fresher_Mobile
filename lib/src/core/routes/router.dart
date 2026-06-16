@@ -1,5 +1,7 @@
 
 import 'package:crud_app/src/presentation/screens/splash/splash_page.dart';
+import 'package:crud_app/src/presentation/screens/login/login_page.dart';
+import 'package:crud_app/src/presentation/screens/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -41,6 +43,16 @@ class AppRouters {
       path: splash,
       name: splash,
       builder: (context, state) => const SplashPage(),
+    ),
+    GoRoute(
+      path: welcome,
+      name: welcome,
+      builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: home,
+      name: home,
+      builder: (context, state) => const HomePage(),
     ),
   ];
 }

@@ -12,7 +12,7 @@ class SharedPreferencesDataSource {
   SharedPreferencesDataSource(this._prefs);
 
   bool isFirstRun() {
-    return _prefs.getBool(_firstRunKey) ?? false;
+    return _prefs.getBool(_firstRunKey) ?? true;
   }
 
   Future<void> setFirstRun({bool isFirstRun = true}) async {
