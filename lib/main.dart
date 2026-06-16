@@ -16,7 +16,17 @@ Future<void> main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapter(AccountModelAdapter());
-  await Hive.openBox<AccountModel>('accountsBox');
+
+  Box<AccountModel>? box;
+  try {
+    box = await Hive.openBox<AccountModel>('accountsBox');
+    // Trigger any potential deserialization errors early to clear corrupt or incompatible boxes
+    box.values.toList();
+  } catch (e) {
+    debugPrint('Hive initialization error (possible migration/schema mismatch): $e. Recreating box...');
+    await Hive.deleteBoxFromDisk('accountsBox');
+    box = await Hive.openBox<AccountModel>('accountsBox');
+  }
 
   final sharedPreferences = await SharedPreferences.getInstance();
   runApp(MyApp(sharedPreferences: sharedPreferences));

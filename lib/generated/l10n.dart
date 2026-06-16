@@ -639,10 +639,10 @@ class S {
     );
   }
 
-  /// `Password must be at least 6 characters`
+  /// `Password must be between 6 and 50 characters.`
   String get passwordLengthError {
     return Intl.message(
-      'Password must be at least 6 characters',
+      'Password must be between 6 and 50 characters.',
       name: 'passwordLengthError',
       desc: '',
       args: [],
@@ -659,9 +659,9 @@ class S {
     );
   }
 
-  /// `••••••••`
+  /// `Password`
   String get passwordHint {
-    return Intl.message('••••••••', name: 'passwordHint', desc: '', args: []);
+    return Intl.message('Password', name: 'passwordHint', desc: '', args: []);
   }
 
   /// `+ 123 456 789`
@@ -987,6 +987,116 @@ class S {
   /// `Logout`
   String get logout {
     return Intl.message('Logout', name: 'logout', desc: '', args: []);
+  }
+
+  /// `Tax Code / Citizen ID`
+  String get taxIdOrIdLabel {
+    return Intl.message(
+      'Tax Code / Citizen ID',
+      name: 'taxIdOrIdLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tax Code / Citizen ID`
+  String get taxIdOrIdHint {
+    return Intl.message(
+      'Tax Code / Citizen ID',
+      name: 'taxIdOrIdHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username`
+  String get usernameLabel {
+    return Intl.message('Username', name: 'usernameLabel', desc: '', args: []);
+  }
+
+  /// `Username`
+  String get usernameHint {
+    return Intl.message('Username', name: 'usernameHint', desc: '', args: []);
+  }
+
+  /// `Please enter a valid 12-digit Citizen ID or 10-digit Tax Code (optional -XXX suffix).`
+  String get taxIdOrIdError {
+    return Intl.message(
+      'Please enter a valid 12-digit Citizen ID or 10-digit Tax Code (optional -XXX suffix).',
+      name: 'taxIdOrIdError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username cannot be empty.`
+  String get usernameError {
+    return Intl.message(
+      'Username cannot be empty.',
+      name: 'usernameError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid login credentials`
+  String get loginErrorTitle {
+    return Intl.message(
+      'Invalid login credentials',
+      name: 'loginErrorTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close`
+  String get closeButton {
+    return Intl.message('Close', name: 'closeButton', desc: '', args: []);
+  }
+
+  /// `Logout Confirmation`
+  String get logoutConfirmTitle {
+    return Intl.message(
+      'Logout Confirmation',
+      name: 'logoutConfirmTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to log out?`
+  String get logoutConfirmMessage {
+    return Intl.message(
+      'Are you sure you want to log out?',
+      name: 'logoutConfirmMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OK`
+  String get okButton {
+    return Intl.message('OK', name: 'okButton', desc: '', args: []);
+  }
+
+  /// `Cancel`
+  String get cancelButton {
+    return Intl.message('Cancel', name: 'cancelButton', desc: '', args: []);
+  }
+
+  /// `Support`
+  String get support {
+    return Intl.message('Support', name: 'support', desc: '', args: []);
+  }
+
+  /// `Group`
+  String get group {
+    return Intl.message('Group', name: 'group', desc: '', args: []);
+  }
+
+  /// `Search`
+  String get lookup {
+    return Intl.message('Search', name: 'lookup', desc: '', args: []);
   }
 }
 

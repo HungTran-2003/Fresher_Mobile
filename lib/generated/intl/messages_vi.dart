@@ -42,8 +42,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Bằng việc tiếp tục, bạn đồng ý với ",
     ),
     "cancel": MessageLookupByLibrary.simpleMessage("Hủy bỏ"),
+    "cancelButton": MessageLookupByLibrary.simpleMessage("Hủy"),
     "category": MessageLookupByLibrary.simpleMessage("Danh mục"),
     "changePassword": MessageLookupByLibrary.simpleMessage("Thay đổi mật khẩu"),
+    "closeButton": MessageLookupByLibrary.simpleMessage("Đóng"),
     "confirmDelete": MessageLookupByLibrary.simpleMessage(
       "Bạn có chắc chắn muốn xóa giao dịch này không?",
     ),
@@ -109,8 +111,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "forgotPassword": MessageLookupByLibrary.simpleMessage("Quên mật khẩu?"),
     "fullName": MessageLookupByLibrary.simpleMessage("Họ và tên"),
     "fullNameHint": MessageLookupByLibrary.simpleMessage("example@example.com"),
+    "goodAfternoon": MessageLookupByLibrary.simpleMessage("Chào buổi chiều"),
+    "goodEvening": MessageLookupByLibrary.simpleMessage("Chào buổi tối"),
     "goodMorning": MessageLookupByLibrary.simpleMessage("Chào buổi sáng"),
+    "goodNight": MessageLookupByLibrary.simpleMessage("Chào buổi đêm"),
+    "goodNoon": MessageLookupByLibrary.simpleMessage("Chào buổi trưa"),
     "groceries": MessageLookupByLibrary.simpleMessage("Tạp hóa"),
+    "group": MessageLookupByLibrary.simpleMessage("Group"),
     "help": MessageLookupByLibrary.simpleMessage("Trợ giúp"),
     "hiWelcomeBack": MessageLookupByLibrary.simpleMessage("Chào mừng trở lại"),
     "income": MessageLookupByLibrary.simpleMessage("Thu nhập"),
@@ -122,7 +129,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đã vượt quá hạn mức ngân sách!",
     ),
     "logIn": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
+    "loginErrorTitle": MessageLookupByLibrary.simpleMessage(
+      "Thông tin đăng nhập không hợp lệ",
+    ),
     "logout": MessageLookupByLibrary.simpleMessage("Đăng xuất"),
+    "logoutConfirmMessage": MessageLookupByLibrary.simpleMessage(
+      "Bạn có chắc chắn muốn đăng xuất?",
+    ),
+    "logoutConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "Xác nhận đăng xuất",
+    ),
+    "lookup": MessageLookupByLibrary.simpleMessage("Tra cứu"),
     "mobileNumber": MessageLookupByLibrary.simpleMessage("Số điện thoại"),
     "monthly": MessageLookupByLibrary.simpleMessage("Hàng tháng"),
     "monthlyReport": MessageLookupByLibrary.simpleMessage(
@@ -132,6 +149,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "next": MessageLookupByLibrary.simpleMessage("Tiếp tục"),
     "nextStep": MessageLookupByLibrary.simpleMessage("Bước tiếp theo"),
     "note": MessageLookupByLibrary.simpleMessage("Ghi chú (Tùy chọn)"),
+    "okButton": MessageLookupByLibrary.simpleMessage("OK"),
     "onboardingTitle1": MessageLookupByLibrary.simpleMessage(
       "Chào mừng đến với Expense Manager",
     ),
@@ -144,9 +162,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordChangedSuccess": MessageLookupByLibrary.simpleMessage(
       "Đổi mật khẩu thành công! Vui lòng đăng nhập bằng mật khẩu mới.",
     ),
-    "passwordHint": MessageLookupByLibrary.simpleMessage("••••••••"),
+    "passwordHint": MessageLookupByLibrary.simpleMessage("Mật khẩu"),
     "passwordLengthError": MessageLookupByLibrary.simpleMessage(
-      "Mật khẩu phải dài ít nhất 6 ký tự",
+      "Mật khẩu phải từ 6 đến 50 ký tự.",
     ),
     "passwordsDoNotMatchError": MessageLookupByLibrary.simpleMessage(
       "Mật khẩu không khớp",
@@ -186,6 +204,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("Cài đặt"),
     "signUp": MessageLookupByLibrary.simpleMessage("Đăng ký"),
     "success": MessageLookupByLibrary.simpleMessage("Thành công"),
+    "support": MessageLookupByLibrary.simpleMessage("Trợ giúp"),
+    "taxIdOrIdError": MessageLookupByLibrary.simpleMessage(
+      "Vui lòng nhập CCCD 12 số hoặc MST hợp lệ (10 số, có thể kèm -XXX).",
+    ),
+    "taxIdOrIdHint": MessageLookupByLibrary.simpleMessage("Mã số thuế / CCCD"),
+    "taxIdOrIdLabel": MessageLookupByLibrary.simpleMessage("Mã số thuế / CCCD"),
     "termsOfUse": MessageLookupByLibrary.simpleMessage("Điều khoản Sử dụng"),
     "theme": MessageLookupByLibrary.simpleMessage("Chủ đề"),
     "totalBalance": MessageLookupByLibrary.simpleMessage("Tổng số dư"),
@@ -205,6 +229,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "useFingerprintToAccess": MessageLookupByLibrary.simpleMessage(
       "Sử dụng vân tay để truy cập",
     ),
+    "usernameError": MessageLookupByLibrary.simpleMessage(
+      "Tên đăng nhập không được để trống.",
+    ),
+    "usernameHint": MessageLookupByLibrary.simpleMessage("Tài khoản"),
+    "usernameLabel": MessageLookupByLibrary.simpleMessage("Tài khoản"),
     "usernameOrEmail": MessageLookupByLibrary.simpleMessage(
       "Tên đăng nhập hoặc Email",
     ),

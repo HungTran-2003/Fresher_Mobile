@@ -79,6 +79,8 @@ abstract class AppColorScheme {
 
   //Text
   Color get textField;
+
+  Color get orange;
 }
 
 abstract class AppTextTheme {

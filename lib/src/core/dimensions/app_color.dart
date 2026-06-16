@@ -64,4 +64,6 @@ class AppColor {
 
   static const Color filterBarLight = Color(0xFFDFF7E2);
   static const Color filterBarDark = Color(0xFF0E3E3E);
+
+  static const Color orange = Color(0xFFF15A24);
 }

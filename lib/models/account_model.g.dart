@@ -17,13 +17,13 @@ class AccountModelAdapter extends TypeAdapter<AccountModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AccountModel(
-      taxIdOrId: fields[0] as String,
+      taxIdOrIds: (fields[0] as List).cast<String>(),
       username: fields[1] as String,
       passwordHash: fields[2] as String,
       salt: fields[3] as String,
       fullName: fields[4] as String,
       enabled: fields[5] as bool,
-      updatedAt: (fields[6] as num).toInt(),
+      updatedAt: fields[6] as DateTime,
     );
   }
 
@@ -32,7 +32,7 @@ class AccountModelAdapter extends TypeAdapter<AccountModel> {
     writer
       ..writeByte(7)
       ..writeByte(0)
-      ..write(obj.taxIdOrId)
+      ..write(obj.taxIdOrIds)
       ..writeByte(1)
       ..write(obj.username)
       ..writeByte(2)

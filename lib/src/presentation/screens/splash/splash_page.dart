@@ -4,6 +4,7 @@ import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
 import 'package:crud_app/src/presentation/global/user/user_cubit.dart';
 import 'package:crud_app/src/presentation/screens/splash/splash_cubit.dart';
 import 'package:crud_app/src/presentation/screens/splash/splash_navigator.dart';
+import 'package:crud_app/src/data/services/database/secure_storage_data_source.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,6 +19,7 @@ class SplashPage extends StatelessWidget {
         context.read<AuthCubit>(),
         context.read<UserCubit>(),
         context.read<SettingRepository>(),
+        context.read<SecureStorageDataSource>(),
       ),
       child: const SplashChildPage(),
     );

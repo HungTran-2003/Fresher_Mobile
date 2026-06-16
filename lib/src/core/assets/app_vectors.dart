@@ -6,5 +6,6 @@ class AppVectors {
   // Common
   static const icVisibility = '$_path/ic_visibility.svg';
   static const icVisibilityOff = '$_path/ic_visibility_off.svg';
+  static const logoApp = '$_path/logo_app.svg';
 
 }

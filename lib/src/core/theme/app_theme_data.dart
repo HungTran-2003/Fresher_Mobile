@@ -116,6 +116,9 @@ class LightColorScheme extends AppColorScheme {
 
   @override
   Color get filterBar => AppColor.filterBarLight;
+
+  @override
+  Color get orange => AppColor.orange;
 }
 
 // DARK THEME
@@ -234,6 +237,9 @@ class DarkColorScheme extends AppColorScheme {
 
   @override
   Color get filterBar => AppColor.filterBarDark;
+
+  @override
+  Color get orange => AppColor.orange;
 }
 
 // SHARED TEXT THEME IMPLEMENTATION

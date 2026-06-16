@@ -118,5 +118,22 @@
   "profile": "Profile",
   "editProfile": "Edit Profile",
   "help": "Help",
-  "logout": "Logout"
+  "logout": "Logout",
+  "taxIdOrIdLabel": "Tax Code / Citizen ID",
+  "taxIdOrIdHint": "Tax Code / Citizen ID",
+  "usernameLabel": "Username",
+  "usernameHint": "Username",
+  "passwordHint": "Password",
+  "taxIdOrIdError": "Please enter a valid 12-digit Citizen ID or 10-digit Tax Code (optional -XXX suffix).",
+  "usernameError": "Username cannot be empty.",
+  "passwordLengthError": "Password must be between 6 and 50 characters.",
+  "loginErrorTitle": "Invalid login credentials",
+  "closeButton": "Close",
+  "logoutConfirmTitle": "Logout Confirmation",
+  "logoutConfirmMessage": "Are you sure you want to log out?",
+  "okButton": "OK",
+  "cancelButton": "Cancel",
+  "support": "Support",
+  "group": "Group",
+  "lookup": "Search"
 }

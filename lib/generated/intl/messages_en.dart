@@ -44,8 +44,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "By continuing, you agree to ",
     ),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "cancelButton": MessageLookupByLibrary.simpleMessage("Cancel"),
     "category": MessageLookupByLibrary.simpleMessage("Category"),
     "changePassword": MessageLookupByLibrary.simpleMessage("Change Password"),
+    "closeButton": MessageLookupByLibrary.simpleMessage("Close"),
     "confirmDelete": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to delete this transaction?",
     ),
@@ -111,8 +113,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "forgotPassword": MessageLookupByLibrary.simpleMessage("Forgot Password?"),
     "fullName": MessageLookupByLibrary.simpleMessage("Full Name"),
     "fullNameHint": MessageLookupByLibrary.simpleMessage("example@example.com"),
+    "goodAfternoon": MessageLookupByLibrary.simpleMessage("Good Afternoon"),
+    "goodEvening": MessageLookupByLibrary.simpleMessage("Good Evening"),
     "goodMorning": MessageLookupByLibrary.simpleMessage("Good Morning"),
+    "goodNight": MessageLookupByLibrary.simpleMessage("Good Night"),
+    "goodNoon": MessageLookupByLibrary.simpleMessage("Good Noon"),
     "groceries": MessageLookupByLibrary.simpleMessage("Groceries"),
+    "group": MessageLookupByLibrary.simpleMessage("Group"),
     "help": MessageLookupByLibrary.simpleMessage("Help"),
     "hiWelcomeBack": MessageLookupByLibrary.simpleMessage("Hi, Welcome Back"),
     "income": MessageLookupByLibrary.simpleMessage("Income"),
@@ -124,7 +131,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "Budget limit exceeded!",
     ),
     "logIn": MessageLookupByLibrary.simpleMessage("Log In"),
+    "loginErrorTitle": MessageLookupByLibrary.simpleMessage(
+      "Invalid login credentials",
+    ),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "logoutConfirmMessage": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to log out?",
+    ),
+    "logoutConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "Logout Confirmation",
+    ),
+    "lookup": MessageLookupByLibrary.simpleMessage("Search"),
     "mobileNumber": MessageLookupByLibrary.simpleMessage("Mobile Number"),
     "monthly": MessageLookupByLibrary.simpleMessage("Monthly"),
     "monthlyReport": MessageLookupByLibrary.simpleMessage(
@@ -134,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "next": MessageLookupByLibrary.simpleMessage("Next"),
     "nextStep": MessageLookupByLibrary.simpleMessage("Next Step"),
     "note": MessageLookupByLibrary.simpleMessage("Note (Optional)"),
+    "okButton": MessageLookupByLibrary.simpleMessage("OK"),
     "onboardingTitle1": MessageLookupByLibrary.simpleMessage(
       "Welcome To Expense Manager",
     ),
@@ -146,9 +164,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordChangedSuccess": MessageLookupByLibrary.simpleMessage(
       "Password changed successfully! Please log in with your new password.",
     ),
-    "passwordHint": MessageLookupByLibrary.simpleMessage("••••••••"),
+    "passwordHint": MessageLookupByLibrary.simpleMessage("Password"),
     "passwordLengthError": MessageLookupByLibrary.simpleMessage(
-      "Password must be at least 6 characters",
+      "Password must be between 6 and 50 characters.",
     ),
     "passwordsDoNotMatchError": MessageLookupByLibrary.simpleMessage(
       "Passwords do not match",
@@ -182,6 +200,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
     "success": MessageLookupByLibrary.simpleMessage("Success"),
+    "support": MessageLookupByLibrary.simpleMessage("Support"),
+    "taxIdOrIdError": MessageLookupByLibrary.simpleMessage(
+      "Please enter a valid 12-digit Citizen ID or 10-digit Tax Code (optional -XXX suffix).",
+    ),
+    "taxIdOrIdHint": MessageLookupByLibrary.simpleMessage(
+      "Tax Code / Citizen ID",
+    ),
+    "taxIdOrIdLabel": MessageLookupByLibrary.simpleMessage(
+      "Tax Code / Citizen ID",
+    ),
     "termsOfUse": MessageLookupByLibrary.simpleMessage("Terms of Use"),
     "theme": MessageLookupByLibrary.simpleMessage("Theme"),
     "totalBalance": MessageLookupByLibrary.simpleMessage("Total Balance"),
@@ -201,6 +229,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "useFingerprintToAccess": MessageLookupByLibrary.simpleMessage(
       "Use Fingerprint To Access",
     ),
+    "usernameError": MessageLookupByLibrary.simpleMessage(
+      "Username cannot be empty.",
+    ),
+    "usernameHint": MessageLookupByLibrary.simpleMessage("Username"),
+    "usernameLabel": MessageLookupByLibrary.simpleMessage("Username"),
     "usernameOrEmail": MessageLookupByLibrary.simpleMessage(
       "Username Or Email",
     ),

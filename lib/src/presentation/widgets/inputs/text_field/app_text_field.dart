@@ -36,6 +36,7 @@ class AppTextField extends StatefulWidget {
   final Color? backgroundColor;
   final bool isSecure;
   final bool isFilled;
+  final bool showClearButton;
 
   const AppTextField({
     super.key,
@@ -69,6 +70,7 @@ class AppTextField extends StatefulWidget {
     this.backgroundColor,
     this.isSecure = false,
     this.isFilled = true,
+    this.showClearButton = false,
   });
 
   @override
@@ -86,11 +88,22 @@ class _AppTextFieldState extends State<AppTextField> {
     _isInternalFocusNode = widget.focusNode == null;
     _focusNode = widget.focusNode ?? FocusNode();
     _focusNode.addListener(_onFocusChange);
+    widget.controller.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   void didUpdateWidget(AppTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      oldWidget.controller.removeListener(_onTextChanged);
+      widget.controller.addListener(_onTextChanged);
+    }
     if (widget.focusNode != oldWidget.focusNode) {
       _focusNode.removeListener(_onFocusChange);
       if (_isInternalFocusNode) {
@@ -105,6 +118,7 @@ class _AppTextFieldState extends State<AppTextField> {
 
   @override
   void dispose() {
+    widget.controller.removeListener(_onTextChanged);
     _focusNode.removeListener(_onFocusChange);
     if (_isInternalFocusNode) {
       _focusNode.dispose();
@@ -217,7 +231,7 @@ class _AppTextFieldState extends State<AppTextField> {
               prefixIcon: widget.prefixIcon,
               suffixIcon:
                   widget.suffixIcon ??
-                  (widget.isSecure ? _buildSuffixIcon() : null),
+                  _buildSuffixIcon(),
             ),
             keyboardType: widget.keyboardType,
             onFieldSubmitted: widget.onFieldSubmitted,
@@ -235,29 +249,52 @@ class _AppTextFieldState extends State<AppTextField> {
     );
   }
 
-  Widget _buildSuffixIcon() {
-    return IconButton(
-      splashRadius: 24,
-      onPressed: _toggleObscure,
-      icon: _obscureText
-          ? AppSvgImage(
-              AppVectors.icVisibilityOff,
-              height: 10,
-              width: 10,
-              colorFilter: ColorFilter.mode(
-                AppTheme.of(context).appColorScheme.textField,
-                BlendMode.srcIn,
-              ),
-            )
-          : AppSvgImage(
-              AppVectors.icVisibility,
-              height: 10,
-              width: 10,
-              colorFilter: ColorFilter.mode(
-                AppTheme.of(context).appColorScheme.textField,
-                BlendMode.srcIn,
-              ),
-            ),
+  Widget? _buildSuffixIcon() {
+    final showClear = widget.showClearButton && widget.controller.text.isNotEmpty;
+    final showSecure = widget.isSecure && widget.controller.text.isNotEmpty;
+
+    if (!showClear && !showSecure) {
+      return null;
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        if (showClear)
+          IconButton(
+            icon: const Icon(Icons.clear, size: 20),
+            onPressed: () {
+              widget.controller.clear();
+              if (widget.onChanged != null) {
+                widget.onChanged!('');
+              }
+            },
+          ),
+        if (showSecure)
+          IconButton(
+            onPressed: _toggleObscure,
+            icon: _obscureText
+                ? AppSvgImage(
+                    AppVectors.icVisibilityOff,
+                    height: 20,
+                    width: 20,
+                    colorFilter: ColorFilter.mode(
+                      AppTheme.of(context).appColorScheme.textField,
+                      BlendMode.srcIn,
+                    ),
+                  )
+                : AppSvgImage(
+                    AppVectors.icVisibility,
+                    height: 20,
+                    width: 20,
+                    colorFilter: ColorFilter.mode(
+                      AppTheme.of(context).appColorScheme.textField,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+          ),
+      ],
     );
   }
 }

@@ -118,5 +118,22 @@
   "profile": "Hồ sơ",
   "editProfile": "Chỉnh sửa hồ sơ",
   "help": "Trợ giúp",
-  "logout": "Đăng xuất"
+  "logout": "Đăng xuất",
+  "taxIdOrIdLabel": "Mã số thuế / CCCD",
+  "taxIdOrIdHint": "Mã số thuế / CCCD",
+  "usernameLabel": "Tài khoản",
+  "usernameHint": "Tài khoản",
+  "passwordHint": "Mật khẩu",
+  "taxIdOrIdError": "Vui lòng nhập CCCD 12 số hoặc MST hợp lệ (10 số, có thể kèm -XXX).",
+  "usernameError": "Tên đăng nhập không được để trống.",
+  "passwordLengthError": "Mật khẩu phải từ 6 đến 50 ký tự.",
+  "loginErrorTitle": "Thông tin đăng nhập không hợp lệ",
+  "closeButton": "Đóng",
+  "logoutConfirmTitle": "Xác nhận đăng xuất",
+  "logoutConfirmMessage": "Bạn có chắc chắn muốn đăng xuất?",
+  "okButton": "OK",
+  "cancelButton": "Hủy",
+  "support": "Trợ giúp",
+  "group": "Group",
+  "lookup": "Tra cứu"
 }
