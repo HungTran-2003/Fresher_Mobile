@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 
-class CryptoService {
-  const CryptoService._();
+class CryptoUtil {
+  const CryptoUtil._();
 
   /// Hashes a password using PBKDF2-HMAC-SHA256.
   /// [password] is the plain text password.

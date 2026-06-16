@@ -3,7 +3,7 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
-import 'package:crud_app/models/account_model.dart';
+import 'package:crud_app/src/data/models/account_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {

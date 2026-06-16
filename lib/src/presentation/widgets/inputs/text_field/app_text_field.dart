@@ -1,5 +1,4 @@
 import 'package:crud_app/src/core/assets/app_vectors.dart';
-import 'package:crud_app/src/core/theme/app_theme.dart';
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
 import 'package:crud_app/src/presentation/widgets/images/app_svg_image.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +68,7 @@ class AppTextField extends StatefulWidget {
     this.borderRadius,
     this.backgroundColor,
     this.isSecure = false,
-    this.isFilled = true,
+    this.isFilled = false,
     this.showClearButton = false,
   });
 
@@ -81,6 +80,7 @@ class _AppTextFieldState extends State<AppTextField> {
   late FocusNode _focusNode;
   late bool _isInternalFocusNode;
   bool _obscureText = true;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -140,33 +140,23 @@ class _AppTextFieldState extends State<AppTextField> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8,
       children: [
         if (widget.labelText != null && widget.labelText!.isNotEmpty) ...{
           Padding(
-            padding: const EdgeInsets.only(left: 16),
+            padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               widget.labelText!,
               style:
                   widget.labelStyle ??
-                  AppTheme.of(context).appTextTheme.bodyLarge.copyWith(
-                    color: _focusNode.hasFocus
-                        ? (widget.focusedBorderColor ??
-                              AppTheme.of(context).appColorScheme.primary)
-                        : null,
-                  ),
+                  context.textThemes.body16Bo,
             ),
           ),
         },
         TextSelectionTheme(
           data: TextSelectionThemeData(
-            selectionColor: AppTheme.of(
-              context,
-            ).appColorScheme.primaryContainer.withValues(alpha: 0.5),
-            selectionHandleColor: AppTheme.of(
-              context,
-            ).appColorScheme.primaryContainer,
-            cursorColor: AppTheme.of(context).appColorScheme.primaryContainer,
+            selectionColor: context.colors.primaryLight.withValues(alpha: 0.5),
+            selectionHandleColor: context.colors.primaryLight,
+            cursorColor: context.colors.primaryLight,
           ),
           child: TextFormField(
             controller: widget.controller,
@@ -175,9 +165,7 @@ class _AppTextFieldState extends State<AppTextField> {
             focusNode: _focusNode,
             style:
                 widget.style ??
-                context.textThemes.bodyLarge.copyWith(
-                  color: context.colors.textField,
-                ),
+                context.textThemes.body16Semi,
             inputFormatters: [
               ...(widget.inputFormatters ??
                   [LengthLimitingTextInputFormatter(255)]),
@@ -185,9 +173,7 @@ class _AppTextFieldState extends State<AppTextField> {
             decoration: InputDecoration(
               isDense: true,
               filled: widget.isFilled,
-              fillColor:
-                  widget.backgroundColor ??
-                  AppTheme.of(context).appColorScheme.onPrimary,
+              fillColor: widget.backgroundColor,
               alignLabelWithHint: widget.alignLabelWithHint,
               contentPadding:
                   widget.padding ??
@@ -195,38 +181,54 @@ class _AppTextFieldState extends State<AppTextField> {
               hintText: widget.hintText,
               hintStyle:
                   widget.hintStyle ??
-                  context.textThemes.bodyLarge.copyWith(
-                    color: context.colors.textField.withValues(alpha: 0.5),
+                  context.textThemes.body16Semi.copyWith(
+                    color: context.colors.grayLight3,
                   ),
+              errorStyle: const TextStyle(fontSize: 0),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 20),
+                  Radius.circular(widget.borderRadius ?? 6),
                 ),
-                borderSide: BorderSide.none,
+                borderSide: BorderSide(
+                  color: context.colors.black0,
+                  width: 1
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 20),
+                  Radius.circular(widget.borderRadius ?? 6),
                 ),
-                borderSide: BorderSide.none,
+                borderSide: BorderSide(
+                    color: context.colors.grayLight7,
+                    width: 1
+                ),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 20),
+                  Radius.circular(widget.borderRadius ?? 6),
                 ),
-                borderSide: BorderSide.none,
+                borderSide:  BorderSide(
+                    color: context.colors.grayLight7,
+                    width: 1
+                ),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 20),
+                  Radius.circular(widget.borderRadius ?? 6),
                 ),
-                borderSide: BorderSide.none,
+                borderSide:  BorderSide(
+                    color: context.colors.grayLight7,
+                    width: 1
+                ),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 20),
+                  Radius.circular(widget.borderRadius ?? 6),
                 ),
-                borderSide: BorderSide.none,
+                borderSide:  BorderSide(
+                    color: context.colors.primaryLight,
+                    width: 1
+                ),
               ),
               prefixIcon: widget.prefixIcon,
               suffixIcon:
@@ -236,13 +238,36 @@ class _AppTextFieldState extends State<AppTextField> {
             keyboardType: widget.keyboardType,
             onFieldSubmitted: widget.onFieldSubmitted,
             obscureText: widget.isSecure ? _obscureText : false,
-            validator: widget.validator,
+            validator: (value) {
+              final result = widget.validator?.call(value);
+              if (result != _errorMessage) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    setState(() {
+                      _errorMessage = result;
+                    });
+                  }
+                });
+              }
+              return result;
+            },
             onChanged: widget.onChanged,
             enabled: widget.enable,
             maxLines: widget.isSecure ? 1 : widget.maxLines,
             readOnly: widget.readOnly ?? false,
             textAlign: widget.textAlign ?? TextAlign.start,
-            cursorColor: AppTheme.of(context).appColorScheme.primaryContainer,
+            cursorColor: context.colors.primaryLight,
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            _errorMessage ?? ' ',
+            textAlign: TextAlign.right,
+            style: widget.errorStyle ??
+                context.textThemes.des12Re.copyWith(
+                  color: context.colors.errorContainer,
+                ),
           ),
         ),
       ],
@@ -263,13 +288,21 @@ class _AppTextFieldState extends State<AppTextField> {
       children: [
         if (showClear)
           IconButton(
-            icon: const Icon(Icons.clear, size: 20),
-            onPressed: () {
+            onPressed: (){
               widget.controller.clear();
               if (widget.onChanged != null) {
                 widget.onChanged!('');
               }
             },
+            icon: AppSvgImage(
+              AppVectors.icClear,
+              height: 20,
+              width: 20,
+              colorFilter: ColorFilter.mode(
+                context.colors.grayLight6,
+                BlendMode.srcIn,
+              ),
+            ),
           ),
         if (showSecure)
           IconButton(
@@ -280,7 +313,7 @@ class _AppTextFieldState extends State<AppTextField> {
                     height: 20,
                     width: 20,
                     colorFilter: ColorFilter.mode(
-                      AppTheme.of(context).appColorScheme.textField,
+                      context.colors.grayLight6,
                       BlendMode.srcIn,
                     ),
                   )
@@ -289,7 +322,7 @@ class _AppTextFieldState extends State<AppTextField> {
                     height: 20,
                     width: 20,
                     colorFilter: ColorFilter.mode(
-                      AppTheme.of(context).appColorScheme.textField,
+                      context.colors.grayLight6,
                       BlendMode.srcIn,
                     ),
                   ),

@@ -1,3 +1,4 @@
+import 'package:crud_app/configs/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +18,7 @@ class HomeContent extends StatelessWidget {
             // Custom AppBar with Logout action on the top right
             AppBar(
               title: Text(
-                context.s.appName,
+                AppConfigs.appName,
                 style: context.textThemes.titleLarge.copyWith(
                   fontWeight: FontWeight.bold,
                   color: context.colors.onSurface,

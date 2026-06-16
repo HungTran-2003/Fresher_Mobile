@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
-import 'package:crud_app/models/account_model.dart';
+import 'package:crud_app/src/data/models/account_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

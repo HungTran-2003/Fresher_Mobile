@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:crud_app/models/account_model.dart';
+import 'package:crud_app/src/data/models/account_model.dart';
 import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/repositories/setting_repository.dart';
 import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';

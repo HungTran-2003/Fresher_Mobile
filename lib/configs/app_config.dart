@@ -10,7 +10,7 @@ class AppConfigs {
   static const pageSizeMax = 1000;
 
   ///Local
-  static const defaultLanguage = Language.english;
+  static const defaultLanguage = Language.vietnamese;
 
   ///DateFormat
 

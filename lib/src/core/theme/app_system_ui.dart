@@ -6,10 +6,10 @@ class AppSystemUi {
 
   static SystemUiOverlayStyle get light => const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
+    statusBarIconBrightness: Brightness.dark,
     statusBarBrightness: Brightness.dark,
     systemNavigationBarColor: Colors.transparent,
-    systemNavigationBarIconBrightness: Brightness.light,
+    systemNavigationBarIconBrightness: Brightness.dark,
   );
 
   static SystemUiOverlayStyle get dark => const SystemUiOverlayStyle(

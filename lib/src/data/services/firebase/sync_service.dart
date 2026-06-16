@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:crud_app/models/account_model.dart';
+import 'package:crud_app/src/data/models/account_model.dart';
 import 'package:flutter/foundation.dart';
 
 class SyncService {
