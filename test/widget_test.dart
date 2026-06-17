@@ -11,7 +11,7 @@ void main() {
     final sharedPreferences = await SharedPreferences.getInstance();
 
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(sharedPreferences: sharedPreferences));
+    await tester.pumpWidget(MyApp());
 
     // The app should build successfully
     expect(find.byType(MyApp), findsOneWidget);

@@ -3,7 +3,7 @@ import 'package:crud_app/src/domain/models/enum/language.dart';
 class AppConfigs {
   AppConfigs._();
 
-  static const String appName = 'Finance';
+  static const String appName = 'Go Fresher';
 
   ///Paging
   static const pageSize = 40;

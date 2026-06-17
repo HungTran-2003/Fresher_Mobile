@@ -1,6 +1,7 @@
 import 'package:crud_app/src/core/assets/app_vectors.dart';
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
 import 'package:crud_app/src/presentation/widgets/images/app_svg_image.dart';
+import 'package:crud_app/src/presentation/widgets/animations/shake_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -81,6 +82,8 @@ class _AppTextFieldState extends State<AppTextField> {
   late bool _isInternalFocusNode;
   bool _obscureText = true;
   String? _errorMessage;
+  String _displayErrorMessage = '';
+  final _shakeKey = GlobalKey<ShakeWidgetState>();
 
   @override
   void initState() {
@@ -158,116 +161,131 @@ class _AppTextFieldState extends State<AppTextField> {
             selectionHandleColor: context.colors.primaryLight,
             cursorColor: context.colors.primaryLight,
           ),
-          child: TextFormField(
-            controller: widget.controller,
-            autofillHints: widget.autofillHints,
-            maxLength: widget.maxLength,
-            focusNode: _focusNode,
-            style:
-                widget.style ??
-                context.textThemes.body16Semi,
-            inputFormatters: [
-              ...(widget.inputFormatters ??
-                  [LengthLimitingTextInputFormatter(255)]),
-            ],
-            decoration: InputDecoration(
-              isDense: true,
-              filled: widget.isFilled,
-              fillColor: widget.backgroundColor,
-              alignLabelWithHint: widget.alignLabelWithHint,
-              contentPadding:
-                  widget.padding ??
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-              hintText: widget.hintText,
-              hintStyle:
-                  widget.hintStyle ??
-                  context.textThemes.body16Semi.copyWith(
-                    color: context.colors.grayLight3,
+          child: ShakeWidget(
+            key: _shakeKey,
+            child: TextFormField(
+              controller: widget.controller,
+              autofillHints: widget.autofillHints,
+              maxLength: widget.maxLength,
+              focusNode: _focusNode,
+              style:
+                  widget.style ??
+                  context.textThemes.body16Semi,
+              inputFormatters: [
+                ...(widget.inputFormatters ??
+                    [LengthLimitingTextInputFormatter(255)]),
+              ],
+              decoration: InputDecoration(
+                isDense: true,
+                filled: widget.isFilled,
+                fillColor: widget.backgroundColor,
+                alignLabelWithHint: widget.alignLabelWithHint,
+                contentPadding:
+                    widget.padding ??
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                hintText: widget.hintText,
+                hintStyle:
+                    widget.hintStyle ??
+                    context.textThemes.body16Semi.copyWith(
+                      color: context.colors.grayLight3,
+                    ),
+                errorStyle: const TextStyle(fontSize: 0),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(widget.borderRadius ?? 6),
                   ),
-              errorStyle: const TextStyle(fontSize: 0),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 6),
-                ),
-                borderSide: BorderSide(
-                  color: context.colors.black0,
-                  width: 1
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 6),
-                ),
-                borderSide: BorderSide(
-                    color: context.colors.grayLight7,
+                  borderSide: BorderSide(
+                    color: context.colors.black0,
                     width: 1
+                  ),
                 ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(widget.borderRadius ?? 6),
+                  ),
+                  borderSide: BorderSide(
+                      color: context.colors.grayLight7,
+                      width: 1
+                  ),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(widget.borderRadius ?? 6),
+                  ),
+                  borderSide:  BorderSide(
+                      color: context.colors.grayLight7,
+                      width: 1
+                  ),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(widget.borderRadius ?? 6),
+                  ),
+                  borderSide:  BorderSide(
+                      color: context.colors.grayLight7,
+                      width: 1
+                  ),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(widget.borderRadius ?? 6),
+                  ),
+                  borderSide:  BorderSide(
+                      color: context.colors.primaryLight,
+                      width: 1
+                  ),
+                ),
+                prefixIcon: widget.prefixIcon,
+                suffixIcon:
+                    widget.suffixIcon ??
+                    _buildSuffixIcon(),
               ),
-              disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 6),
-                ),
-                borderSide:  BorderSide(
-                    color: context.colors.grayLight7,
-                    width: 1
-                ),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 6),
-                ),
-                borderSide:  BorderSide(
-                    color: context.colors.grayLight7,
-                    width: 1
-                ),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 6),
-                ),
-                borderSide:  BorderSide(
-                    color: context.colors.primaryLight,
-                    width: 1
-                ),
-              ),
-              prefixIcon: widget.prefixIcon,
-              suffixIcon:
-                  widget.suffixIcon ??
-                  _buildSuffixIcon(),
+              keyboardType: widget.keyboardType,
+              onFieldSubmitted: widget.onFieldSubmitted,
+              obscureText: widget.isSecure ? _obscureText : false,
+              validator: (value) {
+                final result = widget.validator?.call(value);
+                if (result != _errorMessage) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (mounted) {
+                      setState(() {
+                        _errorMessage = result;
+                        if (result != null) {
+                          _displayErrorMessage = result;
+                          _shakeKey.currentState?.shake();
+                        }
+                      });
+                    }
+                  });
+                }
+                return result;
+              },
+              onChanged: widget.onChanged,
+              enabled: widget.enable,
+              maxLines: widget.isSecure ? 1 : widget.maxLines,
+              readOnly: widget.readOnly ?? false,
+              textAlign: widget.textAlign ?? TextAlign.start,
+              cursorColor: context.colors.primaryLight,
             ),
-            keyboardType: widget.keyboardType,
-            onFieldSubmitted: widget.onFieldSubmitted,
-            obscureText: widget.isSecure ? _obscureText : false,
-            validator: (value) {
-              final result = widget.validator?.call(value);
-              if (result != _errorMessage) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (mounted) {
-                    setState(() {
-                      _errorMessage = result;
-                    });
-                  }
-                });
-              }
-              return result;
-            },
-            onChanged: widget.onChanged,
-            enabled: widget.enable,
-            maxLines: widget.isSecure ? 1 : widget.maxLines,
-            readOnly: widget.readOnly ?? false,
-            textAlign: widget.textAlign ?? TextAlign.start,
-            cursorColor: context.colors.primaryLight,
           ),
         ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-            _errorMessage ?? ' ',
-            textAlign: TextAlign.right,
-            style: widget.errorStyle ??
-                context.textThemes.des12Re.copyWith(
-                  color: context.colors.errorContainer,
-                ),
+        AnimatedOpacity(
+          opacity: _errorMessage != null ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 300),
+          child: AnimatedScale(
+            scale: _errorMessage != null ? 1.0 : 0.8,
+            duration: const Duration(milliseconds: 300),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                _displayErrorMessage.isNotEmpty ? "ⓘ $_displayErrorMessage" : ' ',
+                textAlign: TextAlign.right,
+                style: widget.errorStyle ??
+                    context.textThemes.des12Re.copyWith(
+                      color: context.colors.errorContainer,
+                    ),
+              ),
+            ),
           ),
         ),
       ],

@@ -24,13 +24,15 @@ class AccountModelAdapter extends TypeAdapter<AccountModel> {
       fullName: fields[4] as String,
       enabled: fields[5] as bool,
       updatedAt: fields[6] as DateTime,
+      failedAttempts: fields[7] == null ? 0 : (fields[7] as num?)?.toInt(),
+      lockUntil: fields[8] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, AccountModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.taxIdOrIds)
       ..writeByte(1)
@@ -44,7 +46,11 @@ class AccountModelAdapter extends TypeAdapter<AccountModel> {
       ..writeByte(5)
       ..write(obj.enabled)
       ..writeByte(6)
-      ..write(obj.updatedAt);
+      ..write(obj.updatedAt)
+      ..writeByte(7)
+      ..write(obj.failedAttempts)
+      ..writeByte(8)
+      ..write(obj.lockUntil);
   }
 
   @override

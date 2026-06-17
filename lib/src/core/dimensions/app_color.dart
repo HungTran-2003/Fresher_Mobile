@@ -27,7 +27,7 @@ class AppColor {
   static const Color surfaceContainerDark = Color(0xFF1B3B5E);
   static const Color surfaceContainerHighDark = Color(0xFF22446B);
   static const Color surfaceContainerHighestDark = Color(0xFF2A4D78);
-  static const Color onSurfaceDark = Color(0xFF000000);
+  static const Color onSurfaceDark = Color(0xFFFFFFFF);
 
   // Outline
   static const Color outlineLight = Color(0xFF0E3E3E);

@@ -261,10 +261,10 @@ class DarkColorScheme extends AppColorScheme {
   Color get filterBar => AppColor.filterBarDark;
 
   @override
-  Color get primaryLight => AppColor.primaryLight2;
+  Color get primaryLight => AppColor.primary;
 
   @override
-  Color get black0 => AppColor.black0;
+  Color get black0 => Colors.white;
 
   @override
   Color get grayLight3 => AppColor.grayLight7;

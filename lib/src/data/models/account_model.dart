@@ -1,3 +1,4 @@
+import 'package:crud_app/src/domain/models/entities/user_entity.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
@@ -27,6 +28,12 @@ class AccountModel extends HiveObject {
   @HiveField(6)
   final DateTime updatedAt;
 
+  @HiveField(7)
+  final int? failedAttempts;
+
+  @HiveField(8)
+  final DateTime? lockUntil;
+
   AccountModel({
     required this.taxIdOrIds,
     required this.username,
@@ -35,7 +42,42 @@ class AccountModel extends HiveObject {
     required this.fullName,
     required this.enabled,
     required this.updatedAt,
+    this.failedAttempts = 0,
+    this.lockUntil,
   });
+
+  AccountModel copyWith({
+    List<String>? taxIdOrIds,
+    String? username,
+    String? passwordHash,
+    String? salt,
+    String? fullName,
+    bool? enabled,
+    DateTime? updatedAt,
+    int? failedAttempts,
+    DateTime? lockUntil,
+  }) {
+    return AccountModel(
+      taxIdOrIds: taxIdOrIds ?? this.taxIdOrIds,
+      username: username ?? this.username,
+      passwordHash: passwordHash ?? this.passwordHash,
+      salt: salt ?? this.salt,
+      fullName: fullName ?? this.fullName,
+      enabled: enabled ?? this.enabled,
+      updatedAt: updatedAt ?? this.updatedAt,
+      failedAttempts: failedAttempts ?? this.failedAttempts,
+      lockUntil: lockUntil ?? this.lockUntil,
+    );
+  }
+
+  UserEntity toUserEntity() {
+    return UserEntity(
+      fullName: fullName,
+      id: '1',
+      userName: username,
+      email: '',
+    );
+  }
 
   /// Backward-compatible getter to avoid compilation errors elsewhere.
   String get taxIdOrId => taxIdOrIds.isNotEmpty ? taxIdOrIds.first : '';
@@ -94,6 +136,17 @@ class AccountModel extends HiveObject {
       updatedTime = DateTime.now();
     }
 
+    int? failedAttempts = json['failedAttempts'] as int? ?? 0;
+    DateTime? lockUntil;
+    final rawLockUntil = json['lockUntil'];
+    if (rawLockUntil is Timestamp) {
+      lockUntil = rawLockUntil.toDate();
+    } else if (rawLockUntil is int) {
+      lockUntil = DateTime.fromMillisecondsSinceEpoch(rawLockUntil);
+    } else if (rawLockUntil is String) {
+      lockUntil = DateTime.tryParse(rawLockUntil);
+    }
+
     return AccountModel(
       taxIdOrIds: ids,
       username: json['username'] as String,
@@ -102,6 +155,8 @@ class AccountModel extends HiveObject {
       fullName: json['fullName'] as String,
       enabled: json['enabled'] as bool? ?? true,
       updatedAt: updatedTime,
+      failedAttempts: failedAttempts,
+      lockUntil: lockUntil,
     );
   }
 
@@ -114,6 +169,8 @@ class AccountModel extends HiveObject {
       'fullName': fullName,
       'enabled': enabled,
       'updatedAt': updatedAt,
+      'failedAttempts': failedAttempts,
+      'lockUntil': lockUntil?.toIso8601String(),
     };
   }
 }

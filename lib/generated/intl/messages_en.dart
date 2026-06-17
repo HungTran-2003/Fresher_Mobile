@@ -22,6 +22,18 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "accountLockedError": MessageLookupByLibrary.simpleMessage(
+      "Your account has been temporarily locked for 5 minutes due to multiple failed login attempts.",
+    ),
+    "biometricLoginSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Use Face ID / Fingerprint to log in next time",
+    ),
+    "biometricLoginTitle": MessageLookupByLibrary.simpleMessage(
+      "Biometric Login",
+    ),
+    "biometricSetupFailed": MessageLookupByLibrary.simpleMessage(
+      "Biometric authentication is not supported or not set up on this device.",
+    ),
     "cancelButton": MessageLookupByLibrary.simpleMessage("Cancel"),
     "closeButton": MessageLookupByLibrary.simpleMessage("Close"),
     "group": MessageLookupByLibrary.simpleMessage("Group"),
