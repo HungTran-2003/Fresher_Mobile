@@ -8,4 +8,8 @@ abstract class AuthRepository {
     required String username,
     required String password,
   });
+
+  Future<Either<AppException, Map<String, String>>> getLastLogin();
+
+  Future<void> logout();
 }

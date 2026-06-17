@@ -17,4 +17,9 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(isAuthenticated: isAuthenticated));
     log('Auth status updated: isAuthenticated=$isAuthenticated');
   }
+
+  void logout() {
+    authRepo.logout();
+    setAuthenticated(false);
+  }
 }

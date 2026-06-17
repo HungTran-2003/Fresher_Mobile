@@ -5,14 +5,20 @@ class SecureStorageDataSource {
 
   final FlutterSecureStorage _secureStorage;
 
-  SecureStorageDataSource(this._secureStorage);
+  SecureStorageDataSource._(this._secureStorage);
+
+  static final SecureStorageDataSource _instance =
+  SecureStorageDataSource._(const FlutterSecureStorage());
+
+  static SecureStorageDataSource get instance => _instance;
 
   /// Saves the session token securely.
   Future<void> saveSession({
     required String username,
+    required String taxIdOrId,
   }) async {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final token = "${username}_$timestamp";
+    final token = "${username}_${taxIdOrId}_$timestamp";
     await _secureStorage.write(key: _keySessionToken, value: token);
   }
 

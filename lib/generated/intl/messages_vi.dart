@@ -22,6 +22,18 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "accountLockedError": MessageLookupByLibrary.simpleMessage(
+      "Tài khoản của bạn đã bị tạm khoá trong 5 phút do nhập sai nhiều lần.",
+    ),
+    "biometricLoginSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Sử dụng vân tay / Face ID cho lần đăng nhập sau",
+    ),
+    "biometricLoginTitle": MessageLookupByLibrary.simpleMessage(
+      "Đăng nhập sinh trắc học",
+    ),
+    "biometricSetupFailed": MessageLookupByLibrary.simpleMessage(
+      "Thiết bị không hỗ trợ hoặc chưa cài đặt sinh trắc học.",
+    ),
     "cancelButton": MessageLookupByLibrary.simpleMessage("Hủy"),
     "closeButton": MessageLookupByLibrary.simpleMessage("Đóng"),
     "group": MessageLookupByLibrary.simpleMessage("Group"),

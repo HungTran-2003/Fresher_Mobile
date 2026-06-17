@@ -7,7 +7,6 @@ class LoginState extends Equatable {
   final String username;
   final String password;
 
-
   const LoginState({
     this.status = LoadStatus.initial,
     this.isFirstSubmit = false,

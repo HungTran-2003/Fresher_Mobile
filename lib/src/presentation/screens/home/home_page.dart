@@ -1,12 +1,14 @@
+import 'package:crud_app/configs/app_config.dart';
+import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
+import 'package:crud_app/src/presentation/global/app_settings/app_settings_cubit.dart';
 import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
 import 'package:crud_app/src/presentation/global/user/user_cubit.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
+import 'package:crud_app/src/presentation/widgets/images/app_asset_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:crud_app/src/data/services/database/secure_storage_data_source.dart';
 import 'home_cubit.dart';
 import 'home_navigator.dart';
-import 'widget/home_content.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -18,22 +20,45 @@ class HomePage extends StatelessWidget {
         final navigator = HomeNavigator(context);
         return HomeCubit(
           authCubit: context.read<AuthCubit>(),
-          userCubit: context.read<UserCubit>(),
-          secureStorageDataSource: context.read<SecureStorageDataSource>(),
+          appSettingsCubit: context.read<AppSettingsCubit>(),
           navigator: navigator,
         )..init();
       },
-      child: const _HomePageContent(),
+      child: const HomeChildPage(),
     );
   }
 }
 
-class _HomePageContent extends StatelessWidget {
-  const _HomePageContent();
+class HomeChildPage extends StatefulWidget {
+  const HomeChildPage({super.key});
+
+  @override
+  State<HomeChildPage> createState() => _HomeChildPageState();
+}
+
+class _HomeChildPageState extends State<HomeChildPage> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          AppConfigs.appName,
+          style: context.textThemes.titleLarge.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.colors.onSurface,
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout, color: context.colors.errorText),
+            tooltip: context.s.logout,
+            onPressed: () => context.read<HomeCubit>().logout(context),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: BlocListener<HomeCubit, HomeState>(
           listenWhen: (prev, current) => prev.status != current.status,
@@ -44,9 +69,112 @@ class _HomePageContent extends StatelessWidget {
               AppLoadingOverlay.hide();
             }
           },
-          child: const HomeContent(),
+          child: _buildBodyPage(),
         ),
       ),
+    );
+  }
+
+  Widget _buildBodyPage(){
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+      child: Column(
+        children: [
+          _buildCardUser(context),
+          _buildCardBiometrics(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCardUser(BuildContext context){
+    return BlocBuilder<UserCubit, UserState>(
+      buildWhen: (prev, current) => prev.user != current.user,
+      builder: (context, state) {
+        return Card(
+          elevation: 4,
+          shadowColor: context.colors.outline.withValues(alpha: 0.2),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24.0),
+          ),
+          color: context.colors.surfaceContainer,
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Round Profile Avatar Wrapper
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(48.0),
+                  child: const AppAssetImage(
+                    'assets/images/profile_avatar.png',
+                    width: 96.0,
+                    height: 96.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                const SizedBox(height: 24.0),
+
+                // User Full Name Display
+                Text(
+                  state.user?.fullName ?? "Guest User",
+                  style: context.textThemes.headlineSmall.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.onSurface,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                const SizedBox(height: 8.0),
+
+                // Username Display
+                Text(
+                  state.user?.userName ?? "Guest User",
+                  style: context.textThemes.bodyMedium.copyWith(
+                    color: context.colors.onSurface.withValues(alpha: 0.6),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
+
+  Widget _buildCardBiometrics(BuildContext context){
+    return BlocBuilder<AppSettingsCubit, AppSettingsState>(
+      buildWhen: (prev, current) => prev.useBiometrics != current.useBiometrics,
+      builder: (context, state) {
+        return Card(
+          elevation: 2,
+          shadowColor: context.colors.outline.withValues(alpha: 0.15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          color: context.colors.surfaceContainer,
+          child: SwitchListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+            title: Text(
+              context.s.biometricLoginTitle,
+              style: context.textThemes.body16Semi.copyWith(
+                color: context.colors.onSurface,
+              ),
+            ),
+            subtitle: Text(
+              context.s.biometricLoginSubtitle,
+              style: context.textThemes.des12Re.copyWith(
+                color: context.colors.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+            value: state.useBiometrics,
+            onChanged: (val) => context.read<HomeCubit>().toggleBiometrics(val),
+            activeColor: context.colors.primaryLight,
+          ),
+        );
+      }
     );
   }
 }

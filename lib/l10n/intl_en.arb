@@ -19,5 +19,9 @@
   "cancelButton": "Cancel",
   "support": "Support",
   "group": "Group",
-  "lookup": "Search"
+  "lookup": "Search",
+  "accountLockedError": "Your account has been temporarily locked for 5 minutes due to multiple failed login attempts.",
+  "biometricSetupFailed": "Biometric authentication is not supported or not set up on this device.",
+  "biometricLoginTitle": "Biometric Login",
+  "biometricLoginSubtitle": "Use Face ID / Fingerprint to log in next time"
 }

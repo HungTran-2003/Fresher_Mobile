@@ -193,6 +193,46 @@ class S {
   String get lookup {
     return Intl.message('Search', name: 'lookup', desc: '', args: []);
   }
+
+  /// `Your account has been temporarily locked for 5 minutes due to multiple failed login attempts.`
+  String get accountLockedError {
+    return Intl.message(
+      'Your account has been temporarily locked for 5 minutes due to multiple failed login attempts.',
+      name: 'accountLockedError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Biometric authentication is not supported or not set up on this device.`
+  String get biometricSetupFailed {
+    return Intl.message(
+      'Biometric authentication is not supported or not set up on this device.',
+      name: 'biometricSetupFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Biometric Login`
+  String get biometricLoginTitle {
+    return Intl.message(
+      'Biometric Login',
+      name: 'biometricLoginTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use Face ID / Fingerprint to log in next time`
+  String get biometricLoginSubtitle {
+    return Intl.message(
+      'Use Face ID / Fingerprint to log in next time',
+      name: 'biometricLoginSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

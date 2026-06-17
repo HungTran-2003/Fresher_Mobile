@@ -19,5 +19,9 @@
   "cancelButton": "Hủy",
   "support": "Trợ giúp",
   "group": "Group",
-  "lookup": "Tra cứu"
+  "lookup": "Tra cứu",
+  "accountLockedError": "Tài khoản của bạn đã bị tạm khoá trong 5 phút do nhập sai nhiều lần.",
+  "biometricSetupFailed": "Thiết bị không hỗ trợ hoặc chưa cài đặt sinh trắc học.",
+  "biometricLoginTitle": "Đăng nhập sinh trắc học",
+  "biometricLoginSubtitle": "Sử dụng vân tay / Face ID cho lần đăng nhập sau"
 }

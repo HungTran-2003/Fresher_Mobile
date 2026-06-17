@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:crud_app/src/data/models/account_model.dart';
+import 'package:crud_app/src/data/services/database/share_preferrences_data_source.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +28,7 @@ Future<void> main() async {
     await Hive.deleteBoxFromDisk('accountsBox');
     box = await Hive.openBox<AccountModel>('accountsBox');
   }
-
   final sharedPreferences = await SharedPreferences.getInstance();
-  runApp(MyApp(sharedPreferences: sharedPreferences));
+  SharedPreferencesDataSource.init(sharedPreferences);
+  runApp(MyApp());
 }
