@@ -1,7 +1,7 @@
 import 'package:crud_app/src/core/assets/app_vectors.dart';
-import 'package:crud_app/src/core/theme/app_theme.dart';
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
 import 'package:crud_app/src/presentation/widgets/images/app_svg_image.dart';
+import 'package:crud_app/src/presentation/widgets/animations/shake_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -36,6 +36,7 @@ class AppTextField extends StatefulWidget {
   final Color? backgroundColor;
   final bool isSecure;
   final bool isFilled;
+  final bool showClearButton;
 
   const AppTextField({
     super.key,
@@ -68,7 +69,8 @@ class AppTextField extends StatefulWidget {
     this.borderRadius,
     this.backgroundColor,
     this.isSecure = false,
-    this.isFilled = true,
+    this.isFilled = false,
+    this.showClearButton = false,
   });
 
   @override
@@ -79,6 +81,9 @@ class _AppTextFieldState extends State<AppTextField> {
   late FocusNode _focusNode;
   late bool _isInternalFocusNode;
   bool _obscureText = true;
+  String? _errorMessage;
+  String _displayErrorMessage = '';
+  final _shakeKey = GlobalKey<ShakeWidgetState>();
 
   @override
   void initState() {
@@ -86,11 +91,22 @@ class _AppTextFieldState extends State<AppTextField> {
     _isInternalFocusNode = widget.focusNode == null;
     _focusNode = widget.focusNode ?? FocusNode();
     _focusNode.addListener(_onFocusChange);
+    widget.controller.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   void didUpdateWidget(AppTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      oldWidget.controller.removeListener(_onTextChanged);
+      widget.controller.addListener(_onTextChanged);
+    }
     if (widget.focusNode != oldWidget.focusNode) {
       _focusNode.removeListener(_onFocusChange);
       if (_isInternalFocusNode) {
@@ -105,6 +121,7 @@ class _AppTextFieldState extends State<AppTextField> {
 
   @override
   void dispose() {
+    widget.controller.removeListener(_onTextChanged);
     _focusNode.removeListener(_onFocusChange);
     if (_isInternalFocusNode) {
       _focusNode.dispose();
@@ -126,138 +143,209 @@ class _AppTextFieldState extends State<AppTextField> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8,
       children: [
         if (widget.labelText != null && widget.labelText!.isNotEmpty) ...{
           Padding(
-            padding: const EdgeInsets.only(left: 16),
+            padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               widget.labelText!,
               style:
                   widget.labelStyle ??
-                  AppTheme.of(context).appTextTheme.bodyLarge.copyWith(
-                    color: _focusNode.hasFocus
-                        ? (widget.focusedBorderColor ??
-                              AppTheme.of(context).appColorScheme.primary)
-                        : null,
-                  ),
+                  context.textThemes.body16Bo,
             ),
           ),
         },
         TextSelectionTheme(
           data: TextSelectionThemeData(
-            selectionColor: AppTheme.of(
-              context,
-            ).appColorScheme.primaryContainer.withValues(alpha: 0.5),
-            selectionHandleColor: AppTheme.of(
-              context,
-            ).appColorScheme.primaryContainer,
-            cursorColor: AppTheme.of(context).appColorScheme.primaryContainer,
+            selectionColor: context.colors.primaryLight.withValues(alpha: 0.5),
+            selectionHandleColor: context.colors.primaryLight,
+            cursorColor: context.colors.primaryLight,
           ),
-          child: TextFormField(
-            controller: widget.controller,
-            autofillHints: widget.autofillHints,
-            maxLength: widget.maxLength,
-            focusNode: _focusNode,
-            style:
-                widget.style ??
-                context.textThemes.bodyLarge.copyWith(
-                  color: context.colors.textField,
-                ),
-            inputFormatters: [
-              ...(widget.inputFormatters ??
-                  [LengthLimitingTextInputFormatter(255)]),
-            ],
-            decoration: InputDecoration(
-              isDense: true,
-              filled: widget.isFilled,
-              fillColor:
-                  widget.backgroundColor ??
-                  AppTheme.of(context).appColorScheme.onPrimary,
-              alignLabelWithHint: widget.alignLabelWithHint,
-              contentPadding:
-                  widget.padding ??
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-              hintText: widget.hintText,
-              hintStyle:
-                  widget.hintStyle ??
-                  context.textThemes.bodyLarge.copyWith(
-                    color: context.colors.textField.withValues(alpha: 0.5),
+          child: ShakeWidget(
+            key: _shakeKey,
+            child: TextFormField(
+              controller: widget.controller,
+              autofillHints: widget.autofillHints,
+              maxLength: widget.maxLength,
+              focusNode: _focusNode,
+              style:
+                  widget.style ??
+                  context.textThemes.body16Semi,
+              inputFormatters: [
+                ...(widget.inputFormatters ??
+                    [LengthLimitingTextInputFormatter(255)]),
+              ],
+              decoration: InputDecoration(
+                isDense: true,
+                filled: widget.isFilled,
+                fillColor: widget.backgroundColor,
+                alignLabelWithHint: widget.alignLabelWithHint,
+                contentPadding:
+                    widget.padding ??
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                hintText: widget.hintText,
+                hintStyle:
+                    widget.hintStyle ??
+                    context.textThemes.body16Semi.copyWith(
+                      color: context.colors.grayLight3,
+                    ),
+                errorStyle: const TextStyle(fontSize: 0),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(widget.borderRadius ?? 6),
                   ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 20),
+                  borderSide: BorderSide(
+                    color: context.colors.black0,
+                    width: 1
+                  ),
                 ),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 20),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(widget.borderRadius ?? 6),
+                  ),
+                  borderSide: BorderSide(
+                      color: context.colors.grayLight7,
+                      width: 1
+                  ),
                 ),
-                borderSide: BorderSide.none,
-              ),
-              disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 20),
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(widget.borderRadius ?? 6),
+                  ),
+                  borderSide:  BorderSide(
+                      color: context.colors.grayLight7,
+                      width: 1
+                  ),
                 ),
-                borderSide: BorderSide.none,
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 20),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(widget.borderRadius ?? 6),
+                  ),
+                  borderSide:  BorderSide(
+                      color: context.colors.grayLight7,
+                      width: 1
+                  ),
                 ),
-                borderSide: BorderSide.none,
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(widget.borderRadius ?? 20),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(widget.borderRadius ?? 6),
+                  ),
+                  borderSide:  BorderSide(
+                      color: context.colors.primaryLight,
+                      width: 1
+                  ),
                 ),
-                borderSide: BorderSide.none,
+                prefixIcon: widget.prefixIcon,
+                suffixIcon:
+                    widget.suffixIcon ??
+                    _buildSuffixIcon(),
               ),
-              prefixIcon: widget.prefixIcon,
-              suffixIcon:
-                  widget.suffixIcon ??
-                  (widget.isSecure ? _buildSuffixIcon() : null),
+              keyboardType: widget.keyboardType,
+              onFieldSubmitted: widget.onFieldSubmitted,
+              obscureText: widget.isSecure ? _obscureText : false,
+              validator: (value) {
+                final result = widget.validator?.call(value);
+                if (result != _errorMessage) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (mounted) {
+                      setState(() {
+                        _errorMessage = result;
+                        if (result != null) {
+                          _displayErrorMessage = result;
+                          _shakeKey.currentState?.shake();
+                        }
+                      });
+                    }
+                  });
+                }
+                return result;
+              },
+              onChanged: widget.onChanged,
+              enabled: widget.enable,
+              maxLines: widget.isSecure ? 1 : widget.maxLines,
+              readOnly: widget.readOnly ?? false,
+              textAlign: widget.textAlign ?? TextAlign.start,
+              cursorColor: context.colors.primaryLight,
             ),
-            keyboardType: widget.keyboardType,
-            onFieldSubmitted: widget.onFieldSubmitted,
-            obscureText: widget.isSecure ? _obscureText : false,
-            validator: widget.validator,
-            onChanged: widget.onChanged,
-            enabled: widget.enable,
-            maxLines: widget.isSecure ? 1 : widget.maxLines,
-            readOnly: widget.readOnly ?? false,
-            textAlign: widget.textAlign ?? TextAlign.start,
-            cursorColor: AppTheme.of(context).appColorScheme.primaryContainer,
+          ),
+        ),
+        AnimatedOpacity(
+          opacity: _errorMessage != null ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 300),
+          child: AnimatedScale(
+            scale: _errorMessage != null ? 1.0 : 0.8,
+            duration: const Duration(milliseconds: 300),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                _displayErrorMessage.isNotEmpty ? "ⓘ $_displayErrorMessage" : ' ',
+                textAlign: TextAlign.right,
+                style: widget.errorStyle ??
+                    context.textThemes.des12Re.copyWith(
+                      color: context.colors.errorContainer,
+                    ),
+              ),
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSuffixIcon() {
-    return IconButton(
-      splashRadius: 24,
-      onPressed: _toggleObscure,
-      icon: _obscureText
-          ? AppSvgImage(
-              AppVectors.icVisibilityOff,
-              height: 10,
-              width: 10,
+  Widget? _buildSuffixIcon() {
+    final showClear = widget.showClearButton && widget.controller.text.isNotEmpty;
+    final showSecure = widget.isSecure && widget.controller.text.isNotEmpty;
+
+    if (!showClear && !showSecure) {
+      return null;
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        if (showClear)
+          IconButton(
+            onPressed: (){
+              widget.controller.clear();
+              if (widget.onChanged != null) {
+                widget.onChanged!('');
+              }
+            },
+            icon: AppSvgImage(
+              AppVectors.icClear,
+              height: 20,
+              width: 20,
               colorFilter: ColorFilter.mode(
-                AppTheme.of(context).appColorScheme.textField,
-                BlendMode.srcIn,
-              ),
-            )
-          : AppSvgImage(
-              AppVectors.icVisibility,
-              height: 10,
-              width: 10,
-              colorFilter: ColorFilter.mode(
-                AppTheme.of(context).appColorScheme.textField,
+                context.colors.grayLight6,
                 BlendMode.srcIn,
               ),
             ),
+          ),
+        if (showSecure)
+          IconButton(
+            onPressed: _toggleObscure,
+            icon: _obscureText
+                ? AppSvgImage(
+                    AppVectors.icVisibilityOff,
+                    height: 20,
+                    width: 20,
+                    colorFilter: ColorFilter.mode(
+                      context.colors.grayLight6,
+                      BlendMode.srcIn,
+                    ),
+                  )
+                : AppSvgImage(
+                    AppVectors.icVisibility,
+                    height: 20,
+                    width: 20,
+                    colorFilter: ColorFilter.mode(
+                      context.colors.grayLight6,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+          ),
+      ],
     );
   }
 }

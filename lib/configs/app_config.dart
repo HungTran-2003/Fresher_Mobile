@@ -3,14 +3,14 @@ import 'package:crud_app/src/domain/models/enum/language.dart';
 class AppConfigs {
   AppConfigs._();
 
-  static const String appName = 'Finance';
+  static const String appName = 'Go Fresher';
 
   ///Paging
   static const pageSize = 40;
   static const pageSizeMax = 1000;
 
   ///Local
-  static const defaultLanguage = Language.english;
+  static const defaultLanguage = Language.vietnamese;
 
   ///DateFormat
 
@@ -39,10 +39,4 @@ class AppConfigs {
 
   /// API Configs
   static const Duration timeOutDuration = Duration(seconds: 60);
-
-  static const webClientId =
-      "882097136699-5p0kk1tkp4behtk2fk74aupk8jgbrtf4.apps.googleusercontent.com";
-
-  static const iosClientId =
-      '882097136699-41keg088l84n22cjc4r58d879s3r8in6.apps.googleusercontent.com';
 }
