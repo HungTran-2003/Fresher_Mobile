@@ -16,7 +16,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.35.2" # đổi thành version của bạn
+          flutter-version: "3.44.0" # đổi thành version của bạn
 
       - run: flutter --version
 
