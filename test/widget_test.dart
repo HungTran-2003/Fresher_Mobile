@@ -10,6 +10,7 @@ void main() {
   testWidgets('App basic initialization smoke test', (WidgetTester tester) async {
     final sharedPreferences = await SharedPreferences.getInstance();
 
+
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
 
