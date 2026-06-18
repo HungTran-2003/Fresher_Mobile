@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'item_model.g.dart';
+part 'category_model.g.dart';
 
 @JsonSerializable()
-class ItemModel {
+class CategoryModel {
   final int id;
   final int status;
   @JsonKey(name: 'created_at')
@@ -12,7 +12,7 @@ class ItemModel {
   final String updatedAt;
   final String name;
 
-  ItemModel({
+  CategoryModel({
     required this.id,
     required this.status,
     required this.createdAt,
@@ -20,7 +20,7 @@ class ItemModel {
     required this.name,
   });
 
-  factory ItemModel.fromJson(Map<String, dynamic> json) => _$ItemModelFromJson(json);
+  factory CategoryModel.fromJson(Map<String, dynamic> json) => _$CategoryModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ItemModelToJson(this);
+  Map<String, dynamic> toJson() => _$CategoryModelToJson(this);
 }

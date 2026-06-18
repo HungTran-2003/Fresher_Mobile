@@ -23,5 +23,34 @@
   "accountLockedError": "Your account has been temporarily locked for 5 minutes due to multiple failed login attempts.",
   "biometricSetupFailed": "Biometric authentication is not supported or not set up on this device.",
   "biometricLoginTitle": "Biometric Login",
-  "biometricLoginSubtitle": "Use Face ID / Fingerprint to log in next time"
+  "biometricLoginSubtitle": "Use Face ID / Fingerprint to log in next time",
+  "productManagement": "Product Management",
+  "searchProductHint": "Search products by name...",
+  "category": "Category",
+  "allCategories": "All Categories",
+  "status": "Status",
+  "allStatuses": "All Statuses",
+  "active": "Active",
+  "inactive": "Inactive",
+  "sortBy": "Sort by",
+  "defaultSort": "Default Sort",
+  "nameAsc": "Name A→Z",
+  "nameDesc": "Name Z→A",
+  "priceAsc": "Price ↑",
+  "priceDesc": "Price ↓",
+  "stockAsc": "Stock ↑",
+  "stockDesc": "Stock ↓",
+  "updatedAtDesc": "Newest Updated",
+  "failedToLoadProducts": "Failed to load products",
+  "tryAgain": "Try Again",
+  "noProductsFound": "No products found",
+  "adjustSearchOrFilters": "Try adjusting your search query or filters.",
+  "addProduct": "Add product",
+  "sku": "SKU",
+  "stockCount": "Stock: {count}",
+  "@stockCount": {
+    "placeholders": {
+      "count": {}
+    }
+  }
 }

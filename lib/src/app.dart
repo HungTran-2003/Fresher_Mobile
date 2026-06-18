@@ -23,6 +23,9 @@ import 'data/services/firebase/auth/firebase_service.dart';
 import 'domain/repositories/auth_repository.dart';
 import 'domain/repositories/setting_repository.dart';
 import 'domain/repositories/user_repository.dart';
+import 'data/repositories/product_repository_impl.dart';
+import 'domain/repositories/product_repository.dart';
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -54,7 +57,11 @@ class _MyAppState extends State<MyApp> {
             hiveService: HiveService(),
           ),
         ),
-
+        RepositoryProvider<ProductRepository>(
+          create: (context) => ProductRepositoryImpl(
+            dioClient: DioClient.instance,
+          ),
+        ),
         RepositoryProvider<SettingRepository>(
           create: (context) {
             return SettingRepositoryImpl();

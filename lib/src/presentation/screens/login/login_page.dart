@@ -78,9 +78,7 @@ class _LoginChildPageState extends State<LoginChildPage> {
   Future<void> _loadLastLogin() async {
     if (context.read<LoginCubit>().useBiometrics) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _cubit.loginWithBiometrics();
-        }
+        _cubit.loginWithBiometrics();
       });
     }
   }

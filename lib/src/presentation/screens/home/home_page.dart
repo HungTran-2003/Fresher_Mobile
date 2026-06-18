@@ -1,6 +1,12 @@
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
+import 'package:crud_app/src/domain/models/enum/product_sort_filter.dart';
+import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
+import 'package:crud_app/src/presentation/widgets/feedback/app_circular_process_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:crud_app/src/presentation/widgets/inputs/menu/app_filter_dropdown.dart';
+import 'package:crud_app/src/presentation/screens/home/widgets/product_card.dart';
+import 'package:crud_app/src/domain/repositories/product_repository.dart';
 import 'home_cubit.dart';
 import 'home_navigator.dart';
 
@@ -14,6 +20,7 @@ class HomePage extends StatelessWidget {
         final navigator = HomeNavigator(context);
         return HomeCubit(
           navigator: navigator,
+          productRepository: context.read<ProductRepository>(),
         )..init();
       },
       child: const HomeChildPage(),
@@ -29,298 +36,255 @@ class HomeChildPage extends StatefulWidget {
 }
 
 class _HomeChildPageState extends State<HomeChildPage> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<HomeCubit>().loadProducts(isRefresh: false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
-      buildWhen: (prev, current) => prev.activeTab != current.activeTab,
-      builder: (context, state) {
-        return Scaffold(
-          body: IndexedStack(
-            index: state.activeTab,
-            children: [
-              _buildCodingConventionsTab(context),
-              _buildScreenBuilderTab(context),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          context.s.productManagement,
+          style: context.textThemes.titleLarge.copyWith(
+            fontWeight: FontWeight.bold,
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: state.activeTab,
-            onTap: (index) => context.read<HomeCubit>().changeTab(index),
-            selectedItemColor: context.colors.primary,
-            unselectedItemColor: context.colors.outline,
-            backgroundColor: context.colors.surfaceContainer,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.rule),
-                label: 'Coding Conventions',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.dashboard_customize),
-                label: 'Screen Builder',
-              ),
-            ],
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildSearchInput(context),
+            _buildFilters(context),
+            Expanded(child: _buildProductsList(context)),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(context.s.addProduct)));
+        },
+        backgroundColor: context.colors.primary,
+        foregroundColor: context.colors.onPrimary,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildSearchInput(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0),
+      child: TextField(
+        onChanged: (val) => context.read<HomeCubit>().searchProducts(val),
+        decoration: InputDecoration(
+          hintText: context.s.searchProductHint,
+          prefixIcon: const Icon(Icons.search),
+          filled: true,
+          fillColor: context.colors.surfaceContainer,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilters(BuildContext context) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      buildWhen: (prev, current) =>
+          prev.filterCategoryId != current.filterCategoryId ||
+          prev.filterStatus != current.filterStatus ||
+          prev.sortFilter != current.sortFilter ||
+          prev.categories != current.categories,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 8.0),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: Row(
+              children: [
+                // Category Filter
+                AppFilterDropdown<int?>(
+                  value: state.filterCategoryId,
+                  hint: context.s.category,
+                  items: [
+                    DropdownMenuItem(
+                      value: null,
+                      child: Text(context.s.allCategories),
+                    ),
+                    ...state.categories.map(
+                      (e) => DropdownMenuItem(value: e.id, child: Text(e.name)),
+                    ),
+                  ],
+                  onChanged: (val) =>
+                      context.read<HomeCubit>().filterProducts(categoryId: val),
+                ),
+                const SizedBox(width: 8.0),
+                // Status Filter
+                AppFilterDropdown<ProductStatusFilter>(
+                  value: state.filterStatus,
+                  hint: context.s.status,
+                  items: ProductStatusFilter.values
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.getLabel(context)),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (val) {
+                    if (val != null)
+                      context.read<HomeCubit>().filterProducts(status: val);
+                  },
+                ),
+                const SizedBox(width: 8.0),
+                // Sort options
+                AppFilterDropdown<ProductSortFilter>(
+                  value: state.sortFilter,
+                  hint: context.s.sortBy,
+                  items: ProductSortFilter.values
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.getLabel(context)),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (val) {
+                    if (val != null)
+                      context.read<HomeCubit>().filterProducts(sort: val);
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  // ==========================================
-  // Coding Conventions Tab View
-  // ==========================================
-  Widget _buildCodingConventionsTab(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Coding Conventions',
-          style: context.textThemes.titleLarge.copyWith(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          _buildInfoBanner(
-            context,
-            'UI Development Rules',
-            'Mandatory coding standards defined in .agents/coding-conventions/SKILL.md to ensure maintainability, scalability, and design consistency.',
-            Icons.verified_user,
-          ),
-          const SizedBox(height: 20),
-          _buildConventionSection(
-            context,
-            '1. Localization (l10n)',
-            'NEVER hardcode strings in the UI. All user-facing text must be externalized using the localization system.',
-            '// ❌ Incorrect\nText("Add Transaction")\n\n// ✅ Correct\nText(context.s.addTransaction)',
-          ),
-          _buildConventionSection(
-            context,
-            '2. Common Widgets',
-            'Prioritize using existing common widgets (like AppTextField, AppFilledButton, AppSvgImage) to guarantee styling and theme consistency.',
-            '// ❌ Incorrect\nElevatedButton(child: Text("Submit"))\n\n// ✅ Correct\nAppFilledButton(text: context.s.submit)',
-          ),
-          _buildConventionSection(
-            context,
-            '3. Color & Theme Management',
-            'Colors must be centralized and accessed via the Theme. Direct Color(0xFF...) or Colors.blue usage is strictly prohibited.',
-            '// ❌ Incorrect\nContainer(color: Color(0xFF00D09E))\n\n// ✅ Correct\nContainer(color: context.colors.primary)',
-          ),
-          _buildConventionSection(
-            context,
-            '4. Form Validation & Utilities',
-            'Decouple all validation logic and visual picker triggers. Consolidate and encapsulate all validators in AppValidators.',
-            '// ✅ Correct\nvalidator: (val) => AppValidators.validateEmail(context, val)',
-          ),
-          _buildConventionSection(
-            context,
-            '5. Modularity & Granular Layouts',
-            'Avoid creating monolithic page files. Slice large layout trees into distinct, reusable private module widgets inside a local widget/ directory.',
-            '// Feature Structure\nlib/src/presentation/screens/welcome/\n├── welcome_page.dart\n└── widget/\n    └── welcome_form.dart',
-          ),
-        ],
-      ),
+  Widget _buildProductsList(BuildContext context) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      buildWhen: (prev, current) =>
+          prev.products != current.products ||
+          prev.isProductsLoading != current.isProductsLoading ||
+          prev.isLoadMoreLoading != current.isLoadMoreLoading,
+      builder: (context, state) {
+        if (state.isProductsLoading && state.products.isEmpty) {
+          return _buildLoadingState(context);
+        }
+
+        if (state.products.isEmpty) {
+          return _buildEmptyState(context);
+        }
+
+        return _buildSuccessState(context, state);
+      },
     );
   }
 
-  // ==========================================
-  // Screen Builder Tab View
-  // ==========================================
-  Widget _buildScreenBuilderTab(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Flutter Screen Builder',
-          style: context.textThemes.titleLarge.copyWith(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16.0),
+  Widget _buildLoadingState(BuildContext context) {
+    return Center(
+      child: AppCircularProgressIndicator(valueColor: context.colors.primary),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildInfoBanner(
-            context,
-            'MVVM + Clean Architecture',
-            'Folder blueprint and core architectural guidelines defined in .agents/flutter-screen-builder/SKILL.md to construct new screens.',
-            Icons.architecture,
-          ),
-          const SizedBox(height: 20),
-          _buildStructureCard(context),
+          const Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          _buildComponentCard(
-            context,
-            '1. Navigator (routing)',
-            'Responsible for managing screen transitions, dialog triggers, and back actions. Extends BaseNavigator.',
-            'class WelcomeNavigator extends BaseNavigator {\n  WelcomeNavigator(super.context);\n  void toHome() => goNamed(AppRouters.home);\n}',
-          ),
-          _buildComponentCard(
-            context,
-            '2. State (immutable state)',
-            'Represents the visual state of the screen. Fields marked as final, Equatable extension, copyWith method.',
-            'class SplashState extends Equatable {\n  final LoadStatus status;\n  const SplashState({this.status = LoadStatus.initial});\n  SplashState copyWith({LoadStatus? status}) => ...\n}',
-          ),
-          _buildComponentCard(
-            context,
-            '3. Cubit (business logic)',
-            'Processes UI events and drives state transitions. Injected with navigator and repositories.',
-            'class SplashCubit extends Cubit<SplashState> {\n  final SplashNavigator navigator;\n  SplashCubit(this.navigator) : super(const SplashState());\n}',
-          ),
-          _buildComponentCard(
-            context,
-            '4. Page (declarative UI)',
-            'StatelessWidget entry provider (wraps BlocProvider) + private StatefulWidget content wrapper.',
-            'class WelcomePage extends StatelessWidget {\n  const WelcomePage({super.key});\n  Widget build(BuildContext c) => BlocProvider(...);\n}',
+          Text(context.s.noProductsFound, style: context.textThemes.body16Semi),
+          const SizedBox(height: 8),
+          Text(
+            context.s.adjustSearchOrFilters,
+            style: context.textThemes.des12Re,
           ),
         ],
       ),
     );
   }
 
-  // ==========================================
-  // Helper Component Builders
-  // ==========================================
-  Widget _buildInfoBanner(BuildContext context, String title, String subtitle, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [context.colors.primary.withValues(alpha: 0.15), context.colors.primary.withValues(alpha: 0.05)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: context.colors.primary.withValues(alpha: 0.2)),
+  Widget _buildSuccessState(BuildContext context, HomeState state) {
+    return RefreshIndicator(
+      onRefresh: () => context.read<HomeCubit>().loadProducts(isRefresh: true),
+      child: ListView.builder(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        itemCount: state.products.length + (state.isLoadMoreLoading ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index < state.products.length) {
+            return ProductCard(product: state.products[index]);
+          } else {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Center(
+                child: AppCircularProgressIndicator(
+                  valueColor: context.colors.primary,
+                ),
+              ),
+            );
+          }
+        },
       ),
-      child: Row(
-        children: [
-          Icon(icon, size: 40, color: context.colors.primary),
-          const SizedBox(width: 16.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: context.textThemes.body16Semi.copyWith(color: context.colors.primary, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4.0),
-                Text(
-                  subtitle,
-                  style: context.textThemes.des12Re.copyWith(color: context.colors.onSurfaceContainer),
-                ),
-              ],
-            ),
+    );
+  }
+
+  void _showErrorDialog(BuildContext context, String error) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(context.s.failedToLoadProducts),
+        content: Text(error),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              this.context.read<HomeCubit>().clearError();
+            },
+            child: Text(context.s.closeButton),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              this.context.read<HomeCubit>().clearError();
+              this.context.read<HomeCubit>().loadProducts(isRefresh: true);
+            },
+            child: Text(context.s.tryAgain),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildConventionSection(BuildContext context, String title, String description, String codeExample) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16.0),
-      elevation: 2,
-      shadowColor: context.colors.outline.withValues(alpha: 0.15),
-      color: context.colors.surfaceContainer,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: context.textThemes.body16Semi.copyWith(fontWeight: FontWeight.bold, color: context.colors.onSurface),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              description,
-              style: context.textThemes.des12Re.copyWith(color: context.colors.onSurfaceContainer, fontSize: 13.5),
-            ),
-            const SizedBox(height: 12.0),
-            _buildCodeSnippet(context, codeExample),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStructureCard(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shadowColor: context.colors.outline.withValues(alpha: 0.15),
-      color: context.colors.surfaceContainer,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Feature Directory Blueprint',
-              style: context.textThemes.body16Semi.copyWith(fontWeight: FontWeight.bold, color: context.colors.onSurface),
-            ),
-            const SizedBox(height: 8.0),
-            _buildCodeSnippet(
-              context,
-              'lib/src/presentation/screens/add_transaction/\n├── add_transaction_cubit.dart\n├── add_transaction_navigator.dart\n├── add_transaction_page.dart\n└── add_transaction_state.dart',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildComponentCard(BuildContext context, String title, String description, String codeExample) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16.0),
-      elevation: 2,
-      shadowColor: context.colors.outline.withValues(alpha: 0.15),
-      color: context.colors.surfaceContainer,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: context.textThemes.body16Semi.copyWith(fontWeight: FontWeight.bold, color: context.colors.onSurface),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              description,
-              style: context.textThemes.des12Re.copyWith(color: context.colors.onSurfaceContainer, fontSize: 13.5),
-            ),
-            const SizedBox(height: 12.0),
-            _buildCodeSnippet(context, codeExample),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCodeSnippet(BuildContext context, String code) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12.0),
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.85),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Text(
-          code,
-          style: const TextStyle(
-            fontFamily: 'monospace',
-            fontSize: 12.0,
-            color: Colors.lightGreenAccent,
-          ),
-        ),
-      ),
-    );
+    ).then((_) {
+      if (mounted) {
+        context.read<HomeCubit>().clearError();
+      }
+    });
   }
 }

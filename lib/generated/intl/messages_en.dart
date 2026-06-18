@@ -20,11 +20,20 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(count) => "Stock: ${count}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "accountLockedError": MessageLookupByLibrary.simpleMessage(
       "Your account has been temporarily locked for 5 minutes due to multiple failed login attempts.",
     ),
+    "active": MessageLookupByLibrary.simpleMessage("Active"),
+    "addProduct": MessageLookupByLibrary.simpleMessage("Add product"),
+    "adjustSearchOrFilters": MessageLookupByLibrary.simpleMessage(
+      "Try adjusting your search query or filters.",
+    ),
+    "allCategories": MessageLookupByLibrary.simpleMessage("All Categories"),
+    "allStatuses": MessageLookupByLibrary.simpleMessage("All Statuses"),
     "biometricLoginSubtitle": MessageLookupByLibrary.simpleMessage(
       "Use Face ID / Fingerprint to log in next time",
     ),
@@ -35,9 +44,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Biometric authentication is not supported or not set up on this device.",
     ),
     "cancelButton": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "category": MessageLookupByLibrary.simpleMessage("Category"),
     "closeButton": MessageLookupByLibrary.simpleMessage("Close"),
+    "defaultSort": MessageLookupByLibrary.simpleMessage("Default Sort"),
+    "failedToLoadProducts": MessageLookupByLibrary.simpleMessage(
+      "Failed to load products",
+    ),
     "group": MessageLookupByLibrary.simpleMessage("Group"),
     "help": MessageLookupByLibrary.simpleMessage("Help"),
+    "inactive": MessageLookupByLibrary.simpleMessage("Inactive"),
     "logIn": MessageLookupByLibrary.simpleMessage("Login"),
     "loginErrorTitle": MessageLookupByLibrary.simpleMessage(
       "Invalid login credentials",
@@ -50,11 +65,30 @@ class MessageLookup extends MessageLookupByLibrary {
       "Logout Confirmation",
     ),
     "lookup": MessageLookupByLibrary.simpleMessage("Search"),
+    "nameAsc": MessageLookupByLibrary.simpleMessage("Name A→Z"),
+    "nameDesc": MessageLookupByLibrary.simpleMessage("Name Z→A"),
+    "noProductsFound": MessageLookupByLibrary.simpleMessage(
+      "No products found",
+    ),
     "okButton": MessageLookupByLibrary.simpleMessage("OK"),
     "passwordHint": MessageLookupByLibrary.simpleMessage("Password"),
     "passwordLengthError": MessageLookupByLibrary.simpleMessage(
       "Password must be between 6 and 50 characters.",
     ),
+    "priceAsc": MessageLookupByLibrary.simpleMessage("Price ↑"),
+    "priceDesc": MessageLookupByLibrary.simpleMessage("Price ↓"),
+    "productManagement": MessageLookupByLibrary.simpleMessage(
+      "Product Management",
+    ),
+    "searchProductHint": MessageLookupByLibrary.simpleMessage(
+      "Search products by name...",
+    ),
+    "sku": MessageLookupByLibrary.simpleMessage("SKU"),
+    "sortBy": MessageLookupByLibrary.simpleMessage("Sort by"),
+    "status": MessageLookupByLibrary.simpleMessage("Status"),
+    "stockAsc": MessageLookupByLibrary.simpleMessage("Stock ↑"),
+    "stockCount": m0,
+    "stockDesc": MessageLookupByLibrary.simpleMessage("Stock ↓"),
     "support": MessageLookupByLibrary.simpleMessage("Support"),
     "taxIdOrIdError": MessageLookupByLibrary.simpleMessage(
       "Please enter a valid 12-digit Citizen ID or 10-digit Tax Code (optional -XXX suffix).",
@@ -65,6 +99,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "taxIdOrIdLabel": MessageLookupByLibrary.simpleMessage(
       "Tax Code / Citizen ID",
     ),
+    "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
+    "updatedAtDesc": MessageLookupByLibrary.simpleMessage("Newest Updated"),
     "usernameError": MessageLookupByLibrary.simpleMessage(
       "Username cannot be empty.",
     ),

@@ -1,3 +1,4 @@
+import 'package:crud_app/src/data/services/database/share_preferrences_data_source.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorageDataSource {
@@ -7,8 +8,9 @@ class SecureStorageDataSource {
 
   SecureStorageDataSource._(this._secureStorage);
 
-  static final SecureStorageDataSource _instance =
-  SecureStorageDataSource._(const FlutterSecureStorage());
+  static final SecureStorageDataSource _instance = SecureStorageDataSource._(
+    const FlutterSecureStorage(),
+  );
 
   static SecureStorageDataSource get instance => _instance;
 
@@ -19,6 +21,8 @@ class SecureStorageDataSource {
   }) async {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final token = "${username}_${taxIdOrId}_$timestamp";
+    await SharedPreferencesDataSource.instance.setLastTaxIdOrId(taxIdOrId);
+    await SharedPreferencesDataSource.instance.setLastUsername(username);
     await _secureStorage.write(key: _keySessionToken, value: token);
   }
 

@@ -12,4 +12,6 @@ abstract class AuthRepository {
   Future<Either<AppException, Map<String, String>>> getLastLogin();
 
   Future<void> logout();
+
+  Future<void> relogin();
 }

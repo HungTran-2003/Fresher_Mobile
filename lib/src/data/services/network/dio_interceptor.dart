@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:crud_app/src/data/services/database/share_preferrences_data_source.dart';
 import 'package:dio/dio.dart';
 import 'package:crud_app/src/core/exceptions/app_exception.dart';
-import 'package:crud_app/src/data/services/database/secure_storage_data_source.dart';
 
 class CustomDioInterceptor extends Interceptor {
+  static void Function()? onUnauthorized;
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     // Inject headers
@@ -30,8 +31,31 @@ class CustomDioInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     // Intercept 401 globally
     if (err.response?.statusCode == 401) {
-      // Clear token / sign out user when unauthenticated
-      await SecureStorageDataSource.instance.clearSession();
+      if (onUnauthorized != null) {
+        // 1. Notify to refresh token (AuthCubit's relogin)
+        onUnauthorized!.call();
+
+        // 2. Wait a brief moment for the async relogin to finish saving the new token
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        // 3. Fetch the newly updated token
+        final newToken = SharedPreferencesDataSource.instance.getAccessToken();
+
+        if (newToken != null && newToken.isNotEmpty) {
+          // 4. Update the failed request with the new token
+          final options = err.requestOptions;
+          options.headers['Authorization'] = 'Bearer $newToken';
+
+          // 5. Retry the request and resolve
+          final dio = Dio();
+          try {
+            final response = await dio.fetch(options);
+            return handler.resolve(response);
+          } catch (e) {
+            // If retry also fails, let the original error propagate
+          }
+        }
+      }
     }
 
     // Map DioException to AppException
