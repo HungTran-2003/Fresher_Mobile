@@ -1,7 +1,8 @@
-
+import 'package:crud_app/src/presentation/screens/home/home_page.dart';
+import 'package:crud_app/src/presentation/screens/setting/setting_page.dart';
 import 'package:crud_app/src/presentation/screens/splash/splash_page.dart';
 import 'package:crud_app/src/presentation/screens/login/login_page.dart';
-import 'package:crud_app/src/presentation/screens/home/home_page.dart';
+import 'package:crud_app/src/presentation/screens/main/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -33,10 +34,7 @@ class AppRouters {
 
   // Main Tabs
   static const String home = '/home';
-  static const String quickAnalysis = '/quick-analysis';
-  static const String transfer = '/transfer';
-  static const String layers = '/layers';
-  static const String profile = '/profile';
+  static const String profile = '/setting';
 
   static final _routes = <RouteBase>[
     GoRoute(
@@ -49,10 +47,30 @@ class AppRouters {
       name: welcome,
       builder: (context, state) => const LoginPage(),
     ),
-    GoRoute(
-      path: home,
-      name: home,
-      builder: (context, state) => const HomePage(),
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return MainPage(navigationShell: navigationShell);
+      },
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: home,
+              name: home,
+              builder: (context, state) => const HomePage(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: profile,
+              name: profile,
+              builder: (context, state) => const SettingPage(),
+            ),
+          ],
+        ),
+      ],
     ),
   ];
 }

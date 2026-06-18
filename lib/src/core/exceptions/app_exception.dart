@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 abstract class AppException implements Exception {
   final String message;
   final String? code;
@@ -41,6 +43,10 @@ class UnknownException extends AppException {
 class ExceptionMapper {
   static AppException map(dynamic error) {
     if (error is AppException) return error;
+
+    if (error is DioException && error.error is AppException) {
+      return error.error as AppException;
+    }
 
     return UnknownException(message: error.toString(), originalError: error);
   }

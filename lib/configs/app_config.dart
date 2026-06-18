@@ -39,4 +39,6 @@ class AppConfigs {
 
   /// API Configs
   static const Duration timeOutDuration = Duration(seconds: 60);
+
+  static const baseUrl = "http://localhost:1997/api/v1";
 }

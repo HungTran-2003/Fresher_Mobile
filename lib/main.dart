@@ -6,6 +6,8 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:crud_app/src/data/models/account_model.dart';
 import 'package:crud_app/src/data/services/database/share_preferrences_data_source.dart';
 
+import 'src/data/services/network/network_util.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -30,5 +32,6 @@ Future<void> main() async {
   }
   final sharedPreferences = await SharedPreferences.getInstance();
   SharedPreferencesDataSource.init(sharedPreferences);
+  NetworkUtil.init();
   runApp(MyApp());
 }

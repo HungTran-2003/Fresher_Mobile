@@ -68,6 +68,7 @@ dependencies:
   logger: ^2.6.2
   pretty_dio_logger: ^1.4.0
   #NetWork
+  dio: ^5.9.2
   json_annotation: ^4.12.0
   firebase_core: ^4.10.0
   cloud_firestore: ^6.5.0
@@ -75,6 +76,7 @@ dependencies:
   hive_ce: ^2.19.3
   hive_ce_flutter: ^2.3.4
   connectivity_plus: ^7.1.1
+  retrofit: ^4.9.2
 
 dev_dependencies:
   flutter_test:
@@ -92,6 +94,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   hive_ce_generator: ^1.11.2
+  retrofit_generator: ^10.2.7
 flutter:
 
   # The following line ensures that the Material Icons font is

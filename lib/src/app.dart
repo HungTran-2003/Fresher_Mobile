@@ -4,6 +4,7 @@ import 'package:crud_app/configs/app_config.dart';
 import 'package:crud_app/generated/l10n.dart';
 import 'package:crud_app/src/core/routes/router.dart';
 import 'package:crud_app/src/data/repositories/auth_repository_impl.dart';
+import 'package:crud_app/src/data/services/network/dio_client.dart';
 import 'package:crud_app/src/presentation/global/app_settings/app_settings_cubit.dart';
 import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
 import 'package:crud_app/src/presentation/global/user/user_cubit.dart';
@@ -30,10 +31,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late final DioClient dioClient;
 
   @override
   void initState() {
     super.initState();
+    dioClient = DioClient.instance;
   }
 
   @override
