@@ -233,6 +233,176 @@ class S {
       args: [],
     );
   }
+
+  /// `Product Management`
+  String get productManagement {
+    return Intl.message(
+      'Product Management',
+      name: 'productManagement',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search products by name...`
+  String get searchProductHint {
+    return Intl.message(
+      'Search products by name...',
+      name: 'searchProductHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Category`
+  String get category {
+    return Intl.message('Category', name: 'category', desc: '', args: []);
+  }
+
+  /// `All Categories`
+  String get allCategories {
+    return Intl.message(
+      'All Categories',
+      name: 'allCategories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Status`
+  String get status {
+    return Intl.message('Status', name: 'status', desc: '', args: []);
+  }
+
+  /// `All Statuses`
+  String get allStatuses {
+    return Intl.message(
+      'All Statuses',
+      name: 'allStatuses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active`
+  String get active {
+    return Intl.message('Active', name: 'active', desc: '', args: []);
+  }
+
+  /// `Inactive`
+  String get inactive {
+    return Intl.message('Inactive', name: 'inactive', desc: '', args: []);
+  }
+
+  /// `Sort by`
+  String get sortBy {
+    return Intl.message('Sort by', name: 'sortBy', desc: '', args: []);
+  }
+
+  /// `Default Sort`
+  String get defaultSort {
+    return Intl.message(
+      'Default Sort',
+      name: 'defaultSort',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name A→Z`
+  String get nameAsc {
+    return Intl.message('Name A→Z', name: 'nameAsc', desc: '', args: []);
+  }
+
+  /// `Name Z→A`
+  String get nameDesc {
+    return Intl.message('Name Z→A', name: 'nameDesc', desc: '', args: []);
+  }
+
+  /// `Price ↑`
+  String get priceAsc {
+    return Intl.message('Price ↑', name: 'priceAsc', desc: '', args: []);
+  }
+
+  /// `Price ↓`
+  String get priceDesc {
+    return Intl.message('Price ↓', name: 'priceDesc', desc: '', args: []);
+  }
+
+  /// `Stock ↑`
+  String get stockAsc {
+    return Intl.message('Stock ↑', name: 'stockAsc', desc: '', args: []);
+  }
+
+  /// `Stock ↓`
+  String get stockDesc {
+    return Intl.message('Stock ↓', name: 'stockDesc', desc: '', args: []);
+  }
+
+  /// `Newest Updated`
+  String get updatedAtDesc {
+    return Intl.message(
+      'Newest Updated',
+      name: 'updatedAtDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load products`
+  String get failedToLoadProducts {
+    return Intl.message(
+      'Failed to load products',
+      name: 'failedToLoadProducts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Try Again`
+  String get tryAgain {
+    return Intl.message('Try Again', name: 'tryAgain', desc: '', args: []);
+  }
+
+  /// `No products found`
+  String get noProductsFound {
+    return Intl.message(
+      'No products found',
+      name: 'noProductsFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Try adjusting your search query or filters.`
+  String get adjustSearchOrFilters {
+    return Intl.message(
+      'Try adjusting your search query or filters.',
+      name: 'adjustSearchOrFilters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add product`
+  String get addProduct {
+    return Intl.message('Add product', name: 'addProduct', desc: '', args: []);
+  }
+
+  /// `SKU`
+  String get sku {
+    return Intl.message('SKU', name: 'sku', desc: '', args: []);
+  }
+
+  /// `Stock: {count}`
+  String stockCount(Object count) {
+    return Intl.message(
+      'Stock: $count',
+      name: 'stockCount',
+      desc: '',
+      args: [count],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

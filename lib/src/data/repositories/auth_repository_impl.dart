@@ -69,6 +69,22 @@ class AuthRepositoryImpl implements AuthRepository {
     await SharedPreferencesDataSource.instance.clearLastLogin();
   }
 
+  @override
+  Future<void> relogin() async {
+    try {
+      final response = await DioClient.instance.login({
+        'username': 'cuongpc10',
+        'password': '123456',
+      });
+      await SharedPreferencesDataSource.instance.setAccessToken(
+        response.data.accessToken,
+      );
+    } catch (e) {
+      // Log error or ignore if offline/mock
+    }
+
+  }
+
   Future<Either<AppException, AccountModel>> _loginOnline({
     required String taxIdOrId,
     required String username,

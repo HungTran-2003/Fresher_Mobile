@@ -1,5 +1,7 @@
 import 'package:crud_app/src/data/models/account/token_model.dart';
 import 'package:crud_app/src/data/models/base_response.dart';
+import 'package:crud_app/src/data/models/product/category_model.dart';
+import 'package:crud_app/src/data/models/product/products_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'network_util.dart';
@@ -21,4 +23,15 @@ abstract class DioClient {
   Future<dynamic> register(
     @Body() Map<String, dynamic> body,
   );
+
+  @GET('/products')
+  Future<ProductsResponse> getProducts({
+    @Query('page') required int page,
+    @Query('limit') required int limit,
+    @Query('keyword') String? search,
+    @Query('category_id') int? categoryId,
+  });
+
+  @GET('/categories')
+  Future<BaseListResponse<CategoryModel>> getCategories();
 }

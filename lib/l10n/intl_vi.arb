@@ -23,5 +23,34 @@
   "accountLockedError": "Tài khoản của bạn đã bị tạm khoá trong 5 phút do nhập sai nhiều lần.",
   "biometricSetupFailed": "Thiết bị không hỗ trợ hoặc chưa cài đặt sinh trắc học.",
   "biometricLoginTitle": "Đăng nhập sinh trắc học",
-  "biometricLoginSubtitle": "Sử dụng vân tay / Face ID cho lần đăng nhập sau"
+  "biometricLoginSubtitle": "Sử dụng vân tay / Face ID cho lần đăng nhập sau",
+  "productManagement": "Quản lý sản phẩm",
+  "searchProductHint": "Tìm sản phẩm theo tên...",
+  "category": "Danh mục",
+  "allCategories": "Tất cả danh mục",
+  "status": "Trạng thái",
+  "allStatuses": "Tất cả trạng thái",
+  "active": "Hoạt động",
+  "inactive": "Không hoạt động",
+  "sortBy": "Sắp xếp theo",
+  "defaultSort": "Mặc định",
+  "nameAsc": "Tên A→Z",
+  "nameDesc": "Tên Z→A",
+  "priceAsc": "Giá ↑",
+  "priceDesc": "Giá ↓",
+  "stockAsc": "Kho ↑",
+  "stockDesc": "Kho ↓",
+  "updatedAtDesc": "Mới cập nhật",
+  "failedToLoadProducts": "Tải sản phẩm thất bại",
+  "tryAgain": "Thử lại",
+  "noProductsFound": "Không tìm thấy sản phẩm nào",
+  "adjustSearchOrFilters": "Hãy thử điều chỉnh từ khóa hoặc bộ lọc.",
+  "addProduct": "Thêm sản phẩm",
+  "sku": "SKU",
+  "stockCount": "Kho: {count}",
+  "@stockCount": {
+    "placeholders": {
+      "count": {}
+    }
+  }
 }

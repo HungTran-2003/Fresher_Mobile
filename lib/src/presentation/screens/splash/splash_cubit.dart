@@ -78,7 +78,6 @@ class SplashCubit extends Cubit<SplashState> {
   }
 
   Future<void> _forceReLogin() async {
-    await SecureStorageDataSource.instance.getSessionToken();
     navigator.toWelcome();
   }
 }

@@ -20,11 +20,20 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'vi';
 
+  static String m0(count) => "Kho: ${count}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "accountLockedError": MessageLookupByLibrary.simpleMessage(
       "Tài khoản của bạn đã bị tạm khoá trong 5 phút do nhập sai nhiều lần.",
     ),
+    "active": MessageLookupByLibrary.simpleMessage("Hoạt động"),
+    "addProduct": MessageLookupByLibrary.simpleMessage("Thêm sản phẩm"),
+    "adjustSearchOrFilters": MessageLookupByLibrary.simpleMessage(
+      "Hãy thử điều chỉnh từ khóa hoặc bộ lọc.",
+    ),
+    "allCategories": MessageLookupByLibrary.simpleMessage("Tất cả danh mục"),
+    "allStatuses": MessageLookupByLibrary.simpleMessage("Tất cả trạng thái"),
     "biometricLoginSubtitle": MessageLookupByLibrary.simpleMessage(
       "Sử dụng vân tay / Face ID cho lần đăng nhập sau",
     ),
@@ -35,9 +44,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Thiết bị không hỗ trợ hoặc chưa cài đặt sinh trắc học.",
     ),
     "cancelButton": MessageLookupByLibrary.simpleMessage("Hủy"),
+    "category": MessageLookupByLibrary.simpleMessage("Danh mục"),
     "closeButton": MessageLookupByLibrary.simpleMessage("Đóng"),
+    "defaultSort": MessageLookupByLibrary.simpleMessage("Mặc định"),
+    "failedToLoadProducts": MessageLookupByLibrary.simpleMessage(
+      "Tải sản phẩm thất bại",
+    ),
     "group": MessageLookupByLibrary.simpleMessage("Group"),
     "help": MessageLookupByLibrary.simpleMessage("Trợ giúp"),
+    "inactive": MessageLookupByLibrary.simpleMessage("Không hoạt động"),
     "logIn": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
     "loginErrorTitle": MessageLookupByLibrary.simpleMessage(
       "Thông tin đăng nhập không hợp lệ",
@@ -50,17 +65,38 @@ class MessageLookup extends MessageLookupByLibrary {
       "Xác nhận đăng xuất",
     ),
     "lookup": MessageLookupByLibrary.simpleMessage("Tra cứu"),
+    "nameAsc": MessageLookupByLibrary.simpleMessage("Tên A→Z"),
+    "nameDesc": MessageLookupByLibrary.simpleMessage("Tên Z→A"),
+    "noProductsFound": MessageLookupByLibrary.simpleMessage(
+      "Không tìm thấy sản phẩm nào",
+    ),
     "okButton": MessageLookupByLibrary.simpleMessage("OK"),
     "passwordHint": MessageLookupByLibrary.simpleMessage("Mật khẩu"),
     "passwordLengthError": MessageLookupByLibrary.simpleMessage(
       "Mật khẩu phải từ 6–50 ký tự",
     ),
+    "priceAsc": MessageLookupByLibrary.simpleMessage("Giá ↑"),
+    "priceDesc": MessageLookupByLibrary.simpleMessage("Giá ↓"),
+    "productManagement": MessageLookupByLibrary.simpleMessage(
+      "Quản lý sản phẩm",
+    ),
+    "searchProductHint": MessageLookupByLibrary.simpleMessage(
+      "Tìm sản phẩm theo tên...",
+    ),
+    "sku": MessageLookupByLibrary.simpleMessage("SKU"),
+    "sortBy": MessageLookupByLibrary.simpleMessage("Sắp xếp theo"),
+    "status": MessageLookupByLibrary.simpleMessage("Trạng thái"),
+    "stockAsc": MessageLookupByLibrary.simpleMessage("Kho ↑"),
+    "stockCount": m0,
+    "stockDesc": MessageLookupByLibrary.simpleMessage("Kho ↓"),
     "support": MessageLookupByLibrary.simpleMessage("Trợ giúp"),
     "taxIdOrIdError": MessageLookupByLibrary.simpleMessage(
       "Vui lòng nhập CCCD 12 số hoặc MST hợp lệ (10 số, có thể kèm ‘-XXX’).",
     ),
     "taxIdOrIdHint": MessageLookupByLibrary.simpleMessage("Mã số thuế"),
     "taxIdOrIdLabel": MessageLookupByLibrary.simpleMessage("Mã số thuế"),
+    "tryAgain": MessageLookupByLibrary.simpleMessage("Thử lại"),
+    "updatedAtDesc": MessageLookupByLibrary.simpleMessage("Mới cập nhật"),
     "usernameError": MessageLookupByLibrary.simpleMessage(
       "Tài khoản không được để trống.",
     ),
