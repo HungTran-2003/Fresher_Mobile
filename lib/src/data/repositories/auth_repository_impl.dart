@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crud_app/generated/l10n.dart';
 import 'package:crud_app/src/data/services/database/share_preferrences_data_source.dart';
 import 'package:crud_app/src/data/services/firebase/auth/sync_service.dart';
+import 'package:crud_app/src/data/services/network/dio_client.dart';
 import 'package:dart_either/dart_either.dart';
 import 'package:crud_app/src/core/exceptions/app_exception.dart';
 import 'package:crud_app/src/domain/repositories/auth_repository.dart';
@@ -18,8 +19,8 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
     required HiveService hiveService,
     required FirebaseService firebaseService,
-  })  :_hiveService = hiveService,
-        _firebaseService = firebaseService;
+  }) : _hiveService = hiveService,
+       _firebaseService = firebaseService;
 
   @override
   Future<Either<AppException, AccountModel>> login({
@@ -56,10 +57,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final taxIdOrId = SharedPreferencesDataSource.instance.getLastTaxIdOrId();
       final username = SharedPreferencesDataSource.instance.getLastUsername();
-      return Either.right({
-        'taxIdOrId': taxIdOrId,
-        'username': username,
-      });
+      return Either.right({'taxIdOrId': taxIdOrId, 'username': username});
     } catch (e) {
       return Either.left(ExceptionMapper.map(e));
     }
@@ -69,7 +67,6 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> logout() async {
     await SecureStorageDataSource.instance.clearSession();
     await SharedPreferencesDataSource.instance.clearLastLogin();
-    await SharedPreferencesDataSource.instance.setUseBiometrics(false);
   }
 
   Future<Either<AppException, AccountModel>> _loginOnline({
@@ -77,7 +74,10 @@ class AuthRepositoryImpl implements AuthRepository {
     required String username,
     required String password,
   }) async {
-    final docSnapshot = await _firebaseService.queryAccountDoc(taxIdOrId, username);
+    final docSnapshot = await _firebaseService.queryAccountDoc(
+      taxIdOrId,
+      username,
+    );
 
     if (docSnapshot == null) {
       return Left(ExceptionMapper.map(Exception(S.current.loginErrorTitle)));
@@ -106,10 +106,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ExceptionMapper.map(Exception(S.current.loginErrorTitle)));
     }
 
-    return _handleAuthentication(
-      account: localAccount,
-      password: password,
-    );
+    return _handleAuthentication(account: localAccount, password: password);
   }
 
   Future<Either<AppException, AccountModel>> _handleAuthentication({
@@ -119,7 +116,8 @@ class AuthRepositoryImpl implements AuthRepository {
     Future<void> Function()? onSuccess,
   }) async {
     // Check if account is currently locked
-    if (account.lockUntil != null && DateTime.now().isBefore(account.lockUntil!)) {
+    if (account.lockUntil != null &&
+        DateTime.now().isBefore(account.lockUntil!)) {
       return Left(UnknownException(message: S.current.accountLockedError));
     }
 
@@ -154,7 +152,8 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     // Reset failedAttempts and lockUntil on successful login
-    if (onSuccess != null && ((account.failedAttempts ?? 0) > 0 || account.lockUntil != null)) {
+    if (onSuccess != null &&
+        ((account.failedAttempts ?? 0) > 0 || account.lockUntil != null)) {
       try {
         await onSuccess();
       } catch (_) {
@@ -172,8 +171,20 @@ class AuthRepositoryImpl implements AuthRepository {
 
     await SecureStorageDataSource.instance.saveSession(
       username: account.username,
-      taxIdOrId: account.taxIdOrId
+      taxIdOrId: account.taxIdOrId,
     );
+
+    try {
+      final response = await DioClient.instance.login({
+        'username': 'cuongpc10',
+        'password': '123456',
+      });
+      await SharedPreferencesDataSource.instance.setAccessToken(
+        response.data.accessToken,
+      );
+    } catch (e) {
+      // Log error or ignore if offline/mock
+    }
 
     return Right(account);
   }

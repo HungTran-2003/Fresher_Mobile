@@ -87,5 +87,17 @@ class SharedPreferencesDataSource {
   Future<void> clearLastLogin() async {
     await _prefs.remove(_lastTaxIdOrIdKey);
     await _prefs.remove(_lastUsernameKey);
+    await _prefs.remove(_useBiometricsKey);
+    await _prefs.remove(_accessTokenKey);
+  }
+
+  static const _accessTokenKey = 'access_token';
+
+  Future<void> setAccessToken(String token) async {
+    await _prefs.setString(_accessTokenKey, token);
+  }
+
+  String? getAccessToken() {
+    return _prefs.getString(_accessTokenKey);
   }
 }

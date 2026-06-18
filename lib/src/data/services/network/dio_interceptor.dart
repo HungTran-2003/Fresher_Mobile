@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:crud_app/src/data/services/database/share_preferrences_data_source.dart';
 import 'package:dio/dio.dart';
 import 'package:crud_app/src/core/exceptions/app_exception.dart';
 import 'package:crud_app/src/data/services/database/secure_storage_data_source.dart';
@@ -11,7 +12,7 @@ class CustomDioInterceptor extends Interceptor {
     options.headers['Content-Type'] = 'application/json';
 
     // Fetch token from secure storage
-    final token = await SecureStorageDataSource.instance.getSessionToken();
+    final token = SharedPreferencesDataSource.instance.getAccessToken();
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
