@@ -1,13 +1,14 @@
 import 'package:crud_app/src/core/routes/base_navigator.dart';
 import 'package:crud_app/src/core/routes/router.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_dialog.dart';
+import 'package:get/get.dart';
 
 class SettingNavigator extends BaseNavigator {
-  SettingNavigator(super.context);
+  SettingNavigator([super.context]);
 
   /// Clears navigation stack and redirects back to the welcome/login page
   void toLogin() {
-    goNamed(AppRouters.welcome);
+    Get.offAllNamed(AppRouters.welcome);
   }
 
   /// Displays the confirmation dialog for logout confirmation

@@ -1,50 +1,33 @@
+import 'package:crud_app/src/presentation/screens/home/home_page.dart';
+import 'package:crud_app/src/presentation/screens/main/main_controller.dart';
 import 'package:crud_app/src/presentation/screens/main/widgets/app_bottom_nav.dart';
+import 'package:crud_app/src/presentation/screens/setting/setting_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'main_cubit.dart';
-import 'main_navigator.dart';
+import 'package:get/get.dart';
 
 class MainPage extends StatelessWidget {
-  final StatefulNavigationShell navigationShell;
-  const MainPage({super.key, required this.navigationShell});
+  const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<MainCubit>(
-      create: (context) {
-        final navigator = MainNavigator(context);
-        return MainCubit(navigator: navigator);
-      },
-      child: MainChildPage(navigationShell: navigationShell),
-    );
-  }
-}
+    final controller = Get.put(MainController());
 
-class MainChildPage extends StatefulWidget {
-  final StatefulNavigationShell navigationShell;
-  const MainChildPage({super.key, required this.navigationShell});
+    final pages = [
+      const HomePage(),
+      const SettingPage(),
+    ];
 
-  @override
-  State<MainChildPage> createState() => _MainChildPageState();
-}
-
-class _MainChildPageState extends State<MainChildPage> {
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(bottom: false, child: widget.navigationShell),
+      body: Obx(() => IndexedStack(
+            index: controller.currentIndex.value,
+            children: pages,
+          )),
       bottomNavigationBar: SafeArea(
         top: false,
-        child: AppBottomNav(
-          selectedIndex: widget.navigationShell.currentIndex,
-          onIndexChanged: (index) {
-            widget.navigationShell.goBranch(
-              index,
-              initialLocation: index == widget.navigationShell.currentIndex,
-            );
-          },
-        ),
+        child: Obx(() => AppBottomNav(
+              selectedIndex: controller.currentIndex.value,
+              onIndexChanged: (index) => controller.changeIndex(index),
+            )),
       ),
     );
   }

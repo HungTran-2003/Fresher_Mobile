@@ -1,88 +1,22 @@
-part of 'add_product_cubit.dart';
+import 'dart:io';
+import 'package:crud_app/src/domain/models/entities/category_entity.dart';
+import 'package:crud_app/src/domain/models/enum/load_status.dart';
+import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
+import 'package:get/get.dart';
 
-class AddProductState extends Equatable {
-  final LoadStatus status;
-  final String name;
-  final String code;
-  final String price;
-  final String stock;
-  final CategoryEntity? category;
-  final List<CategoryEntity> categories;
-  final List<String> tags;
-  final ProductStatusFilter statusFilter;
-  final String description;
-  final File? imageFile;
-  final bool isFirstSubmit;
-  final Set<String> existingCodes;
-  final String? error;
-
-  const AddProductState({
-    this.status = LoadStatus.initial,
-    this.name = '',
-    this.code = '',
-    this.price = '',
-    this.stock = '',
-    this.category,
-    this.categories = const [],
-    this.tags = const [],
-    this.statusFilter = ProductStatusFilter.active,
-    this.description = '',
-    this.imageFile,
-    this.isFirstSubmit = false,
-    this.existingCodes = const {},
-    this.error,
-  });
-
-  AddProductState copyWith({
-    LoadStatus? status,
-    String? name,
-    String? code,
-    String? price,
-    String? stock,
-    CategoryEntity? category,
-    List<CategoryEntity>? categories,
-    List<String>? tags,
-    ProductStatusFilter? statusFilter,
-    String? description,
-    File? imageFile,
-    bool? isFirstSubmit,
-    Set<String>? existingCodes,
-    String? error,
-    bool clearImage = false,
-  }) {
-    return AddProductState(
-      status: status ?? this.status,
-      name: name ?? this.name,
-      code: code ?? this.code,
-      price: price ?? this.price,
-      stock: stock ?? this.stock,
-      category: category ?? this.category,
-      categories: categories ?? this.categories,
-      tags: tags ?? this.tags,
-      statusFilter: statusFilter ?? this.statusFilter,
-      description: description ?? this.description,
-      imageFile: clearImage ? null : (imageFile ?? this.imageFile),
-      isFirstSubmit: isFirstSubmit ?? this.isFirstSubmit,
-      existingCodes: existingCodes ?? this.existingCodes,
-      error: error ?? this.error,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        status,
-        name,
-        code,
-        price,
-        stock,
-        category,
-        categories,
-        tags,
-        statusFilter,
-        description,
-        imageFile,
-        isFirstSubmit,
-        existingCodes,
-        error,
-      ];
+class AddProductState {
+  final status = LoadStatus.initial.obs;
+  final name = ''.obs;
+  final code = ''.obs;
+  final price = ''.obs;
+  final stock = ''.obs;
+  final category = Rxn<CategoryEntity>();
+  final categories = <CategoryEntity>[].obs;
+  final tags = <String>[].obs;
+  final statusFilter = ProductStatusFilter.active.obs;
+  final description = ''.obs;
+  final imageFile = Rxn<File>();
+  final isFirstSubmit = false.obs;
+  final existingCodes = <String>{}.obs;
+  final error = RxnString();
 }

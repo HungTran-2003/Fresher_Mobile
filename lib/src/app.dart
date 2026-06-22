@@ -9,10 +9,12 @@ import 'package:crud_app/src/presentation/global/app_settings/app_settings_cubit
 import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
 import 'package:crud_app/src/presentation/global/user/user_cubit.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
+import 'package:crud_app/src/core/routes/get_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
 
 import 'core/theme/app_theme.dart';
 import 'data/repositories/setting_repository_impl.dart';
@@ -121,10 +123,10 @@ class _AppContentState extends State<AppContent> {
           listener: (context, state) {
             if (state.isAuthenticated) {
               AppLoadingOverlay.hide();
-              AppRouters.router.go(AppRouters.home);
+              Get.offAllNamed(AppRouters.home);
             } else {
               AppLoadingOverlay.hide();
-              AppRouters.router.go(AppRouters.welcome);
+              Get.offAllNamed(AppRouters.welcome);
             }
           },
           child: GestureDetector(
@@ -161,12 +163,13 @@ class _AppContentState extends State<AppContent> {
       theme: currentAppTheme,
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: currentAppTheme.systemOverlayStyle,
-        child: MaterialApp.router(
+        child: GetMaterialApp(
           title: AppConfigs.appName,
           theme: lightTheme.themeData,
           darkTheme: darkTheme.themeData,
           themeMode: themeMode,
-          routerConfig: AppRouters.router,
+          initialRoute: AppRouters.splash,
+          getPages: GetAppPages.routes,
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
