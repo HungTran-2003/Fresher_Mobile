@@ -12,7 +12,8 @@ part 'dio_client.g.dart';
 abstract class DioClient {
   factory DioClient(Dio dio, {String baseUrl}) = _DioClient;
 
-  static final DioClient instance = _DioClient(NetworkUtil.dio);
+  static DioClient? _instance;
+  static DioClient get instance => _instance ??= _DioClient(NetworkUtil.dio);
 
   @POST('/login')
   Future<BaseResponse<TokenModel>> login(

@@ -7,7 +7,14 @@ import 'dio_interceptor.dart';
 class NetworkUtil {
   NetworkUtil._();
 
-  static late final Dio dio;
+  static Dio? _dio;
+
+  static Dio get dio {
+    if (_dio == null) {
+      init();
+    }
+    return _dio!;
+  }
 
   /// Initialize the global Dio instance with base URL, timeouts, and interceptors.
   static void init({
@@ -15,9 +22,11 @@ class NetworkUtil {
     Duration? timeout,
     List<Interceptor>? additionalInterceptors,
   }) {
+    if (_dio != null) return;
+
     final timeoutDuration = timeout ?? AppConfigs.timeOutDuration;
 
-    dio = Dio(
+    _dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,
         connectTimeout: timeoutDuration,
@@ -27,10 +36,10 @@ class NetworkUtil {
     );
 
     // Add custom interceptor for authentication and headers
-    dio.interceptors.add(CustomDioInterceptor());
+    _dio!.interceptors.add(CustomDioInterceptor());
 
     // Add logger for request/response debugging
-    dio.interceptors.add(
+    _dio!.interceptors.add(
       PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
@@ -44,7 +53,7 @@ class NetworkUtil {
 
     // Add any other additional interceptors
     if (additionalInterceptors != null) {
-      dio.interceptors.addAll(additionalInterceptors);
+      _dio!.interceptors.addAll(additionalInterceptors);
     }
   }
 
