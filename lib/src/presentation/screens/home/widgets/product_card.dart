@@ -1,11 +1,11 @@
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
-import 'package:crud_app/src/data/models/product/product_model.dart';
 import 'package:crud_app/src/data/services/cloudinary/cloudinary_service.dart';
+import 'package:crud_app/src/domain/models/entities/product_entity.dart';
 import 'package:crud_app/src/presentation/widgets/images/app_cache_image.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
-  final ProductModel product;
+  final ProductEntity product;
 
   const ProductCard({
     super.key,

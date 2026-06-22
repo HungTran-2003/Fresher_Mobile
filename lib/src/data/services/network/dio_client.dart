@@ -1,7 +1,7 @@
 import 'package:crud_app/src/data/models/account/token_model.dart';
 import 'package:crud_app/src/data/models/base_response.dart';
 import 'package:crud_app/src/data/models/product/category_model.dart';
-import 'package:crud_app/src/data/models/product/products_response.dart';
+import 'package:crud_app/src/data/models/product/product_model.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'network_util.dart';
@@ -25,7 +25,7 @@ abstract class DioClient {
   );
 
   @GET('/products')
-  Future<ProductsResponse> getProducts({
+  Future<BaseListResponse<ProductModel>> getProducts({
     @Query('page') required int page,
     @Query('limit') required int limit,
     @Query('keyword') String? search,
@@ -34,4 +34,20 @@ abstract class DioClient {
 
   @GET('/categories')
   Future<BaseListResponse<CategoryModel>> getCategories();
+
+  @POST('/products')
+  Future<dynamic> addProduct(
+    @Body() Map<String, dynamic> body,
+  );
+
+  @PUT('/products/{id}')
+  Future<dynamic> updateProduct(
+    @Path('id') int id,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @DELETE('/products/{id}')
+  Future<dynamic> deleteProduct(
+    @Path('id') int id,
+  );
 }

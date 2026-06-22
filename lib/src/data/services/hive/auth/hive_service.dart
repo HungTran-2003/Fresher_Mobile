@@ -1,5 +1,5 @@
 import 'package:hive_ce/hive.dart';
-import 'package:crud_app/src/data/models/account_model.dart';
+import 'package:crud_app/src/data/models/account/account_model.dart';
 
 class HiveService {
   HiveService._();

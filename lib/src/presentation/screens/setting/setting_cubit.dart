@@ -1,4 +1,5 @@
 import 'package:crud_app/src/presentation/global/app_settings/app_settings_cubit.dart';
+import 'package:crud_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -33,7 +34,7 @@ class SettingCubit extends Cubit<SettingState> {
       if (isSupported && canCheck) {
         try {
           final authenticated = await localAuth.authenticate(
-            localizedReason: 'Xác thực để bật đăng nhập sinh trắc học',
+            localizedReason: S.current.biometricAuthReason,
             options: const AuthenticationOptions(
               stickyAuth: true,
               biometricOnly: true,
@@ -47,8 +48,8 @@ class SettingCubit extends Cubit<SettingState> {
         }
       } else {
         await navigator.showErrorDialog(
-          title: 'Thông báo',
-          message: 'Thiết bị không hỗ trợ hoặc chưa cài đặt sinh trắc học.',
+          title: S.current.notificationTitle,
+          message: S.current.biometricSetupFailed,
         );
       }
     } else {

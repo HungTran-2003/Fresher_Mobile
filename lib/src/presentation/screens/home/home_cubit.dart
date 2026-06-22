@@ -1,16 +1,17 @@
 import 'dart:async';
 
-import 'package:crud_app/src/data/models/product/product_model.dart';
+import 'package:crud_app/src/domain/models/entities/category_entity.dart';
+import 'package:crud_app/src/domain/models/entities/product_entity.dart';
 import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/models/enum/product_sort_filter.dart';
 import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
 import 'package:crud_app/src/domain/repositories/product_repository.dart';
 import 'package:crud_app/src/core/utils/extensions/either_extension.dart';
+import 'package:crud_app/generated/l10n.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/models/product/category_model.dart';
 import 'home_navigator.dart';
 
 part 'home_state.dart';
@@ -43,8 +44,9 @@ class HomeCubit extends Cubit<HomeState> {
     if (!isRefresh &&
         (state.hasReachedMax ||
             state.isProductsLoading ||
-            state.isLoadMoreLoading))
+            state.isLoadMoreLoading)) {
       return;
+    }
 
     emit(
       state.copyWith(
@@ -52,7 +54,6 @@ class HomeCubit extends Cubit<HomeState> {
         hasReachedMax: isRefresh ? false : state.hasReachedMax,
         isProductsLoading: isRefresh,
         isLoadMoreLoading: !isRefresh,
-        productsError: null,
         products: isRefresh ? [] : state.products,
       ),
     );
@@ -89,9 +90,27 @@ class HomeCubit extends Cubit<HomeState> {
     loadProducts(isRefresh: true);
   }
 
-  /// Clears the error state.
-  void clearError() {
-    emit(state.copyWith(productsError: null));
+  /// Deletes a product by ID.
+  Future<void> deleteProduct(int id) async {
+    emit(state.copyWith(status: LoadStatus.loading));
+
+    final result = await _productRepository.deleteProduct(id);
+
+    result.foldResult(
+      onError: (e) {
+        emit(state.copyWith(status: LoadStatus.failure));
+        navigator.showErrorDialog(message: e.message);
+      },
+      onSuccess: (_) {
+        final updatedProducts = state.products
+            .where((p) => p.id != id)
+            .toList();
+        emit(
+          state.copyWith(products: updatedProducts, status: LoadStatus.success),
+        );
+        navigator.showSuccessSnackBar(message: S.current.productDeletedSuccess);
+      },
+    );
   }
 
   /// Internal method to fetch, filter, and sort products.
@@ -105,25 +124,20 @@ class HomeCubit extends Cubit<HomeState> {
       search: state.searchQuery.trim().isEmpty
           ? null
           : state.searchQuery.trim(),
-      categoryId: state.filterCategoryId,
+      categoryId: state.filterCategoryId == -1 ? null : state.filterCategoryId,
     );
 
     result.foldResult(
       onError: (e) {
         emit(
-          state.copyWith(
-            isProductsLoading: false,
-            isLoadMoreLoading: false,
-            productsError: e.toString(),
-          ),
+          state.copyWith(isProductsLoading: false, isLoadMoreLoading: false),
         );
         navigator.showErrorDialog(message: e.message);
       },
       onSuccess: (response) {
-        final rawProducts = response.data;
-        final hasReachedMax = rawProducts.length < 10;
+        final hasReachedMax = response.length < 10;
         final processedProducts = _processProducts(
-          rawProducts,
+          response,
           isRefresh: isRefresh,
         );
 
@@ -141,8 +155,8 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   /// Processes raw products by applying local filters and sorting.
-  List<ProductModel> _processProducts(
-    List<ProductModel> rawProducts, {
+  List<ProductEntity> _processProducts(
+    List<ProductEntity> rawProducts, {
     required bool isRefresh,
   }) {
     final filtered = _applyLocalFilters(rawProducts);
@@ -151,14 +165,14 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   /// Filters products locally based on status.
-  List<ProductModel> _applyLocalFilters(List<ProductModel> products) {
+  List<ProductEntity> _applyLocalFilters(List<ProductEntity> products) {
     if (state.filterStatus == ProductStatusFilter.all) return products;
     return products.where((p) => p.status == state.filterStatus.value).toList();
   }
 
   /// Sorts products locally based on the selected sort criteria.
-  List<ProductModel> _sortProducts(List<ProductModel> products) {
-    return List<ProductModel>.from(products)..sort((a, b) {
+  List<ProductEntity> _sortProducts(List<ProductEntity> products) {
+    return List<ProductEntity>.from(products)..sort((a, b) {
       final filter = state.sortFilter;
       return switch (filter) {
         ProductSortFilter.nameAsc => a.name.toLowerCase().compareTo(

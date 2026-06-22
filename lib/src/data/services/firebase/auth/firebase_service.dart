@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crud_app/src/data/models/account_model.dart';
+import 'package:crud_app/src/data/models/account/account_model.dart';
 
 class FirebaseService {
   FirebaseService({

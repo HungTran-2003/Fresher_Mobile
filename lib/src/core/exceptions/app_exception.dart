@@ -3,40 +3,42 @@ import 'package:dio/dio.dart';
 abstract class AppException implements Exception {
   final String message;
   final String? code;
+  final String? errorKey;
   final dynamic originalError;
 
   AppException({
     this.message = 'Something went wrong',
     this.code,
+    this.errorKey,
     this.originalError,
   });
 
   @override
-  String toString() => 'AppException(message: $message, code: $code)';
+  String toString() => 'AppException(message: $message, code: $code, errorKey: $errorKey)';
 }
 
 class NetworkException extends AppException {
-  NetworkException({super.message, super.code, super.originalError});
+  NetworkException({super.message, super.code, super.errorKey, super.originalError});
 }
 
 class ServerException extends AppException {
-  ServerException({super.message, super.code, super.originalError});
+  ServerException({super.message, super.code, super.errorKey, super.originalError});
 }
 
 class UnauthenticatedException extends AppException {
-  UnauthenticatedException({super.message, super.code, super.originalError});
+  UnauthenticatedException({super.message, super.code, super.errorKey, super.originalError});
 }
 
 class UnauthorizedException extends AppException {
-  UnauthorizedException({super.message, super.code, super.originalError});
+  UnauthorizedException({super.message, super.code, super.errorKey, super.originalError});
 }
 
 class RequestCancelledException extends AppException {
-  RequestCancelledException({super.message, super.code, super.originalError});
+  RequestCancelledException({super.message, super.code, super.errorKey, super.originalError});
 }
 
 class UnknownException extends AppException {
-  UnknownException({super.message, super.code, super.originalError});
+  UnknownException({super.message, super.code, super.errorKey, super.originalError});
 }
 
 /// Mapper to convert various errors (like DioException) to [AppException]

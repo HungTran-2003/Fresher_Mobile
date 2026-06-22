@@ -20,7 +20,7 @@ BaseListResponse<T> _$BaseListResponseFromJson<T>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
 ) => BaseListResponse<T>(
-  data: (json['data'] as List<dynamic>).map(fromJsonT).toList(),
+  data: (json['data'] as List<dynamic>?)?.map(fromJsonT).toList() ?? [],
 );
 
 Map<String, dynamic> _$BaseListResponseToJson<T>(

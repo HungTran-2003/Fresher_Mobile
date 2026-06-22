@@ -10,7 +10,7 @@ import 'package:crud_app/src/data/services/database/secure_storage_data_source.d
 import 'package:crud_app/src/data/services/hive/auth/hive_service.dart';
 import 'package:crud_app/src/data/services/firebase/auth/firebase_service.dart';
 import 'package:crud_app/src/core/utils/crypto_util.dart';
-import 'package:crud_app/src/data/models/account_model.dart';
+import 'package:crud_app/src/data/models/account/account_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final HiveService _hiveService;
@@ -70,7 +70,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> relogin() async {
+  Future<String> relogin() async {
     try {
       final response = await DioClient.instance.login({
         'username': 'cuongpc10',
@@ -79,8 +79,9 @@ class AuthRepositoryImpl implements AuthRepository {
       await SharedPreferencesDataSource.instance.setAccessToken(
         response.data.accessToken,
       );
+      return response.data.accessToken;
     } catch (e) {
-      // Log error or ignore if offline/mock
+      return '';
     }
 
   }

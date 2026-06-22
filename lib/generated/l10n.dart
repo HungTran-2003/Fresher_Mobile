@@ -403,6 +403,331 @@ class S {
       args: [count],
     );
   }
+
+  /// `Add New Product`
+  String get addNewProduct {
+    return Intl.message(
+      'Add New Product',
+      name: 'addNewProduct',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product Name`
+  String get productNameLabel {
+    return Intl.message(
+      'Product Name',
+      name: 'productNameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter product name`
+  String get productNameHint {
+    return Intl.message(
+      'Enter product name',
+      name: 'productNameHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product Code`
+  String get productCodeLabel {
+    return Intl.message(
+      'Product Code',
+      name: 'productCodeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter unique code`
+  String get productCodeHint {
+    return Intl.message(
+      'Enter unique code',
+      name: 'productCodeHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price`
+  String get priceLabel {
+    return Intl.message('Price', name: 'priceLabel', desc: '', args: []);
+  }
+
+  /// `Enter price`
+  String get priceHint {
+    return Intl.message('Enter price', name: 'priceHint', desc: '', args: []);
+  }
+
+  /// `Stock`
+  String get stockLabel {
+    return Intl.message('Stock', name: 'stockLabel', desc: '', args: []);
+  }
+
+  /// `Enter stock quantity`
+  String get stockHint {
+    return Intl.message(
+      'Enter stock quantity',
+      name: 'stockHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tags`
+  String get tagsLabel {
+    return Intl.message('Tags', name: 'tagsLabel', desc: '', args: []);
+  }
+
+  /// `Enter tags (comma separated)`
+  String get tagsHint {
+    return Intl.message(
+      'Enter tags (comma separated)',
+      name: 'tagsHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description`
+  String get descriptionLabel {
+    return Intl.message(
+      'Description',
+      name: 'descriptionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter product description`
+  String get descriptionHint {
+    return Intl.message(
+      'Enter product description',
+      name: 'descriptionHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get saveButton {
+    return Intl.message('Save', name: 'saveButton', desc: '', args: []);
+  }
+
+  /// `Cancel`
+  String get cancelButtonLabel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancelButtonLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick Image`
+  String get pickImage {
+    return Intl.message('Pick Image', name: 'pickImage', desc: '', args: []);
+  }
+
+  /// `Remove Image`
+  String get removeImage {
+    return Intl.message(
+      'Remove Image',
+      name: 'removeImage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product name is required`
+  String get nameRequired {
+    return Intl.message(
+      'Product name is required',
+      name: 'nameRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product code is required`
+  String get codeRequired {
+    return Intl.message(
+      'Product code is required',
+      name: 'codeRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price is required`
+  String get priceRequired {
+    return Intl.message(
+      'Price is required',
+      name: 'priceRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price must be greater than 0`
+  String get pricePositive {
+    return Intl.message(
+      'Price must be greater than 0',
+      name: 'pricePositive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stock is required`
+  String get stockRequired {
+    return Intl.message(
+      'Stock is required',
+      name: 'stockRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stock cannot be negative`
+  String get stockNonNegative {
+    return Intl.message(
+      'Stock cannot be negative',
+      name: 'stockNonNegative',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product added successfully`
+  String get productAddedSuccess {
+    return Intl.message(
+      'Product added successfully',
+      name: 'productAddedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to add product`
+  String get failedToAddProduct {
+    return Intl.message(
+      'Failed to add product',
+      name: 'failedToAddProduct',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Product`
+  String get deleteProductConfirmTitle {
+    return Intl.message(
+      'Delete Product',
+      name: 'deleteProductConfirmTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete this product?`
+  String get deleteProductConfirmMessage {
+    return Intl.message(
+      'Are you sure you want to delete this product?',
+      name: 'deleteProductConfirmMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get deleteButton {
+    return Intl.message('Delete', name: 'deleteButton', desc: '', args: []);
+  }
+
+  /// `Product deleted successfully`
+  String get productDeletedSuccess {
+    return Intl.message(
+      'Product deleted successfully',
+      name: 'productDeletedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to upload image`
+  String get failedToUploadImage {
+    return Intl.message(
+      'Failed to upload image',
+      name: 'failedToUploadImage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Authenticate to enable biometric login`
+  String get biometricAuthReason {
+    return Intl.message(
+      'Authenticate to enable biometric login',
+      name: 'biometricAuthReason',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notification`
+  String get notificationTitle {
+    return Intl.message(
+      'Notification',
+      name: 'notificationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product updated successfully`
+  String get productUpdateSuccess {
+    return Intl.message(
+      'Product updated successfully',
+      name: 'productUpdateSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stock must be an integer`
+  String get stockOnlyInteger {
+    return Intl.message(
+      'Stock must be an integer',
+      name: 'stockOnlyInteger',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Created at`
+  String get createdAtLabel {
+    return Intl.message(
+      'Created at',
+      name: 'createdAtLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updated at`
+  String get updatedAtLabel {
+    return Intl.message(
+      'Updated at',
+      name: 'updatedAtLabel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

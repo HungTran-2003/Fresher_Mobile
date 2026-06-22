@@ -23,7 +23,7 @@ class CloudinaryService {
 
   /// Uploads an image file to Cloudinary.
   /// Returns the secure URL of the uploaded image, or null if failed.
-  static Future<String?> uploadImage(File file, {String uploadPreset = 'fresher_mobile'}) async {
+  static Future<String?> uploadImage(File file, {String uploadPreset = 'ml_default'}) async {
     try {
       final dio = Dio();
       final formData = FormData.fromMap({
@@ -39,8 +39,10 @@ class CloudinaryService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.data['secure_url'] as String?;
       }
+    } on DioException catch (e) {
+      debugPrint('CloudinaryService: Upload failed: ${e.response?.data ?? e.message}');
     } catch (e) {
-      debugPrint('CloudinaryService: Upload failed: $e');
+      debugPrint('CloudinaryService: Unexpected error: $e');
     }
     return null;
   }

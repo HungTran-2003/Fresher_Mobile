@@ -17,49 +17,69 @@ class AppBottomNav extends StatelessWidget {
     final colors = context.colors;
 
     final items = [
-      _BottomNavItem(icon: LucideIcons.home, tooltip: 'Home'),
-      _BottomNavItem(icon: LucideIcons.settings, tooltip: 'Setting'),
+      _BottomNavItem(icon: LucideIcons.home, label: 'Home'),
+      _BottomNavItem(icon: LucideIcons.settings, label: 'Setting'),
     ];
 
     return Container(
-      height: 64,
-      margin: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      height: 64, // Tăng chiều cao để chứa cả Icon và Text theo chiều dọc
+      margin: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: colors.outline, width: 2),
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(36),
+        border: Border.all(
+          color: colors.outline.withValues(alpha: 0.1),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: colors.black0.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(items.length, (index) {
           final item = items[index];
           final isSelected = selectedIndex == index;
+          final activeColor = colors.primary;
+          final inactiveColor = colors.onSurface.withValues(alpha: 0.4);
 
           return Expanded(
             child: GestureDetector(
               onTap: () => onIndexChanged(index),
               behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.fastOutSlowIn,
-                padding: isSelected
-                    ? const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 12.0,
-                      )
-                    : const EdgeInsets.all(12.0),
-                decoration: isSelected
-                    ? BoxDecoration(
-                        color: colors.primaryLight,
-                        borderRadius: BorderRadius.circular(24),
-                      )
-                    : null,
-                child: Icon(
-                  item.icon,
-                  size: 24,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 6.0),
+                decoration: BoxDecoration(
                   color: isSelected
-                      ? colors.onSurfaceLight
-                      : colors.onSurface.withValues(alpha: 0.65),
+                      ? colors.primary.withValues(alpha: 0.1)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(28),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      item.icon,
+                      size: 22,
+                      color: isSelected ? activeColor : inactiveColor,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      item.label,
+                      style: context.textThemes.bodySmall.copyWith(
+                        color: isSelected ? activeColor : inactiveColor,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -72,7 +92,7 @@ class AppBottomNav extends StatelessWidget {
 
 class _BottomNavItem {
   final IconData icon;
-  final String tooltip;
+  final String label;
 
-  const _BottomNavItem({required this.icon, required this.tooltip});
+  const _BottomNavItem({required this.icon, required this.label});
 }

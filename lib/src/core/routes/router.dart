@@ -1,4 +1,7 @@
+import 'package:crud_app/src/domain/models/entities/product_entity.dart';
+import 'package:crud_app/src/presentation/screens/home/add_product/add_product_page.dart';
 import 'package:crud_app/src/presentation/screens/home/home_page.dart';
+import 'package:crud_app/src/presentation/screens/home/product_detail/product_detail_page.dart';
 import 'package:crud_app/src/presentation/screens/setting/setting_page.dart';
 import 'package:crud_app/src/presentation/screens/splash/splash_page.dart';
 import 'package:crud_app/src/presentation/screens/login/login_page.dart';
@@ -34,6 +37,8 @@ class AppRouters {
 
   // Main Tabs
   static const String home = '/home';
+  static const String addProduct = '/add-product';
+  static const String productDetail = '/product-detail';
   static const String profile = '/setting';
 
   static final _routes = <RouteBase>[
@@ -71,6 +76,19 @@ class AppRouters {
           ],
         ),
       ],
+    ),
+    GoRoute(
+      path: addProduct,
+      name: addProduct,
+      builder: (context, state) => const AddProductPage(),
+    ),
+    GoRoute(
+      path: productDetail,
+      name: productDetail,
+      builder: (context, state) {
+        final product = state.extra as ProductEntity;
+        return ProductDetailPage(argument: ProductDetailArgument(product: product));
+      },
     ),
   ];
 }

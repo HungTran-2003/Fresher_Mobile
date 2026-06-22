@@ -12,8 +12,8 @@ class AuthCubit extends Cubit<AuthState> {
   AuthRepository authRepo;
 
   AuthCubit({required this.authRepo}) : super(const AuthState()) {
-    CustomDioInterceptor.onUnauthorized = () {
-     relogin();
+    CustomDioInterceptor.onUnauthorized = () async {
+     return await relogin();
     };
   }
 
@@ -28,7 +28,7 @@ class AuthCubit extends Cubit<AuthState> {
     setAuthenticated(false);
   }
 
-  void relogin(){
-    authRepo.relogin();
+  Future<String> relogin() async {
+    return authRepo.relogin();
   }
 }

@@ -4,9 +4,8 @@ class HomeState extends Equatable {
   final LoadStatus status;
   final int activeTab;
 
-  // Products pagination & data
-  final List<ProductModel> products;
-  final List<CategoryModel> categories;
+  final List<ProductEntity> products;
+  final List<CategoryEntity> categories;
   final bool isProductsLoading;
   final bool isLoadMoreLoading;
   final int currentPage;
@@ -36,11 +35,10 @@ class HomeState extends Equatable {
   HomeState copyWith({
     LoadStatus? status,
     int? activeTab,
-    List<ProductModel>? products,
-    List<CategoryModel>? categories,
+    List<ProductEntity>? products,
+    List<CategoryEntity>? categories,
     bool? isProductsLoading,
     bool? isLoadMoreLoading,
-    String? productsError,
     int? currentPage,
     bool? hasReachedMax,
     String? searchQuery,

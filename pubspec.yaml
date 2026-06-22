@@ -77,6 +77,8 @@ dependencies:
   hive_ce_flutter: ^2.3.4
   connectivity_plus: ^7.1.1
   retrofit: ^4.9.2
+  image_picker: ^1.2.2
+  flutter_slidable: ^4.0.3
 
 dev_dependencies:
   flutter_test:

@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:crud_app/src/core/exceptions/app_exception.dart';
 
 class CustomDioInterceptor extends Interceptor {
-  static void Function()? onUnauthorized;
+  static Future<String> Function()? onUnauthorized;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
@@ -33,15 +33,9 @@ class CustomDioInterceptor extends Interceptor {
     if (err.response?.statusCode == 401) {
       if (onUnauthorized != null) {
         // 1. Notify to refresh token (AuthCubit's relogin)
-        onUnauthorized!.call();
+       final newToken = await onUnauthorized!.call();
 
-        // 2. Wait a brief moment for the async relogin to finish saving the new token
-        await Future.delayed(const Duration(milliseconds: 500));
-
-        // 3. Fetch the newly updated token
-        final newToken = SharedPreferencesDataSource.instance.getAccessToken();
-
-        if (newToken != null && newToken.isNotEmpty) {
+        if (newToken.isNotEmpty) {
           // 4. Update the failed request with the new token
           final options = err.requestOptions;
           options.headers['Authorization'] = 'Bearer $newToken';
@@ -70,8 +64,9 @@ class CustomDioInterceptor extends Interceptor {
   AppException _mapDioException(DioException error) {
     String message = error.message ?? 'An unexpected network error occurred';
     String? code = error.response?.statusCode?.toString();
+    String? errorKey;
 
-    // Try to extract server message if available in response data
+    // Try to extract server message and error key if available in response data
     if (error.response?.data != null) {
       final data = error.response!.data;
       if (data is Map<String, dynamic>) {
@@ -79,6 +74,10 @@ class CustomDioInterceptor extends Interceptor {
           message = data['message'].toString();
         } else if (data.containsKey('error')) {
           message = data['error'].toString();
+        }
+        
+        if (data.containsKey('error_key')) {
+          errorKey = data['error_key'].toString();
         }
       }
     }
@@ -90,6 +89,7 @@ class CustomDioInterceptor extends Interceptor {
         return NetworkException(
           message: 'Connection timed out. Please check your internet connection.',
           code: code,
+          errorKey: errorKey,
           originalError: error,
         );
 
@@ -99,24 +99,28 @@ class CustomDioInterceptor extends Interceptor {
           return UnauthenticatedException(
             message: message.isNotEmpty ? message : 'Session expired. Please log in again.',
             code: code,
+            errorKey: errorKey,
             originalError: error,
           );
         } else if (statusCode == 403) {
           return UnauthorizedException(
             message: message.isNotEmpty ? message : 'Access denied. You do not have permission.',
             code: code,
+            errorKey: errorKey,
             originalError: error,
           );
         } else if (statusCode != null && statusCode >= 500) {
           return ServerException(
             message: 'Server error occurred. Please try again later.',
             code: code,
+            errorKey: errorKey,
             originalError: error,
           );
         } else {
           return ServerException(
             message: message,
             code: code,
+            errorKey: errorKey,
             originalError: error,
           );
         }
@@ -125,6 +129,7 @@ class CustomDioInterceptor extends Interceptor {
         return RequestCancelledException(
           message: 'Request was cancelled.',
           code: code,
+          errorKey: errorKey,
           originalError: error,
         );
 
@@ -132,6 +137,7 @@ class CustomDioInterceptor extends Interceptor {
         return NetworkException(
           message: 'No internet connection. Please connect to the internet and try again.',
           code: code,
+          errorKey: errorKey,
           originalError: error,
         );
 
@@ -139,6 +145,7 @@ class CustomDioInterceptor extends Interceptor {
         return NetworkException(
           message: 'Secure connection could not be established (invalid certificate).',
           code: code,
+          errorKey: errorKey,
           originalError: error,
         );
 
@@ -147,12 +154,14 @@ class CustomDioInterceptor extends Interceptor {
           return NetworkException(
             message: 'No internet connection. Please connect to the internet and try again.',
             code: code,
+            errorKey: errorKey,
             originalError: error,
           );
         }
         return UnknownException(
           message: message,
           code: code,
+          errorKey: errorKey,
           originalError: error,
         );
     }

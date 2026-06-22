@@ -20,6 +20,7 @@ class BaseResponse<T> {
 
 @JsonSerializable(genericArgumentFactories: true)
 class BaseListResponse<T> {
+  @JsonKey(defaultValue: [])
   final List<T> data;
 
   BaseListResponse({required this.data});
