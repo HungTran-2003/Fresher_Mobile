@@ -1,52 +1,55 @@
 import 'package:crud_app/generated/l10n.dart';
 import 'package:crud_app/src/core/utils/extensions/either_extension.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
-
-import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/models/entities/user_entity.dart';
-import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
-import 'package:crud_app/src/presentation/global/user/user_cubit.dart';
+import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/repositories/auth_repository.dart';
 import 'package:crud_app/src/domain/repositories/setting_repository.dart';
+import 'package:crud_app/src/presentation/global/auth/auth_controller.dart';
+import 'package:crud_app/src/presentation/global/user/user_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'login_navigator.dart';
+import 'login_state.dart';
 
-part 'login_state.dart';
-
-class LoginCubit extends Cubit<LoginState> {
-  final AuthCubit _authCubit;
-  final UserCubit _userCubit;
+class LoginController extends GetxController {
+  final AuthController _authController;
+  final UserController _userController;
   final AuthRepository _authRepository;
   final SettingRepository _settingRepository;
   final LoginNavigator navigator;
 
+  final state = LoginState();
   bool _isBiometricEnabled = false;
   bool get useBiometrics => _isBiometricEnabled;
-
-  LoginCubit({
-    required AuthCubit authCubit,
-    required UserCubit userCubit,
-    required AuthRepository authRepository,
-    required SettingRepository settingRepository,
-    required this.navigator,
-  }) : _authCubit = authCubit,
-       _userCubit = userCubit,
-       _authRepository = authRepository,
-       _settingRepository = settingRepository,
-       super(const LoginState());
 
   final TextEditingController taxIdOrIdController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  LoginController({
+    required AuthController authController,
+    required UserController userController,
+    required AuthRepository authRepository,
+    required SettingRepository settingRepository,
+    required this.navigator,
+  })  : _authController = authController,
+        _userController = userController,
+        _authRepository = authRepository,
+        _settingRepository = settingRepository;
+
   @override
-  Future<void> close() {
+  void onInit() {
+    super.onInit();
+    init();
+  }
+
+  @override
+  void onClose() {
     taxIdOrIdController.dispose();
     usernameController.dispose();
     passwordController.dispose();
-    return super.close();
+    super.onClose();
   }
 
   Future<void> init() async {
@@ -56,41 +59,30 @@ class LoginCubit extends Cubit<LoginState> {
       onSuccess: (data) {
         taxIdOrIdController.text = data['taxIdOrId'] ?? '';
         usernameController.text = data['username'] ?? '';
-        emit(
-          state.copyWith(
-            taxIdOrId: data['taxIdOrId'] ?? '',
-            username: data['username'] ?? '',
-          ),
-        );
+        state.taxIdOrId.value = data['taxIdOrId'] ?? '';
+        state.username.value = data['username'] ?? '';
       },
     );
     final useBio = await _settingRepository.getUseBiometrics();
     _isBiometricEnabled = useBio;
   }
 
-  void onTaxIdOrIdChanged(String value) {
-    emit(state.copyWith(taxIdOrId: value));
-  }
-
-  void onUsernameChanged(String value) {
-    emit(state.copyWith(username: value));
-  }
-
-  void onPasswordChanged(String value) {
-    emit(state.copyWith(password: value));
-  }
+  void onTaxIdOrIdChanged(String value) => state.taxIdOrId.value = value;
+  void onUsernameChanged(String value) => state.username.value = value;
+  void onPasswordChanged(String value) => state.password.value = value;
+  void changeIsFirstSubmit(bool value) => state.isFirstSubmit.value = value;
 
   Future<void> submitLogin() async {
-    emit(state.copyWith(status: LoadStatus.loading));
+    state.status.value = LoadStatus.loading;
     final result = await _authRepository.login(
-      taxIdOrId: state.taxIdOrId.trim(),
-      username: state.username.trim(),
-      password: state.password,
+      taxIdOrId: state.taxIdOrId.value.trim(),
+      username: state.username.value.trim(),
+      password: state.password.value,
     );
 
     result.fold(
       ifLeft: (failure) {
-        emit(state.copyWith(status: LoadStatus.failure));
+        state.status.value = LoadStatus.failure;
         navigator.showErrorDialog(message: failure.message);
       },
       ifRight: (account) async {
@@ -100,10 +92,10 @@ class LoginCubit extends Cubit<LoginState> {
           email: '',
           fullName: account.fullName,
         );
-        _userCubit.updateUser(user);
-        _authCubit.setAuthenticated(true);
+        _userController.updateUser(user);
+        _authController.setAuthenticated(true);
 
-        emit(state.copyWith(status: LoadStatus.success));
+        state.status.value = LoadStatus.success;
         navigator.toHome();
       },
     );
@@ -124,22 +116,19 @@ class LoginCubit extends Cubit<LoginState> {
       );
 
       if (authenticated) {
-        final taxId = state.taxIdOrId;
-        final username = state.username;
+        final taxId = state.taxIdOrId.value;
+        final username = state.username.value;
 
         if (taxId.isEmpty || username.isEmpty) {
-          emit(state.copyWith(status: LoadStatus.failure));
+          state.status.value = LoadStatus.failure;
           navigator.showErrorDialog(message: S.current.loginErrorTitle);
+          return;
         }
 
-        await _userCubit.getUser(taxId, username);
-        _authCubit.setAuthenticated(true);
+        await _userController.getUser(taxId, username);
+        _authController.setAuthenticated(true);
         navigator.toHome();
       }
     }
-  }
-
-  void changeIsFirstSubmit(bool value) {
-    emit(state.copyWith(isFirstSubmit: value));
   }
 }

@@ -1,20 +1,6 @@
-part of 'setting_cubit.dart';
+import 'package:crud_app/src/domain/models/enum/load_status.dart';
+import 'package:get/get.dart';
 
-class SettingState extends Equatable {
-  final LoadStatus status;
-
-  const SettingState({
-    this.status = LoadStatus.initial,
-  });
-
-  SettingState copyWith({
-    LoadStatus? status,
-  }) {
-    return SettingState(
-      status: status ?? this.status,
-    );
-  }
-
-  @override
-  List<Object?> get props => [status];
+class SettingState {
+  final status = LoadStatus.initial.obs;
 }

@@ -1,8 +1,7 @@
 import 'package:crud_app/src/core/assets/app_vectors.dart';
 import 'package:crud_app/src/core/utils/app_validators.dart';
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
-import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
-import 'package:crud_app/src/presentation/global/user/user_cubit.dart';
+import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
 import 'package:crud_app/src/presentation/widgets/images/app_svg_image.dart';
 import 'package:crud_app/src/presentation/widgets/inputs/buttons/app_button_wrapper.dart';
@@ -11,30 +10,15 @@ import 'package:crud_app/src/presentation/widgets/inputs/buttons/app_outlined_bu
 import 'package:crud_app/src/presentation/widgets/inputs/text_field/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:crud_app/src/domain/repositories/auth_repository.dart';
-import 'package:crud_app/src/domain/repositories/setting_repository.dart';
-import 'login_cubit.dart';
-import 'login_navigator.dart';
+import 'package:get/get.dart';
+import 'login_controller.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends GetView<LoginController> {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<LoginCubit>(
-      create: (context) {
-        final navigator = LoginNavigator(context);
-        return LoginCubit(
-          authCubit: context.read<AuthCubit>(),
-          userCubit: context.read<UserCubit>(),
-          authRepository: context.read<AuthRepository>(),
-          settingRepository: context.read<SettingRepository>(),
-          navigator: navigator,
-        );
-      },
-      child: const LoginChildPage(),
-    );
+    return const LoginChildPage();
   }
 }
 
@@ -52,7 +36,7 @@ class _LoginChildPageState extends State<LoginChildPage> {
   late final FocusNode _usernameFocusNode;
   late final FocusNode _passwordFocusNode;
 
-  late final LoginCubit _cubit;
+  late final LoginController _controller;
 
   @override
   void initState() {
@@ -62,9 +46,8 @@ class _LoginChildPageState extends State<LoginChildPage> {
     _usernameFocusNode = FocusNode();
     _passwordFocusNode = FocusNode();
 
-    _cubit = context.read<LoginCubit>();
-    _loadLastLogin();
-    _cubit.init();
+    _controller = Get.find<LoginController>();
+    setup();
   }
 
   @override
@@ -75,10 +58,14 @@ class _LoginChildPageState extends State<LoginChildPage> {
     super.dispose();
   }
 
+  void setup() async {
+    await _loadLastLogin();
+  }
+
   Future<void> _loadLastLogin() async {
-    if (context.read<LoginCubit>().useBiometrics) {
+    if (_controller.useBiometrics) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _cubit.loginWithBiometrics();
+        _controller.loginWithBiometrics();
       });
     }
   }
@@ -87,21 +74,27 @@ class _LoginChildPageState extends State<LoginChildPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.surface,
-      body: SafeArea(
-        child: BlocListener<LoginCubit, LoginState>(
-          listenWhen: (prev, current) => prev.status != current.status,
-          listener: (context, state) {
-            if (state.status.isLoading) {
-              AppLoadingOverlay.show(context);
-            } else {
-              AppLoadingOverlay.hide();
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 32, 12, 0),
-            child: _buildBodyPage(context),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 32, 12, 0),
+              child: _buildBodyPage(context),
+            ),
           ),
-        ),
+          Obx(() {
+            if (_controller.state.status.value == LoadStatus.loading) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                AppLoadingOverlay.show(context);
+              });
+            } else {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                AppLoadingOverlay.hide();
+              });
+            }
+            return const SizedBox.shrink();
+          }),
+        ],
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
@@ -151,17 +144,17 @@ class _LoginChildPageState extends State<LoginChildPage> {
               ],
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  await _cubit.submitLogin();
+                  await _controller.submitLogin();
                 } else {
-                  _cubit.changeIsFirstSubmit(true);
+                  _controller.changeIsFirstSubmit(true);
                 }
               },
             ),
           ),
-          if (context.read<LoginCubit>().useBiometrics)
+          if (_controller.useBiometrics)
           AppButtonWrapper(
             onPressed: () async {
-              await _cubit.loginWithBiometrics();
+              await _controller.loginWithBiometrics();
             },
             child: Container(
               height: 48,
@@ -183,20 +176,18 @@ class _LoginChildPageState extends State<LoginChildPage> {
   }
 
   Widget _buildFormLogin() {
-    return BlocBuilder<LoginCubit, LoginState>(
-      buildWhen: (prev, current) => prev.isFirstSubmit != current.isFirstSubmit,
-      builder: (context, state) {
+    return Obx(() {
         return AutofillGroup(
           child: Form(
             key: _formKey,
-            autovalidateMode: state.isFirstSubmit
+            autovalidateMode: _controller.state.isFirstSubmit.value
                 ? AutovalidateMode.onUserInteraction
                 : AutovalidateMode.disabled,
             child: Column(
               spacing: 4,
               children: [
                 AppTextField(
-                  controller: context.read<LoginCubit>().taxIdOrIdController,
+                  controller: _controller.taxIdOrIdController,
                   focusNode: _taxIdOrIdFocusNode,
                   labelText: context.s.taxIdOrIdLabel,
                   hintText: context.s.taxIdOrIdHint,
@@ -205,7 +196,7 @@ class _LoginChildPageState extends State<LoginChildPage> {
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9\-]')),
                   ],
-                  onChanged: (val) => _cubit.onTaxIdOrIdChanged(val),
+                  onChanged: (val) => _controller.onTaxIdOrIdChanged(val),
                   onFieldSubmitted: (_) =>
                       FocusScope.of(context).requestFocus(_usernameFocusNode),
                   validator: (val) =>
@@ -213,14 +204,14 @@ class _LoginChildPageState extends State<LoginChildPage> {
                 ),
 
                 AppTextField(
-                  controller: context.read<LoginCubit>().usernameController,
+                  controller: _controller.usernameController,
                   focusNode: _usernameFocusNode,
                   labelText: context.s.usernameLabel,
                   hintText: context.s.usernameHint,
                   maxLines: 1,
                   showClearButton: true,
                   autofillHints: const [AutofillHints.username],
-                  onChanged: (val) => _cubit.onUsernameChanged(val),
+                  onChanged: (val) => _controller.onUsernameChanged(val),
                   onFieldSubmitted: (_) =>
                       FocusScope.of(context).requestFocus(_passwordFocusNode),
                   validator: (val) =>
@@ -228,19 +219,19 @@ class _LoginChildPageState extends State<LoginChildPage> {
                 ),
 
                 AppTextField(
-                  controller: context.read<LoginCubit>().passwordController,
+                  controller: _controller.passwordController,
                   focusNode: _passwordFocusNode,
                   labelText: context.s.passwordHint,
                   hintText: context.s.passwordHint,
                   isSecure: true,
                   showClearButton: true,
                   autofillHints: const [AutofillHints.password],
-                  onChanged: (val) => _cubit.onPasswordChanged(val),
+                  onChanged: (val) => _controller.onPasswordChanged(val),
                   onFieldSubmitted: (_) async {
                     if (_formKey.currentState!.validate()) {
-                      await _cubit.submitLogin();
+                      await _controller.submitLogin();
                     } else {
-                      _cubit.changeIsFirstSubmit(true);
+                      _controller.changeIsFirstSubmit(true);
                     }
                   },
                   validator: (val) =>
@@ -250,7 +241,7 @@ class _LoginChildPageState extends State<LoginChildPage> {
             ),
           ),
         );
-      },
+      }
     );
   }
 

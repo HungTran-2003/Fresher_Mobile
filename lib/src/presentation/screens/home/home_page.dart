@@ -29,15 +29,34 @@ class HomeChildPage extends StatefulWidget {
   State<HomeChildPage> createState() => _HomeChildPageState();
 }
 
-class _HomeChildPageState extends State<HomeChildPage> {
+class _HomeChildPageState extends State<HomeChildPage>
+    with SingleTickerProviderStateMixin {
   late final ScrollController _scrollController;
   late final HomeController _controller;
+
+  late final AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
     _controller = Get.find<HomeController>();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+
+    // Trigger animation when products are loaded
+    ever(_controller.state.products, (_) {
+      if (_controller.state.products.isNotEmpty) {
+        _animationController.forward(from: 0.0);
+      }
+    });
+
+    // Initial trigger if products are already there
+    if (_controller.state.products.isNotEmpty) {
+      _animationController.forward();
+    }
   }
 
   void _onScroll() {
@@ -70,54 +89,56 @@ class _HomeChildPageState extends State<HomeChildPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          context.s.productManagement,
-          style: context.textThemes.titleLarge.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        scrolledUnderElevation: 0,
-      ),
-      body: Stack(
-        children: [
-          SafeArea(
-            child: Column(
-              children: [
-                _buildSearchInput(context),
-                _buildFilters(context),
-                Expanded(child: _buildProductsList(context)),
-              ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            context.s.productManagement,
+            style: context.textThemes.titleLarge.copyWith(
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Obx(() {
-            if (_controller.state.status.value == LoadStatus.loading) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                AppLoadingOverlay.show(context);
-              });
-            } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                AppLoadingOverlay.hide();
-              });
+          backgroundColor: Colors.transparent,
+          scrolledUnderElevation: 0,
+        ),
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  _buildSearchInput(context),
+                  _buildFilters(context),
+                  Expanded(child: _buildProductsList(context)),
+                ],
+              ),
+            ),
+            Obx(() {
+              if (_controller.state.status.value == LoadStatus.loading) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  AppLoadingOverlay.show(context);
+                });
+              } else {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  AppLoadingOverlay.hide();
+                });
+              }
+              return const SizedBox.shrink();
+            }),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final result = await _controller.navigator.pushNamed(
+              AppRouters.addProduct,
+            );
+            if (result == true) {
+              _controller.loadProducts(isRefresh: true);
             }
-            return const SizedBox.shrink();
-          }),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await _controller.navigator.pushNamed(
-            AppRouters.addProduct,
-          );
-          if (result == true) {
-            _controller.loadProducts(isRefresh: true);
-          }
-        },
-        backgroundColor: context.colors.primary,
-        foregroundColor: context.colors.onPrimary,
-        child: const Icon(Icons.add),
+          },
+          backgroundColor: context.colors.primary,
+          foregroundColor: context.colors.onPrimary,
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
@@ -164,8 +185,7 @@ class _HomeChildPageState extends State<HomeChildPage> {
                     (e) => DropdownMenuItem(value: e.id, child: Text(e.name)),
                   ),
                 ],
-                onChanged: (val) =>
-                    _controller.filterProducts(categoryId: val),
+                onChanged: (val) => _controller.filterProducts(categoryId: val),
               ),
               const SizedBox(width: 8.0),
               // Status Filter
@@ -214,7 +234,8 @@ class _HomeChildPageState extends State<HomeChildPage> {
 
   Widget _buildProductsList(BuildContext context) {
     return Obx(() {
-      if (_controller.state.isProductsLoading.value && _controller.state.products.isEmpty) {
+      if (_controller.state.isProductsLoading.value &&
+          _controller.state.products.isEmpty) {
         return _buildLoadingState(context);
       }
 
@@ -257,36 +278,60 @@ class _HomeChildPageState extends State<HomeChildPage> {
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        itemCount: _controller.state.products.length + (_controller.state.isLoadMoreLoading.value ? 1 : 0),
+        itemCount:
+            _controller.state.products.length +
+            (_controller.state.isLoadMoreLoading.value ? 1 : 0),
         itemBuilder: (context, index) {
           if (index < _controller.state.products.length) {
             final product = _controller.state.products[index];
-            return Slidable(
-              key: ValueKey(product.id),
-              endActionPane: ActionPane(
-                motion: const ScrollMotion(),
-                children: [
-                  SlidableAction(
-                    onPressed: (_) => _confirmDelete(product.id),
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    icon: Icons.delete,
-                    label: context.s.deleteButton,
-                  ),
-                ],
+
+            // Animation logic
+            final animation = Tween<Offset>(
+              begin: const Offset(-1.0, 0.0),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(
+                parent: _animationController,
+                curve: Interval(
+                  (index / 10).clamp(0.0, 1.0),
+                  1.0,
+                  curve: Curves.easeOutQuart,
+                ),
               ),
-              child: GestureDetector(
-                onTap: () async {
-                  final result = await _controller.navigator.pushNamed(
-                    AppRouters.productDetail,
-                    arguments: product,
-                  );
-                  if (result == true) {
-                    _controller.loadProducts(isRefresh: true);
-                  }
-                },
-                onLongPress: () => _confirmDelete(product.id),
-                child: ProductCard(product: product),
+            );
+
+            return SlideTransition(
+              position: animation,
+              child: FadeTransition(
+                opacity: _animationController,
+                child: Slidable(
+                  key: ValueKey(product.id),
+                  endActionPane: ActionPane(
+                    motion: const ScrollMotion(),
+                    children: [
+                      SlidableAction(
+                        onPressed: (_) => _confirmDelete(product.id),
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        icon: Icons.delete,
+                        label: context.s.deleteButton,
+                      ),
+                    ],
+                  ),
+                  child: GestureDetector(
+                    onTap: () async {
+                      final result = await _controller.navigator.pushNamed(
+                        AppRouters.productDetail,
+                        arguments: product,
+                      );
+                      if (result == true) {
+                        _controller.loadProducts(isRefresh: true);
+                      }
+                    },
+                    onLongPress: () => _confirmDelete(product.id),
+                    child: ProductCard(product: product),
+                  ),
+                ),
               ),
             );
           } else {

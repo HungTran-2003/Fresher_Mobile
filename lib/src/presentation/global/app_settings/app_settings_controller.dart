@@ -1,23 +1,24 @@
 import 'dart:developer';
-
-import 'package:dart_either/dart_either.dart';
-import 'package:equatable/equatable.dart';
-import 'package:crud_app/configs/app_config.dart';
 import 'package:crud_app/src/core/utils/extensions/either_extension.dart';
 import 'package:crud_app/src/domain/models/enum/language.dart';
-import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/repositories/setting_repository.dart';
+import 'package:dart_either/dart_either.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'app_settings_state.dart';
 
-part 'app_settings_state.dart';
-
-class AppSettingsCubit extends Cubit<AppSettingsState> {
+class AppSettingsController extends GetxController {
   final SettingRepository _settingRepository;
+  final state = AppSettingsState();
 
-  AppSettingsCubit({required SettingRepository settingRepository})
-    : _settingRepository = settingRepository,
-      super(const AppSettingsState());
+  AppSettingsController({required SettingRepository settingRepository})
+      : _settingRepository = settingRepository;
+
+  @override
+  void onInit() {
+    super.onInit();
+    getInitialSetting();
+  }
 
   Future<void> getInitialSetting() async {
     final results = await Future.wait([
@@ -33,12 +34,8 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
     await languageResult.foldResult(
       onSuccess: (language) {
         if (language != null) {
-          emit(
-            state.copyWith(
-              language: language,
-              useBiometrics: useBiometricsResult,
-            ),
-          );
+          state.language.value = language;
+          state.useBiometrics.value = useBiometricsResult;
         }
         return null;
       },
@@ -49,7 +46,7 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
 
     await themeModeResult.foldResult(
       onSuccess: (themeMode) {
-        emit(state.copyWith(themeMode: themeMode));
+        state.themeMode.value = themeMode;
       },
       onError: (failure) {
         log("Error theme: $failure");
@@ -61,7 +58,7 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
     final result = await _settingRepository.setCurrentLanguage(language);
     result.foldResult(
       onSuccess: (_) {
-        emit(state.copyWith(language: language));
+        state.language.value = language;
       },
       onError: (failure) {
         log("Error: $failure");
@@ -73,7 +70,7 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
     final result = await _settingRepository.setThemeMode(themeMode);
     result.foldResult(
       onSuccess: (_) {
-        emit(state.copyWith(themeMode: themeMode));
+        state.themeMode.value = themeMode;
       },
       onError: (failure) {
         log("Error: $failure");
@@ -83,6 +80,6 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
 
   void changeUseBiometrics({required bool useBiometrics}) async {
     await _settingRepository.setUseBiometrics(useBiometrics);
-    emit(state.copyWith(useBiometrics: useBiometrics));
+    state.useBiometrics.value = useBiometrics;
   }
 }

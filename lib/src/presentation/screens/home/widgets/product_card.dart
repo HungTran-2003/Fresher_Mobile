@@ -7,10 +7,7 @@ import 'package:flutter/material.dart';
 class ProductCard extends StatelessWidget {
   final ProductEntity product;
 
-  const ProductCard({
-    super.key,
-    required this.product,
-  });
+  const ProductCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +27,11 @@ class ProductCard extends StatelessWidget {
           children: [
             // Cloudinary optimized thumbnail image
             AppCacheImage(
-              url: CloudinaryService.getOptimizedUrl(product.image, width: 90, height: 90),
+              url: CloudinaryService.getOptimizedUrl(
+                product.image,
+                width: 90,
+                height: 90,
+              ),
               width: 90,
               height: 90,
               borderRadius: BorderRadius.circular(12.0),
@@ -43,23 +44,36 @@ class ProductCard extends StatelessWidget {
                 children: [
                   Text(
                     product.name,
-                    style: context.textThemes.body16Semi.copyWith(fontWeight: FontWeight.bold, color: colors.onSurface),
+                    style: context.textThemes.body16Semi.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colors.onSurface,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4.0),
-                  Text('${context.s.sku}: ${product.code}', style: context.textThemes.des12Re.copyWith(color: colors.onSurface.withValues(alpha: 0.6))),
+                  Text(
+                    '${context.s.sku}: ${product.code}',
+                    style: context.textThemes.des12Re.copyWith(
+                      color: colors.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
                   const SizedBox(height: 8.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         '\$${product.price.toStringAsFixed(2)}',
-                        style: context.textThemes.body16Semi.copyWith(color: colors.primary, fontWeight: FontWeight.bold),
+                        style: context.textThemes.body16Semi.copyWith(
+                          color: colors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         context.s.stockCount(product.stock),
-                        style: context.textThemes.des12Re.copyWith(color: colors.onSurface.withValues(alpha: 0.8)),
+                        style: context.textThemes.des12Re.copyWith(
+                          color: colors.onSurface.withValues(alpha: 0.8),
+                        ),
                       ),
                     ],
                   ),
@@ -70,29 +84,42 @@ class ProductCard extends StatelessWidget {
                       // Category Tag
                       if (product.category != null)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0,
+                            vertical: 4.0,
+                          ),
                           decoration: BoxDecoration(
                             color: colors.primaryLight.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(6.0),
                           ),
                           child: Text(
                             product.category!.name,
-                            style: context.textThemes.bodyTiny.copyWith(color: colors.primary, fontWeight: FontWeight.bold),
+                            style: context.textThemes.bodyTiny.copyWith(
+                              color: colors.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         )
                       else
                         const SizedBox.shrink(),
                       // Status Tag
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 4.0,
+                        ),
                         decoration: BoxDecoration(
-                          color: isActive ? colors.successContainer : colors.errorContainer,
+                          color: isActive
+                              ? colors.successContainer
+                              : colors.errorContainer,
                           borderRadius: BorderRadius.circular(6.0),
                         ),
                         child: Text(
                           isActive ? context.s.active : context.s.inactive,
                           style: context.textThemes.bodyTiny.copyWith(
-                            color: isActive ? colors.successText : colors.errorText,
+                            color: isActive
+                                ? colors.successText
+                                : colors.errorText,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
