@@ -48,6 +48,8 @@ class _AddProductChildPageState extends State<AddProductChildPage> {
     _stockController = TextEditingController();
     _tagsController = TextEditingController();
     _descriptionController = TextEditingController();
+    _triggerLoadingOverlay();
+    _triggerValidator();
   }
 
   @override
@@ -59,6 +61,26 @@ class _AddProductChildPageState extends State<AddProductChildPage> {
     _tagsController.dispose();
     _descriptionController.dispose();
     super.dispose();
+  }
+
+  void _triggerLoadingOverlay() {
+    ever(_controller.state.status, (status) {
+      if (status == LoadStatus.loading) {
+        AppLoadingOverlay.show(context);
+      } else {
+        AppLoadingOverlay.hide();
+      }
+    });
+  }
+
+  void _triggerValidator(){
+    ever(_controller.state.existingCodes, (existingCodes) {
+      if(existingCodes.isNotEmpty){
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _formKey.currentState?.validate();
+        });
+      }
+    });
   }
 
   @override
@@ -74,95 +96,77 @@ class _AddProductChildPageState extends State<AddProductChildPage> {
         backgroundColor: Colors.transparent,
         scrolledUnderElevation: 0,
       ),
-      body: Stack(
-        children: [
-          SafeArea(
-            child: Obx(() {
-              if (_controller.state.existingCodes.isNotEmpty) {
-                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                   _formKey.currentState?.validate();
-                 });
-              }
-              
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    ProductForm(
-                      formKey: _formKey,
-                      nameController: _nameController,
-                      codeController: _codeController,
-                      priceController: _priceController,
-                      stockController: _stockController,
-                      tagsController: _tagsController,
-                      descriptionController: _descriptionController,
-                      selectedCategory: _controller.state.category.value,
-                      categories: _controller.state.categories,
-                      statusFilter: _controller.state.statusFilter.value,
-                      isFirstSubmit: _controller.state.isFirstSubmit.value,
-                      existingCodes: _controller.state.existingCodes,
-                      serverError: _controller.state.error.value,
-                      onNameChanged: _controller.onNameChanged,
-                      onCodeChanged: _controller.onCodeChanged,
-                      onPriceChanged: _controller.onPriceChanged,
-                      onStockChanged: _controller.onStockChanged,
-                      onCategoryChanged: _controller.onCategoryChanged,
-                      onTagsChanged: _controller.onTagsChanged,
-                      onStatusChanged: _controller.onStatusChanged,
-                      onDescriptionChanged: _controller.onDescriptionChanged,
-                      imagePicker: ProductImagePicker(
-                        imageFile: _controller.state.imageFile.value,
-                        onImageChanged: _controller.onImageChanged,
-                        onRemoveImage: _controller.removeImage,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      spacing: 12,
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => _controller.navigator.pop(),
-                            style: OutlinedButton.styleFrom(
-                              minimumSize: const Size(0, 48),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Text(context.s.cancelButtonLabel),
-                          ),
-                        ),
-                        Expanded(
-                          child: AppFilledButton(
-                            title: context.s.saveButton,
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _controller.submit();
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+      body: SafeArea(
+        child: Obx(() {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                ProductForm(
+                  formKey: _formKey,
+                  nameController: _nameController,
+                  codeController: _codeController,
+                  priceController: _priceController,
+                  stockController: _stockController,
+                  tagsController: _tagsController,
+                  descriptionController: _descriptionController,
+                  selectedCategory: _controller.state.category.value,
+                  categories: _controller.state.categories,
+                  statusFilter: _controller.state.statusFilter.value,
+                  isFirstSubmit: _controller.state.isFirstSubmit.value,
+                  existingCodes: _controller.state.existingCodes,
+                  serverError: _controller.state.error.value,
+                  onNameChanged: _controller.onNameChanged,
+                  onCodeChanged: _controller.onCodeChanged,
+                  onPriceChanged: _controller.onPriceChanged,
+                  onStockChanged: _controller.onStockChanged,
+                  onCategoryChanged: _controller.onCategoryChanged,
+                  onTagsChanged: _controller.onTagsChanged,
+                  onStatusChanged: _controller.onStatusChanged,
+                  onDescriptionChanged: _controller.onDescriptionChanged,
+                  imagePicker: ProductImagePicker(
+                    imageFile: _controller.state.imageFile.value,
+                    onImageChanged: _controller.onImageChanged,
+                    onRemoveImage: _controller.removeImage,
+                  ),
                 ),
-              );
-            }),
-          ),
-          Obx(() {
-            if (_controller.state.status.value == LoadStatus.loading) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                AppLoadingOverlay.show(context);
-              });
-            } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                AppLoadingOverlay.hide();
-              });
-            }
-            return const SizedBox.shrink();
-          }),
-        ],
+                const SizedBox(height: 24),
+                _buildButtons(context),
+              ],
+            ),
+          );
+        }),
       ),
+    );
+  }
+
+  Widget _buildButtons(BuildContext context) {
+    return Row(
+      spacing: 12,
+      children: [
+        Expanded(
+          child: OutlinedButton(
+            onPressed: () => _controller.navigator.pop(),
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size(0, 48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(context.s.cancelButtonLabel),
+          ),
+        ),
+        Expanded(
+          child: AppFilledButton(
+            title: context.s.saveButton,
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                _controller.submit();
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 }

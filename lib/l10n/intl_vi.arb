@@ -88,5 +88,6 @@
   "productUpdateSuccess": "Cập nhật thành công",
   "stockOnlyInteger": "Kho phải là số nguyên",
   "createdAtLabel": "Ngày tạo",
-  "updatedAtLabel": "Cập nhật"
+  "updatedAtLabel": "Cập nhật",
+  "retryButton": "Thử lại"
 }

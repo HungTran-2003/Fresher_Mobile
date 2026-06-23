@@ -1,15 +1,13 @@
 import 'package:crud_app/src/core/routes/router.dart';
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
-import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/models/enum/product_sort_filter.dart';
 import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_circular_process_indicator.dart';
-import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
+import 'package:crud_app/src/presentation/widgets/inputs/buttons/app_filled_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:crud_app/src/presentation/widgets/inputs/menu/app_filter_dropdown.dart';
 import 'package:crud_app/src/presentation/screens/home/widgets/product_card.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_dialog.dart';
 import 'home_controller.dart';
 
@@ -29,34 +27,15 @@ class HomeChildPage extends StatefulWidget {
   State<HomeChildPage> createState() => _HomeChildPageState();
 }
 
-class _HomeChildPageState extends State<HomeChildPage>
-    with SingleTickerProviderStateMixin {
+class _HomeChildPageState extends State<HomeChildPage> {
   late final ScrollController _scrollController;
   late final HomeController _controller;
-
-  late final AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
     _controller = Get.find<HomeController>();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
-
-    // Trigger animation when products are loaded
-    ever(_controller.state.products, (_) {
-      if (_controller.state.products.isNotEmpty) {
-        _animationController.forward(from: 0.0);
-      }
-    });
-
-    // Initial trigger if products are already there
-    if (_controller.state.products.isNotEmpty) {
-      _animationController.forward();
-    }
   }
 
   void _onScroll() {
@@ -101,30 +80,14 @@ class _HomeChildPageState extends State<HomeChildPage>
           backgroundColor: Colors.transparent,
           scrolledUnderElevation: 0,
         ),
-        body: Stack(
-          children: [
-            SafeArea(
-              child: Column(
-                children: [
-                  _buildSearchInput(context),
-                  _buildFilters(context),
-                  Expanded(child: _buildProductsList(context)),
-                ],
-              ),
-            ),
-            Obx(() {
-              if (_controller.state.status.value == LoadStatus.loading) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  AppLoadingOverlay.show(context);
-                });
-              } else {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  AppLoadingOverlay.hide();
-                });
-              }
-              return const SizedBox.shrink();
-            }),
-          ],
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildSearchInput(context),
+              _buildFilters(context),
+              Expanded(child: _buildProductsList(context)),
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
@@ -234,26 +197,26 @@ class _HomeChildPageState extends State<HomeChildPage>
 
   Widget _buildProductsList(BuildContext context) {
     return Obx(() {
-      if (_controller.state.isProductsLoading.value &&
-          _controller.state.products.isEmpty) {
-        return _buildLoadingState(context);
+      if (_controller.state.productStatus.value.isLoading) {
+        return AppCircularProgressIndicator(valueColor: context.colors.primary);
+      }
+
+      if (_controller.state.errorLoadProduct.value.isNotEmpty) {
+        return _buildErrorProductsListState(
+          context,
+          _controller.state.errorLoadProduct.value,
+        );
       }
 
       if (_controller.state.products.isEmpty) {
-        return _buildEmptyState(context);
+        return _buildEmptyProductsListState(context);
       }
 
-      return _buildSuccessState(context);
+      return _buildSuccessProductsListState(context);
     });
   }
 
-  Widget _buildLoadingState(BuildContext context) {
-    return Center(
-      child: AppCircularProgressIndicator(valueColor: context.colors.primary),
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context) {
+  Widget _buildEmptyProductsListState(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -271,81 +234,81 @@ class _HomeChildPageState extends State<HomeChildPage>
     );
   }
 
-  Widget _buildSuccessState(BuildContext context) {
+  Widget _buildSuccessProductsListState(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () => _controller.loadProducts(isRefresh: true),
       child: ListView.builder(
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        itemCount:
-            _controller.state.products.length +
-            (_controller.state.isLoadMoreLoading.value ? 1 : 0),
+        itemCount: _controller.state.products.length + 1,
         itemBuilder: (context, index) {
           if (index < _controller.state.products.length) {
             final product = _controller.state.products[index];
-
-            // Animation logic
-            final animation = Tween<Offset>(
-              begin: const Offset(-1.0, 0.0),
-              end: Offset.zero,
-            ).animate(
-              CurvedAnimation(
-                parent: _animationController,
-                curve: Interval(
-                  (index / 10).clamp(0.0, 1.0),
-                  1.0,
-                  curve: Curves.easeOutQuart,
-                ),
-              ),
-            );
-
-            return SlideTransition(
-              position: animation,
-              child: FadeTransition(
-                opacity: _animationController,
-                child: Slidable(
-                  key: ValueKey(product.id),
-                  endActionPane: ActionPane(
-                    motion: const ScrollMotion(),
-                    children: [
-                      SlidableAction(
-                        onPressed: (_) => _confirmDelete(product.id),
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        icon: Icons.delete,
-                        label: context.s.deleteButton,
-                      ),
-                    ],
-                  ),
-                  child: GestureDetector(
-                    onTap: () async {
-                      final result = await _controller.navigator.pushNamed(
-                        AppRouters.productDetail,
-                        arguments: product,
-                      );
-                      if (result == true) {
-                        _controller.loadProducts(isRefresh: true);
-                      }
-                    },
-                    onLongPress: () => _confirmDelete(product.id),
-                    child: ProductCard(product: product),
-                  ),
-                ),
-              ),
+            return ProductCard(
+              product: product,
+              onProductTap: () async {
+                final result = await _controller.navigator.pushNamed(
+                  AppRouters.productDetail,
+                  arguments: product,
+                );
+                if (result == true) {
+                  _controller.loadProducts(isRefresh: true);
+                }
+              },
+              onDeleteTap: () => _confirmDelete(product.id),
             );
           } else {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Center(
-                child: AppCircularProgressIndicator(
-                  valueColor: context.colors.primary,
-                ),
-              ),
-            );
+            return _buildLoadMoreIndicator();
           }
         },
       ),
     );
+  }
+
+  Widget _buildErrorProductsListState(
+    BuildContext context,
+    String errorMessage,
+  ) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text(
+              errorMessage,
+              style: context.textThemes.body16Semi,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            AppFilledButton(
+              title: context.s.retryButton,
+              width: 64,
+              borderRadius: 25,
+              onPressed: () => _controller.loadProducts(isRefresh: true),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadMoreIndicator() {
+    return Obx(() {
+      if (_controller.state.loadMoreStatus.value.isLoading) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Center(
+            child: AppCircularProgressIndicator(
+              valueColor: context.colors.primary,
+            ),
+          ),
+        );
+      }
+      return const SizedBox(height: 50);
+    });
   }
 }

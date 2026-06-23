@@ -36,6 +36,7 @@ class AppSettingsController extends GetxController {
         if (language != null) {
           state.language.value = language;
           state.useBiometrics.value = useBiometricsResult;
+          Get.updateLocale(language.local);
         }
         return null;
       },
@@ -47,6 +48,7 @@ class AppSettingsController extends GetxController {
     await themeModeResult.foldResult(
       onSuccess: (themeMode) {
         state.themeMode.value = themeMode;
+        Get.changeThemeMode(themeMode);
       },
       onError: (failure) {
         log("Error theme: $failure");
@@ -59,6 +61,7 @@ class AppSettingsController extends GetxController {
     result.foldResult(
       onSuccess: (_) {
         state.language.value = language;
+        Get.updateLocale(language.local);
       },
       onError: (failure) {
         log("Error: $failure");
@@ -71,6 +74,7 @@ class AppSettingsController extends GetxController {
     result.foldResult(
       onSuccess: (_) {
         state.themeMode.value = themeMode;
+        Get.changeThemeMode(themeMode);
       },
       onError: (failure) {
         log("Error: $failure");

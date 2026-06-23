@@ -69,7 +69,7 @@ void main() {
       await homeController.loadProducts(isRefresh: true);
 
       expect(homeController.state.products, tProducts);
-      expect(homeController.state.isProductsLoading.value, false);
+      expect(homeController.state.loadMoreStatus.value.isLoading, false);
       verify(() => productRepository.getProducts(page: 1, limit: 10)).called(1);
     });
 

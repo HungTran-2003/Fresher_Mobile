@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:crud_app/src/core/routes/router.dart';
 import 'package:crud_app/src/data/services/network/dio_interceptor.dart';
 import 'package:crud_app/src/domain/repositories/auth_repository.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,22 @@ class AuthController extends GetxController {
     CustomDioInterceptor.onUnauthorized = () async {
       return await relogin();
     };
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    _initAuthListener();
+  }
+
+  void _initAuthListener() {
+    ever(state.isAuthenticated, (bool isAuthenticated) {
+      if (isAuthenticated) {
+        Get.offAllNamed(AppRouters.home);
+      } else {
+        Get.offAllNamed(AppRouters.welcome);
+      }
+    });
   }
 
   void setAuthenticated(bool isAuthenticated) {

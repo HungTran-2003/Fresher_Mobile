@@ -60,6 +60,7 @@ class _LoginChildPageState extends State<LoginChildPage> {
 
   void setup() async {
     await _loadLastLogin();
+    _triggerLoadingOverlay();
   }
 
   Future<void> _loadLastLogin() async {
@@ -70,34 +71,25 @@ class _LoginChildPageState extends State<LoginChildPage> {
     }
   }
 
+  void _triggerLoadingOverlay() {
+    ever(_controller.state.status, (status) {
+      if (status == LoadStatus.loading) {
+        AppLoadingOverlay.show(context);
+      } else {
+        AppLoadingOverlay.hide();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colors.surface,
-      body: Stack(
-        children: [
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 32, 12, 0),
-              child: _buildBodyPage(context),
-            ),
-          ),
-          Obx(() {
-            if (_controller.state.status.value == LoadStatus.loading) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                AppLoadingOverlay.show(context);
-              });
-            } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                AppLoadingOverlay.hide();
-              });
-            }
-            return const SizedBox.shrink();
-          }),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 32, 12, 0),
+          child: _buildBodyPage(context),
+        ),
+        bottomNavigationBar: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: _buildBottomUtilities(context),
         ),

@@ -13,27 +13,24 @@ class SettingPage extends GetView<SettingController> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<SettingController>();
+    _triggerLoadingOverlay(controller, context);
+
     return Scaffold(
-      body: Stack(
-        children: [
-          SafeArea(
-            child: _buildBody(context),
-          ),
-          Obx(() {
-            if (controller.state.status.value == LoadStatus.loading) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                AppLoadingOverlay.show(context);
-              });
-            } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                AppLoadingOverlay.hide();
-              });
-            }
-            return const SizedBox.shrink();
-          }),
-        ],
+      body: SafeArea(
+        child: _buildBody(context),
       ),
     );
+  }
+
+  void _triggerLoadingOverlay(SettingController controller, BuildContext context) {
+    ever(controller.state.status, (status) {
+      if (status == LoadStatus.loading) {
+        AppLoadingOverlay.show(context);
+      } else {
+        AppLoadingOverlay.hide();
+      }
+    });
   }
 
   Widget _buildBody(BuildContext context) {

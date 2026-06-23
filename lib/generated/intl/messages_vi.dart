@@ -131,6 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cập nhật thành công",
     ),
     "removeImage": MessageLookupByLibrary.simpleMessage("Xóa ảnh"),
+    "retryButton": MessageLookupByLibrary.simpleMessage("Thử lại"),
     "saveButton": MessageLookupByLibrary.simpleMessage("Lưu"),
     "searchProductHint": MessageLookupByLibrary.simpleMessage(
       "Tìm sản phẩm theo tên...",

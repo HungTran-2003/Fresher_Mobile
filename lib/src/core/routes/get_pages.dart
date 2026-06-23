@@ -1,6 +1,5 @@
 import 'package:crud_app/src/presentation/screens/home/add_product/add_product_binding.dart';
 import 'package:crud_app/src/presentation/screens/home/add_product/add_product_page.dart';
-import 'package:crud_app/src/presentation/screens/home/home_binding.dart';
 import 'package:crud_app/src/presentation/screens/home/product_detail/product_detail_binding.dart';
 import 'package:crud_app/src/presentation/screens/home/product_detail/product_detail_page.dart';
 import 'package:crud_app/src/presentation/screens/login/login_binding.dart';
@@ -9,6 +8,7 @@ import 'package:crud_app/src/presentation/screens/setting/setting_page.dart';
 import 'package:crud_app/src/presentation/screens/splash/splash_binding.dart';
 import 'package:crud_app/src/presentation/screens/splash/splash_page.dart';
 import 'package:crud_app/src/presentation/screens/login/login_page.dart';
+import 'package:crud_app/src/presentation/screens/main/main_binding.dart';
 import 'package:crud_app/src/presentation/screens/main/main_page.dart';
 import 'package:get/get.dart';
 import 'router.dart';
@@ -30,7 +30,7 @@ class GetAppPages {
     GetPage(
       name: AppRouters.home,
       page: () => const MainPage(),
-      binding: HomeBinding(),
+      binding: MainBinding(),
     ),
     GetPage(
       name: AppRouters.profile,

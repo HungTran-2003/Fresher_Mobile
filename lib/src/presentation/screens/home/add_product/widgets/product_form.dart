@@ -91,6 +91,7 @@ class ProductForm extends StatelessWidget {
               return null;
             },
           ),
+          // Price and Stock
           Row(
             spacing: 16,
             children: [
@@ -118,6 +119,7 @@ class ProductForm extends StatelessWidget {
               ),
             ],
           ),
+          // Category
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

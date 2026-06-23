@@ -96,7 +96,6 @@ class LoginController extends GetxController {
         _authController.setAuthenticated(true);
 
         state.status.value = LoadStatus.success;
-        navigator.toHome();
       },
     );
   }
@@ -127,7 +126,6 @@ class LoginController extends GetxController {
 
         await _userController.getUser(taxId, username);
         _authController.setAuthenticated(true);
-        navigator.toHome();
       }
     }
   }

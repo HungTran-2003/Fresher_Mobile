@@ -65,7 +65,6 @@ class SettingController extends GetxController {
       _authController.logout();
       _appSettingsController.changeUseBiometrics(useBiometrics: false);
       state.status.value = LoadStatus.success;
-      navigator.toLogin();
     }
   }
 }

@@ -10,6 +10,8 @@ class SplashPage extends GetView<SplashController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.find<SplashController>();
+
     return Scaffold(
       backgroundColor: context.colors.primaryLight,
       body: Center(

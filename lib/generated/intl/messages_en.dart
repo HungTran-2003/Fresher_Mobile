@@ -135,6 +135,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Product updated successfully",
     ),
     "removeImage": MessageLookupByLibrary.simpleMessage("Remove Image"),
+    "retryButton": MessageLookupByLibrary.simpleMessage("Retry"),
     "saveButton": MessageLookupByLibrary.simpleMessage("Save"),
     "searchProductHint": MessageLookupByLibrary.simpleMessage(
       "Search products by name...",

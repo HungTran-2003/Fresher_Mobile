@@ -43,18 +43,18 @@ class HomeController extends GetxController {
   Future<void> loadProducts({bool isRefresh = true}) async {
     if (!isRefresh &&
         (state.hasReachedMax.value ||
-            state.isProductsLoading.value ||
-            state.isLoadMoreLoading.value)) {
+            state.productStatus.value.isLoading ||
+            state.loadMoreStatus.value.isLoading)) {
       return;
     }
 
     if (isRefresh) {
       state.currentPage.value = 1;
       state.hasReachedMax.value = false;
-      state.isProductsLoading.value = true;
+      state.productStatus.value = LoadStatus.loading;
       state.products.clear();
     } else {
-      state.isLoadMoreLoading.value = true;
+      state.loadMoreStatus.value = LoadStatus.loading;
     }
 
     await _fetchProductsData(
@@ -117,9 +117,13 @@ class HomeController extends GetxController {
 
     result.foldResult(
       onError: (e) {
-        state.isProductsLoading.value = false;
-        state.isLoadMoreLoading.value = false;
-        navigator.showErrorDialog(message: e.message);
+        if(isRefresh){
+          state.productStatus.value = LoadStatus.failure;
+          state.errorLoadProduct.value = e.message;
+        } else {
+          state.loadMoreStatus.value = LoadStatus.failure;
+          navigator.showErrorDialog(message: e.message);
+        }
       },
       onSuccess: (response) {
         final hasReached = response.length < 10;
@@ -128,8 +132,11 @@ class HomeController extends GetxController {
         state.products.assignAll(processed);
         state.currentPage.value = page + (hasReached ? 0 : 1);
         state.hasReachedMax.value = hasReached;
-        state.isProductsLoading.value = false;
-        state.isLoadMoreLoading.value = false;
+        state.loadMoreStatus.value = LoadStatus.success;
+        state.productStatus.value = LoadStatus.success;
+        if(isRefresh){
+          state.errorLoadProduct.value = '';
+        }
       },
     );
   }

@@ -88,5 +88,6 @@
   "productUpdateSuccess": "Product updated successfully",
   "stockOnlyInteger": "Stock must be an integer",
   "createdAtLabel": "Created at",
-  "updatedAtLabel": "Updated at"
+  "updatedAtLabel": "Updated at",
+  "retryButton": "Retry"
 }

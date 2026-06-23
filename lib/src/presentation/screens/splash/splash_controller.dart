@@ -17,44 +17,42 @@ class SplashController extends GetxController {
     required AuthController authController,
     required UserController userController,
     required SettingRepository settingRepository,
-  })  : _authController = authController,
-        _userController = userController,
-        _settingRepository = settingRepository;
+  }) : _authController = authController,
+       _userController = userController,
+       _settingRepository = settingRepository;
 
   @override
-  void onInit() {
-    super.onInit();
+  void onReady() {
+    super.onReady();
     init();
   }
 
   Future<void> init() async {
-    Future.delayed(const Duration(seconds: 1)).then((_) async {
-      final Either<dynamic, bool> isFirstRunResult =
-          await _settingRepository.isFirstRun();
-      final isFirstRun = isFirstRunResult.fold(
-        ifLeft: (_) => false,
-        ifRight: (val) => val,
-      );
+    await Future.delayed(const Duration(seconds: 1));
+    
+    final Either<dynamic, bool> isFirstRunResult = await _settingRepository.isFirstRun();
+    final isFirstRun = isFirstRunResult.fold(
+      ifLeft: (_) => false,
+      ifRight: (val) => val,
+    );
 
-      if (isFirstRun) {
-        await _handleFirstRun();
-      } else {
-        await _handleReturningUser();
-      }
-    });
+    if (isFirstRun) {
+      await _handleFirstRun();
+    } else {
+      await _handleReturningUser();
+    }
   }
 
   Future<void> _handleFirstRun() async {
     _authController.logout();
     await _settingRepository.setFirstRun(isFirstRun: false);
-    navigator.toWelcome();
   }
 
   Future<void> _handleReturningUser() async {
     final token = await SecureStorageDataSource.instance.getSessionToken();
 
     if (token == null) {
-      navigator.toWelcome();
+      _authController.setAuthenticated(false);
       return;
     }
     try {
@@ -83,6 +81,6 @@ class SplashController extends GetxController {
   }
 
   Future<void> _forceReLogin() async {
-    navigator.toWelcome();
+    _authController.setAuthenticated(false);
   }
 }
