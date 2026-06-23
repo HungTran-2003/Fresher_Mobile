@@ -38,7 +38,8 @@ class MyApp extends StatelessWidget {
           final appSettingsController = Get.find<AppSettingsController>();
           final themeMode = appSettingsController.state.themeMode.value;
 
-          final isDark = themeMode == ThemeMode.dark ||
+          final isDark =
+              themeMode == ThemeMode.dark ||
               (themeMode == ThemeMode.system &&
                   MediaQuery.platformBrightnessOf(context) == Brightness.dark);
 
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
             child: AnnotatedRegion<SystemUiOverlayStyle>(
               value: currentAppTheme.systemOverlayStyle,
               child: GestureDetector(
-                onTap: () => _hideKeyboard(context),
+                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
                 child: child ?? const SizedBox.shrink(),
               ),
             ),
@@ -57,12 +58,5 @@ class MyApp extends StatelessWidget {
         });
       },
     );
-  }
-
-  void _hideKeyboard(BuildContext context) {
-    final FocusScopeNode currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-      FocusManager.instance.primaryFocus?.unfocus();
-    }
   }
 }

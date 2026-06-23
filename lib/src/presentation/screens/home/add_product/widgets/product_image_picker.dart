@@ -72,7 +72,8 @@ class ProductImagePicker extends StatelessWidget {
                 color: context.colors.surfaceContainer,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: context.colors.outline.withValues(alpha: 0.15)),
+                  color: context.colors.outline.withValues(alpha: 0.15),
+                ),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

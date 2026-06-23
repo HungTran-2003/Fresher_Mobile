@@ -49,12 +49,7 @@ class CryptoUtil {
     for (int i = 1; i <= blocks; i++) {
       final blockInput = BytesBuilder()
         ..add(salt)
-        ..add([
-          (i >> 24) & 0xff,
-          (i >> 16) & 0xff,
-          (i >> 8) & 0xff,
-          i & 0xff,
-        ]);
+        ..add([(i >> 24) & 0xff, (i >> 16) & 0xff, (i >> 8) & 0xff, i & 0xff]);
 
       var u = hmac.convert(blockInput.toBytes()).bytes;
       var xorSum = List<int>.from(u);

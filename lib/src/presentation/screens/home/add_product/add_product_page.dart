@@ -73,9 +73,9 @@ class _AddProductChildPageState extends State<AddProductChildPage> {
     });
   }
 
-  void _triggerValidator(){
+  void _triggerValidator() {
     ever(_controller.state.existingCodes, (existingCodes) {
-      if(existingCodes.isNotEmpty){
+      if (existingCodes.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _formKey.currentState?.validate();
         });
@@ -97,12 +97,12 @@ class _AddProductChildPageState extends State<AddProductChildPage> {
         scrolledUnderElevation: 0,
       ),
       body: SafeArea(
-        child: Obx(() {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                ProductForm(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Obx(() {
+                return ProductForm(
                   formKey: _formKey,
                   nameController: _nameController,
                   codeController: _codeController,
@@ -111,7 +111,7 @@ class _AddProductChildPageState extends State<AddProductChildPage> {
                   tagsController: _tagsController,
                   descriptionController: _descriptionController,
                   selectedCategory: _controller.state.category.value,
-                  categories: _controller.state.categories,
+                  categories: _controller.state.categories.toList(),
                   statusFilter: _controller.state.statusFilter.value,
                   isFirstSubmit: _controller.state.isFirstSubmit.value,
                   existingCodes: _controller.state.existingCodes,
@@ -129,13 +129,13 @@ class _AddProductChildPageState extends State<AddProductChildPage> {
                     onImageChanged: _controller.onImageChanged,
                     onRemoveImage: _controller.removeImage,
                   ),
-                ),
-                const SizedBox(height: 24),
-                _buildButtons(context),
-              ],
-            ),
-          );
-        }),
+                );
+              }),
+              const SizedBox(height: 24),
+              _buildButtons(context),
+            ],
+          ),
+        ),
       ),
     );
   }

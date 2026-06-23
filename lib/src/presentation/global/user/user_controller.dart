@@ -12,10 +12,7 @@ class UserController extends GetxController {
 
   Future<void> getUser(String taxIdOrId, String username) async {
     final result = await _userRepository.getCurrentUser(taxIdOrId, username);
-    result.foldResult(
-      onError: (_) {},
-      onSuccess: (user) => updateUser(user),
-    );
+    result.foldResult(onError: (_) {}, onSuccess: (user) => updateUser(user));
   }
 
   void updateUser(UserEntity user) {

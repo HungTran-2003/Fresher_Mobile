@@ -140,7 +140,6 @@ class LightColorScheme extends AppColorScheme {
 
   @override
   Color get btnShadow => AppColor.btnShadow;
-
 }
 
 // DARK THEME

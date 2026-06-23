@@ -82,7 +82,10 @@ class ProductForm extends StatelessWidget {
             onChanged: onCodeChanged,
             maxLines: 1,
             validator: (val) {
-              final basicError = AppValidators.validateProductCode(context, val);
+              final basicError = AppValidators.validateProductCode(
+                context,
+                val,
+              );
               if (basicError != null) return basicError;
 
               if (val != null && existingCodes.contains(val.trim())) {
@@ -131,7 +134,10 @@ class ProductForm extends StatelessWidget {
                   value: selectedCategory?.id,
                   hint: context.s.category,
                   items: categories
-                      .map((e) => DropdownMenuItem(value: e.id, child: Text(e.name)))
+                      .map(
+                        (e) =>
+                            DropdownMenuItem(value: e.id, child: Text(e.name)),
+                      )
                       .toList(),
                   onChanged: (val) {
                     final cat = categories.firstWhere((e) => e.id == val);
@@ -158,8 +164,12 @@ class ProductForm extends StatelessWidget {
                   value: statusFilter,
                   hint: context.s.status,
                   items: ProductStatusFilter.values
-                      .map((e) => DropdownMenuItem(
-                          value: e, child: Text(e.getLabel(context))))
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.getLabel(context)),
+                        ),
+                      )
                       .toList(),
                   onChanged: (val) {
                     if (val != null) onStatusChanged(val);

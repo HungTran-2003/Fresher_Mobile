@@ -12,22 +12,21 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<MainController>();
 
-    final pages = [
-      const HomePage(),
-      const SettingPage(),
-    ];
+    final pages = [const HomePage(), const SettingPage()];
 
     return Scaffold(
-      body: Obx(() => IndexedStack(
-            index: controller.currentIndex.value,
-            children: pages,
-          )),
+      body: Obx(
+        () =>
+            IndexedStack(index: controller.currentIndex.value, children: pages),
+      ),
       bottomNavigationBar: SafeArea(
         top: false,
-        child: Obx(() => AppBottomNav(
-              selectedIndex: controller.currentIndex.value,
-              onIndexChanged: (index) => controller.changeIndex(index),
-            )),
+        child: Obx(
+          () => AppBottomNav(
+            selectedIndex: controller.currentIndex.value,
+            onIndexChanged: (index) => controller.changeIndex(index),
+          ),
+        ),
       ),
     );
   }

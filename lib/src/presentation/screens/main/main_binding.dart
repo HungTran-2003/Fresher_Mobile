@@ -12,16 +12,20 @@ class MainBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => MainController());
-    
-    Get.lazyPut(() => HomeController(
-          productRepository: Get.find<ProductRepository>(),
-          navigator: HomeNavigator(),
-        ));
 
-    Get.lazyPut(() => SettingController(
-          authController: Get.find<AuthController>(),
-          appSettingsController: Get.find<AppSettingsController>(),
-          navigator: SettingNavigator(),
-        ));
+    Get.lazyPut(
+      () => HomeController(
+        productRepository: Get.find<ProductRepository>(),
+        navigator: HomeNavigator(),
+      ),
+    );
+
+    Get.lazyPut(
+      () => SettingController(
+        authController: Get.find<AuthController>(),
+        appSettingsController: Get.find<AppSettingsController>(),
+        navigator: SettingNavigator(),
+      ),
+    );
   }
 }

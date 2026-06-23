@@ -29,7 +29,7 @@ class ProductDetailController extends GetxController {
   void onInit() {
     super.onInit();
     product = initialProduct ?? Get.arguments as ProductEntity;
-    
+
     state.name.value = product.name;
     state.code.value = product.code;
     state.price.value = product.price.toString();
@@ -38,7 +38,7 @@ class ProductDetailController extends GetxController {
     state.statusFilter.value = ProductStatusFilter.fromValue(product.status);
     state.description.value = product.description ?? '';
     state.imageUrl.value = product.image;
-    
+
     init();
   }
 
@@ -55,15 +55,18 @@ class ProductDetailController extends GetxController {
     state.code.value = value;
     state.existingCodes.clear();
   }
+
   void onPriceChanged(String value) => state.price.value = value;
   void onStockChanged(String value) => state.stock.value = value;
   void onCategoryChanged(CategoryEntity? value) => state.category.value = value;
-  void onStatusChanged(ProductStatusFilter value) => state.statusFilter.value = value;
+  void onStatusChanged(ProductStatusFilter value) =>
+      state.statusFilter.value = value;
   void onDescriptionChanged(String value) => state.description.value = value;
   void onImageChanged(File? file) {
     state.imageFile.value = file;
     state.imageUrl.value = null;
   }
+
   void removeImage() {
     state.imageFile.value = null;
     state.imageUrl.value = null;
@@ -84,7 +87,9 @@ class ProductDetailController extends GetxController {
 
     String? finalImageUrl = state.imageUrl.value;
     if (state.imageFile.value != null) {
-      finalImageUrl = await CloudinaryService.uploadImage(state.imageFile.value!);
+      finalImageUrl = await CloudinaryService.uploadImage(
+        state.imageFile.value!,
+      );
       if (finalImageUrl == null) {
         state.status.value = LoadStatus.failure;
         navigator.showErrorDialog(message: S.current.failedToUploadImage);

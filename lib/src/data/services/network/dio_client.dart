@@ -16,14 +16,10 @@ abstract class DioClient {
   static DioClient get instance => _instance ??= _DioClient(NetworkUtil.dio);
 
   @POST('/login')
-  Future<BaseResponse<TokenModel>> login(
-    @Body() Map<String, dynamic> body,
-  );
+  Future<BaseResponse<TokenModel>> login(@Body() Map<String, dynamic> body);
 
   @POST('/auth/register')
-  Future<dynamic> register(
-    @Body() Map<String, dynamic> body,
-  );
+  Future<dynamic> register(@Body() Map<String, dynamic> body);
 
   @GET('/products')
   Future<BaseListResponse<ProductModel>> getProducts({
@@ -37,9 +33,7 @@ abstract class DioClient {
   Future<BaseListResponse<CategoryModel>> getCategories();
 
   @POST('/products')
-  Future<dynamic> addProduct(
-    @Body() Map<String, dynamic> body,
-  );
+  Future<dynamic> addProduct(@Body() Map<String, dynamic> body);
 
   @PUT('/products/{id}')
   Future<dynamic> updateProduct(
@@ -48,7 +42,5 @@ abstract class DioClient {
   );
 
   @DELETE('/products/{id}')
-  Future<dynamic> deleteProduct(
-    @Path('id') int id,
-  );
+  Future<dynamic> deleteProduct(@Path('id') int id);
 }

@@ -16,14 +16,13 @@ class SettingPage extends GetView<SettingController> {
     final controller = Get.find<SettingController>();
     _triggerLoadingOverlay(controller, context);
 
-    return Scaffold(
-      body: SafeArea(
-        child: _buildBody(context),
-      ),
-    );
+    return Scaffold(body: SafeArea(child: _buildBody(context)));
   }
 
-  void _triggerLoadingOverlay(SettingController controller, BuildContext context) {
+  void _triggerLoadingOverlay(
+    SettingController controller,
+    BuildContext context,
+  ) {
     ever(controller.state.status, (status) {
       if (status == LoadStatus.loading) {
         AppLoadingOverlay.show(context);
@@ -110,7 +109,10 @@ class SettingPage extends GetView<SettingController> {
         ),
         color: context.colors.surfaceContainer,
         child: SwitchListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 8.0,
+          ),
           title: Text(
             context.s.biometricLoginTitle,
             style: context.textThemes.body16Semi.copyWith(

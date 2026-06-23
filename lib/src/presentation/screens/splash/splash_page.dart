@@ -17,11 +17,7 @@ class SplashPage extends GetView<SplashController> {
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            AppSvgImage(
-              AppVectors.logoApp
-            )
-          ],
+          children: [AppSvgImage(AppVectors.logoApp)],
         ),
       ),
     );

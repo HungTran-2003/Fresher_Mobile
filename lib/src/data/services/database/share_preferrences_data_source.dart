@@ -18,7 +18,9 @@ class SharedPreferencesDataSource {
 
   static SharedPreferencesDataSource get instance {
     if (_instance == null) {
-      throw StateError('SharedPreferencesDataSource has not been initialized. Call init() first.');
+      throw StateError(
+        'SharedPreferencesDataSource has not been initialized. Call init() first.',
+      );
     }
     return _instance!;
   }

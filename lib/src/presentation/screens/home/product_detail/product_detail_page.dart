@@ -48,7 +48,9 @@ class _ProductDetailChildPageState extends State<ProductDetailChildPage> {
     _codeController = TextEditingController(text: product.code);
     _priceController = TextEditingController(text: product.price.toString());
     _stockController = TextEditingController(text: product.stock.toString());
-    _tagsController = TextEditingController(text: _controller.state.tags.join(', '));
+    _tagsController = TextEditingController(
+      text: _controller.state.tags.join(', '),
+    );
     _descriptionController = TextEditingController(text: product.description);
 
     _triggerLoadingOverlay();
@@ -76,9 +78,9 @@ class _ProductDetailChildPageState extends State<ProductDetailChildPage> {
     });
   }
 
-  void _triggerValidator(){
+  void _triggerValidator() {
     ever(_controller.state.existingCodes, (existingCodes) {
-      if(existingCodes.isNotEmpty){
+      if (existingCodes.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _formKey.currentState?.validate();
         });
@@ -95,12 +97,12 @@ class _ProductDetailChildPageState extends State<ProductDetailChildPage> {
         scrolledUnderElevation: 0,
       ),
       body: SafeArea(
-        child: Obx(() {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                ProductForm(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Obx(() {
+                return ProductForm(
                   formKey: _formKey,
                   nameController: _nameController,
                   codeController: _codeController,
@@ -128,15 +130,15 @@ class _ProductDetailChildPageState extends State<ProductDetailChildPage> {
                     onImageChanged: _controller.onImageChanged,
                     onRemoveImage: _controller.removeImage,
                   ),
-                ),
-                const SizedBox(height: 8),
-                _buildUpdateTime(context),
-                const SizedBox(height: 24),
-                _buildButton(context),
-              ],
-            ),
-          );
-        }),
+                );
+              }),
+              const SizedBox(height: 8),
+              _buildUpdateTime(context),
+              const SizedBox(height: 24),
+              _buildButton(context),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -180,7 +182,7 @@ class _ProductDetailChildPageState extends State<ProductDetailChildPage> {
     );
   }
 
-  Widget _buildButton(BuildContext context){
+  Widget _buildButton(BuildContext context) {
     return Row(
       spacing: 12,
       children: [

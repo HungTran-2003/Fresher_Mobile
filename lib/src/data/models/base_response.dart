@@ -11,8 +11,7 @@ class BaseResponse<T> {
   factory BaseResponse.fromJson(
     Map<String, dynamic> json,
     T Function(Object? json) fromJsonT,
-  ) =>
-      _$BaseResponseFromJson(json, fromJsonT);
+  ) => _$BaseResponseFromJson(json, fromJsonT);
 
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
       _$BaseResponseToJson(this, toJsonT);
@@ -28,8 +27,7 @@ class BaseListResponse<T> {
   factory BaseListResponse.fromJson(
     Map<String, dynamic> json,
     T Function(Object? json) fromJsonT,
-  ) =>
-      _$BaseListResponseFromJson(json, fromJsonT);
+  ) => _$BaseListResponseFromJson(json, fromJsonT);
 
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
       _$BaseListResponseToJson(this, toJsonT);

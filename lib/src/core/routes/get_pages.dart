@@ -3,7 +3,6 @@ import 'package:crud_app/src/presentation/screens/home/add_product/add_product_p
 import 'package:crud_app/src/presentation/screens/home/product_detail/product_detail_binding.dart';
 import 'package:crud_app/src/presentation/screens/home/product_detail/product_detail_page.dart';
 import 'package:crud_app/src/presentation/screens/login/login_binding.dart';
-import 'package:crud_app/src/presentation/screens/setting/setting_binding.dart';
 import 'package:crud_app/src/presentation/screens/setting/setting_page.dart';
 import 'package:crud_app/src/presentation/screens/splash/splash_binding.dart';
 import 'package:crud_app/src/presentation/screens/splash/splash_page.dart';
@@ -35,7 +34,7 @@ class GetAppPages {
     GetPage(
       name: AppRouters.profile,
       page: () => const SettingPage(),
-      binding: SettingBinding(),
+      binding: MainBinding(),
     ),
     GetPage(
       name: AppRouters.addProduct,

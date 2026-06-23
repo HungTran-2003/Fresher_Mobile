@@ -1,8 +1,10 @@
 import 'package:crud_app/src/core/routes/router.dart';
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
+import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/models/enum/product_sort_filter.dart';
 import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_circular_process_indicator.dart';
+import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
 import 'package:crud_app/src/presentation/widgets/inputs/buttons/app_filled_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,6 +38,7 @@ class _HomeChildPageState extends State<HomeChildPage> {
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
     _controller = Get.find<HomeController>();
+    _triggerLoadingOverlay();
   }
 
   void _onScroll() {
@@ -49,6 +52,16 @@ class _HomeChildPageState extends State<HomeChildPage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _triggerLoadingOverlay() {
+    ever(_controller.state.status, (status) {
+      if (status == LoadStatus.loading) {
+        AppLoadingOverlay.show(context);
+      } else {
+        AppLoadingOverlay.hide();
+      }
+    });
   }
 
   Future<void> _confirmDelete(int id) async {
@@ -289,7 +302,7 @@ class _HomeChildPageState extends State<HomeChildPage> {
               width: 64,
               borderRadius: 25,
               onPressed: () => _controller.loadProducts(isRefresh: true),
-            )
+            ),
           ],
         ),
       ),

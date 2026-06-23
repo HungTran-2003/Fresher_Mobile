@@ -33,10 +33,10 @@ class LoginController extends GetxController {
     required AuthRepository authRepository,
     required SettingRepository settingRepository,
     required this.navigator,
-  })  : _authController = authController,
-        _userController = userController,
-        _authRepository = authRepository,
-        _settingRepository = settingRepository;
+  }) : _authController = authController,
+       _userController = userController,
+       _authRepository = authRepository,
+       _settingRepository = settingRepository;
 
   @override
   void onInit() {

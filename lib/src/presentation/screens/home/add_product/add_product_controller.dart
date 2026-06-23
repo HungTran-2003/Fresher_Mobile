@@ -40,7 +40,8 @@ class AddProductController extends GetxController {
   void onPriceChanged(String value) => state.price.value = value;
   void onStockChanged(String value) => state.stock.value = value;
   void onCategoryChanged(CategoryEntity? value) => state.category.value = value;
-  void onStatusChanged(ProductStatusFilter value) => state.statusFilter.value = value;
+  void onStatusChanged(ProductStatusFilter value) =>
+      state.statusFilter.value = value;
   void onDescriptionChanged(String value) => state.description.value = value;
   void onImageChanged(File? file) => state.imageFile.value = file;
   void removeImage() => state.imageFile.value = null;

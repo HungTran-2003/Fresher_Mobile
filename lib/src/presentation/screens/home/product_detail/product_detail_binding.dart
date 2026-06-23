@@ -6,9 +6,11 @@ import '../add_product/add_product_navigator.dart';
 class ProductDetailBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => ProductDetailController(
-      productRepository: Get.find<ProductRepository>(),
-      navigator: AddProductNavigator(),
-    ));
+    Get.lazyPut(
+      () => ProductDetailController(
+        productRepository: Get.find<ProductRepository>(),
+        navigator: AddProductNavigator(),
+      ),
+    );
   }
 }

@@ -12,7 +12,9 @@ class DateTimeUtils {
     if (dateStr == null || dateStr.isEmpty) return '';
     try {
       final dateTime = DateTime.parse(dateStr).toLocal();
-      return DateFormat(format ?? AppConfigs.dateTimeDisplayFormat).format(dateTime);
+      return DateFormat(
+        format ?? AppConfigs.dateTimeDisplayFormat,
+      ).format(dateTime);
     } catch (e) {
       return dateStr;
     }

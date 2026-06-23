@@ -18,8 +18,8 @@ class SettingController extends GetxController {
     required AuthController authController,
     required AppSettingsController appSettingsController,
     required this.navigator,
-  })  : _authController = authController,
-        _appSettingsController = appSettingsController;
+  }) : _authController = authController,
+       _appSettingsController = appSettingsController;
 
   Future<void> toggleBiometrics(bool value) async {
     if (value) {

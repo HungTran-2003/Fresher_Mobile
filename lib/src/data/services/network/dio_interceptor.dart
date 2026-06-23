@@ -7,7 +7,10 @@ class CustomDioInterceptor extends Interceptor {
   static Future<String> Function()? onUnauthorized;
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     // Inject headers
     options.headers['Accept'] = 'application/json';
     options.headers['Content-Type'] = 'application/json';
@@ -33,7 +36,7 @@ class CustomDioInterceptor extends Interceptor {
     if (err.response?.statusCode == 401) {
       if (onUnauthorized != null) {
         // 1. Notify to refresh token (AuthCubit's relogin)
-       final newToken = await onUnauthorized!.call();
+        final newToken = await onUnauthorized!.call();
 
         if (newToken.isNotEmpty) {
           // 4. Update the failed request with the new token
@@ -75,7 +78,7 @@ class CustomDioInterceptor extends Interceptor {
         } else if (data.containsKey('error')) {
           message = data['error'].toString();
         }
-        
+
         if (data.containsKey('error_key')) {
           errorKey = data['error_key'].toString();
         }
@@ -87,7 +90,8 @@ class CustomDioInterceptor extends Interceptor {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
         return NetworkException(
-          message: 'Connection timed out. Please check your internet connection.',
+          message:
+              'Connection timed out. Please check your internet connection.',
           code: code,
           errorKey: errorKey,
           originalError: error,
@@ -97,14 +101,18 @@ class CustomDioInterceptor extends Interceptor {
         final statusCode = error.response?.statusCode;
         if (statusCode == 401) {
           return UnauthenticatedException(
-            message: message.isNotEmpty ? message : 'Session expired. Please log in again.',
+            message: message.isNotEmpty
+                ? message
+                : 'Session expired. Please log in again.',
             code: code,
             errorKey: errorKey,
             originalError: error,
           );
         } else if (statusCode == 403) {
           return UnauthorizedException(
-            message: message.isNotEmpty ? message : 'Access denied. You do not have permission.',
+            message: message.isNotEmpty
+                ? message
+                : 'Access denied. You do not have permission.',
             code: code,
             errorKey: errorKey,
             originalError: error,
@@ -135,7 +143,8 @@ class CustomDioInterceptor extends Interceptor {
 
       case DioExceptionType.connectionError:
         return NetworkException(
-          message: 'No internet connection. Please connect to the internet and try again.',
+          message:
+              'No internet connection. Please connect to the internet and try again.',
           code: code,
           errorKey: errorKey,
           originalError: error,
@@ -143,7 +152,8 @@ class CustomDioInterceptor extends Interceptor {
 
       case DioExceptionType.badCertificate:
         return NetworkException(
-          message: 'Secure connection could not be established (invalid certificate).',
+          message:
+              'Secure connection could not be established (invalid certificate).',
           code: code,
           errorKey: errorKey,
           originalError: error,
@@ -152,7 +162,8 @@ class CustomDioInterceptor extends Interceptor {
       case DioExceptionType.unknown:
         if (error.error is SocketException) {
           return NetworkException(
-            message: 'No internet connection. Please connect to the internet and try again.',
+            message:
+                'No internet connection. Please connect to the internet and try again.',
             code: code,
             errorKey: errorKey,
             originalError: error,

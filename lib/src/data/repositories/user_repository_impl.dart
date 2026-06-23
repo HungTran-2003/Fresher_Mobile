@@ -16,13 +16,13 @@ class UserRepositoryImpl implements UserRepository {
     String username,
   ) async {
     final accounts = _hiveService.getAccount(taxIdOrId, username);
-    try{
+    try {
       final user = accounts?.toUserEntity();
-      if(user != null){
+      if (user != null) {
         return Either.right(user);
       }
       return Either.left(ExceptionMapper.map(Exception('User not found')));
-    } catch(e){
+    } catch (e) {
       return Either.left(ExceptionMapper.map(e));
     }
   }

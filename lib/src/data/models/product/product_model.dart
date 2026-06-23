@@ -34,21 +34,22 @@ class ProductModel {
     this.image,
   });
 
-  factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
+  factory ProductModel.fromJson(Map<String, dynamic> json) =>
+      _$ProductModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProductModelToJson(this);
 
   ProductEntity toEntity() => ProductEntity(
-        id: id,
-        status: status,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        name: name,
-        code: code,
-        price: price,
-        stock: stock,
-        category: category?.toEntity(),
-        description: description,
-        image: image,
-      );
+    id: id,
+    status: status,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+    name: name,
+    code: code,
+    price: price,
+    stock: stock,
+    category: category?.toEntity(),
+    description: description,
+    image: image,
+  );
 }

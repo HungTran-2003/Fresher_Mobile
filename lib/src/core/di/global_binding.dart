@@ -19,23 +19,31 @@ class GlobalBinding extends Bindings {
   void dependencies() {
     // Repositories
     Get.lazyPut<AuthRepository>(
-        () => AuthRepositoryImpl(
-            hiveService: HiveService(), firebaseService: FirebaseService()),
-        fenix: true);
+      () => AuthRepositoryImpl(
+        hiveService: HiveService(),
+        firebaseService: FirebaseService(),
+      ),
+      fenix: true,
+    );
     Get.lazyPut<UserRepository>(
-        () => UserRepositoryImpl(hiveService: HiveService()),
-        fenix: true);
+      () => UserRepositoryImpl(hiveService: HiveService()),
+      fenix: true,
+    );
     Get.lazyPut<ProductRepository>(
-        () => ProductRepositoryImpl(dioClient: DioClient.instance),
-        fenix: true);
-    Get.lazyPut<SettingRepository>(() => SettingRepositoryImpl(),
-        fenix: true);
+      () => ProductRepositoryImpl(dioClient: DioClient.instance),
+      fenix: true,
+    );
+    Get.lazyPut<SettingRepository>(() => SettingRepositoryImpl(), fenix: true);
 
     // Global Controllers
-    Get.put(AuthController(authRepo: Get.find<AuthRepository>()),
-        permanent: true);
+    Get.put(
+      AuthController(authRepo: Get.find<AuthRepository>()),
+      permanent: true,
+    );
     Get.put(UserController(Get.find<UserRepository>()), permanent: true);
-    Get.put(AppSettingsController(settingRepository: Get.find<SettingRepository>()),
-        permanent: true);
+    Get.put(
+      AppSettingsController(settingRepository: Get.find<SettingRepository>()),
+      permanent: true,
+    );
   }
 }

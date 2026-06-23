@@ -64,7 +64,7 @@ class AppValidators {
       return context.s.stockRequired;
     }
     final stock = int.tryParse(value);
-    if(stock == null) {
+    if (stock == null) {
       return context.s.stockOnlyInteger;
     }
     if (stock < 0) {

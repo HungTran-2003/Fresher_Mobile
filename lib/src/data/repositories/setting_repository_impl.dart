@@ -8,13 +8,13 @@ import 'package:crud_app/src/domain/repositories/setting_repository.dart';
 import 'package:flutter/material.dart';
 
 class SettingRepositoryImpl extends SettingRepository {
-
   SettingRepositoryImpl();
 
   @override
   Future<Either<AppException, Language?>> getCurrentLanguage() async {
     try {
-      final language = SharedPreferencesDataSource.instance.getCurrentLanguage();
+      final language = SharedPreferencesDataSource.instance
+          .getCurrentLanguage();
       return Either.right(language);
     } catch (e) {
       return Either.left(ExceptionMapper.map(e));
@@ -38,7 +38,9 @@ class SettingRepositoryImpl extends SettingRepository {
     required bool isFirstRun,
   }) async {
     try {
-      await SharedPreferencesDataSource.instance.setFirstRun(isFirstRun: isFirstRun);
+      await SharedPreferencesDataSource.instance.setFirstRun(
+        isFirstRun: isFirstRun,
+      );
       return const Either.right(null);
     } catch (e) {
       return Either.left(ExceptionMapper.map(e));
@@ -80,9 +82,13 @@ class SettingRepositoryImpl extends SettingRepository {
   }
 
   @override
-  Future<Either<AppException, void>> setUseBiometrics(bool useBiometrics) async {
+  Future<Either<AppException, void>> setUseBiometrics(
+    bool useBiometrics,
+  ) async {
     try {
-      await SharedPreferencesDataSource.instance.setUseBiometrics(useBiometrics);
+      await SharedPreferencesDataSource.instance.setUseBiometrics(
+        useBiometrics,
+      );
       return const Either.right(null);
     } catch (e) {
       return Either.left(ExceptionMapper.map(e));
@@ -94,8 +100,7 @@ class SettingRepositoryImpl extends SettingRepository {
     try {
       final useBio = SharedPreferencesDataSource.instance.getUseBiometrics();
       return useBio;
-
-      } catch (e) {
+    } catch (e) {
       log("getUseBiometricsError: ${e.toString()}");
       return false;
     }

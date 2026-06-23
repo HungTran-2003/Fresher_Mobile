@@ -8,11 +8,13 @@ import 'splash_navigator.dart';
 class SplashBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => SplashController(
-          navigator: SplashNavigator(),
-          authController: Get.find<AuthController>(),
-          userController: Get.find<UserController>(),
-          settingRepository: Get.find<SettingRepository>(),
-        ));
+    Get.lazyPut(
+      () => SplashController(
+        navigator: SplashNavigator(),
+        authController: Get.find<AuthController>(),
+        userController: Get.find<UserController>(),
+        settingRepository: Get.find<SettingRepository>(),
+      ),
+    );
   }
 }

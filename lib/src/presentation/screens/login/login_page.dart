@@ -115,35 +115,35 @@ class _LoginChildPageState extends State<LoginChildPage> {
   }
 
   Widget _buildLoginButton(BuildContext context) {
-      return Row(
-        spacing: 12,
-        children: [
-          Expanded(
-            child: AppFilledButton(
-              title: context.s.logIn,
-              color: context.colors.primaryLight,
-              borderRadius: 12.0,
-              titleStyle: context.textThemes.body16Semi.copyWith(
-                color: Colors.white,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: context.colors.btnShadow.withValues(alpha: 0.4),
-                  offset: const Offset(1, 1),
-                  blurRadius: 23.3,
-                  spreadRadius: 0,
-                ),
-              ],
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  await _controller.submitLogin();
-                } else {
-                  _controller.changeIsFirstSubmit(true);
-                }
-              },
+    return Row(
+      spacing: 12,
+      children: [
+        Expanded(
+          child: AppFilledButton(
+            title: context.s.logIn,
+            color: context.colors.primaryLight,
+            borderRadius: 12.0,
+            titleStyle: context.textThemes.body16Semi.copyWith(
+              color: Colors.white,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: context.colors.btnShadow.withValues(alpha: 0.4),
+                offset: const Offset(1, 1),
+                blurRadius: 23.3,
+                spreadRadius: 0,
+              ),
+            ],
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                await _controller.submitLogin();
+              } else {
+                _controller.changeIsFirstSubmit(true);
+              }
+            },
           ),
-          if (_controller.useBiometrics)
+        ),
+        if (_controller.useBiometrics)
           AppButtonWrapper(
             onPressed: () async {
               await _controller.loginWithBiometrics();
@@ -163,78 +163,77 @@ class _LoginChildPageState extends State<LoginChildPage> {
               ),
             ),
           ),
-        ],
-      );
+      ],
+    );
   }
 
   Widget _buildFormLogin() {
     return Obx(() {
-        return AutofillGroup(
-          child: Form(
-            key: _formKey,
-            autovalidateMode: _controller.state.isFirstSubmit.value
-                ? AutovalidateMode.onUserInteraction
-                : AutovalidateMode.disabled,
-            child: Column(
-              spacing: 4,
-              children: [
-                AppTextField(
-                  controller: _controller.taxIdOrIdController,
-                  focusNode: _taxIdOrIdFocusNode,
-                  labelText: context.s.taxIdOrIdLabel,
-                  hintText: context.s.taxIdOrIdHint,
-                  keyboardType: TextInputType.number,
-                  showClearButton: true,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9\-]')),
-                  ],
-                  onChanged: (val) => _controller.onTaxIdOrIdChanged(val),
-                  onFieldSubmitted: (_) =>
-                      FocusScope.of(context).requestFocus(_usernameFocusNode),
-                  validator: (val) =>
-                      AppValidators.validateTaxIdOrId(context, val),
-                ),
+      return AutofillGroup(
+        child: Form(
+          key: _formKey,
+          autovalidateMode: _controller.state.isFirstSubmit.value
+              ? AutovalidateMode.onUserInteraction
+              : AutovalidateMode.disabled,
+          child: Column(
+            spacing: 4,
+            children: [
+              AppTextField(
+                controller: _controller.taxIdOrIdController,
+                focusNode: _taxIdOrIdFocusNode,
+                labelText: context.s.taxIdOrIdLabel,
+                hintText: context.s.taxIdOrIdHint,
+                keyboardType: TextInputType.number,
+                showClearButton: true,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\-]')),
+                ],
+                onChanged: (val) => _controller.onTaxIdOrIdChanged(val),
+                onFieldSubmitted: (_) =>
+                    FocusScope.of(context).requestFocus(_usernameFocusNode),
+                validator: (val) =>
+                    AppValidators.validateTaxIdOrId(context, val),
+              ),
 
-                AppTextField(
-                  controller: _controller.usernameController,
-                  focusNode: _usernameFocusNode,
-                  labelText: context.s.usernameLabel,
-                  hintText: context.s.usernameHint,
-                  maxLines: 1,
-                  showClearButton: true,
-                  autofillHints: const [AutofillHints.username],
-                  onChanged: (val) => _controller.onUsernameChanged(val),
-                  onFieldSubmitted: (_) =>
-                      FocusScope.of(context).requestFocus(_passwordFocusNode),
-                  validator: (val) =>
-                      AppValidators.validateUsername(context, val),
-                ),
+              AppTextField(
+                controller: _controller.usernameController,
+                focusNode: _usernameFocusNode,
+                labelText: context.s.usernameLabel,
+                hintText: context.s.usernameHint,
+                maxLines: 1,
+                showClearButton: true,
+                autofillHints: const [AutofillHints.username],
+                onChanged: (val) => _controller.onUsernameChanged(val),
+                onFieldSubmitted: (_) =>
+                    FocusScope.of(context).requestFocus(_passwordFocusNode),
+                validator: (val) =>
+                    AppValidators.validateUsername(context, val),
+              ),
 
-                AppTextField(
-                  controller: _controller.passwordController,
-                  focusNode: _passwordFocusNode,
-                  labelText: context.s.passwordHint,
-                  hintText: context.s.passwordHint,
-                  isSecure: true,
-                  showClearButton: true,
-                  autofillHints: const [AutofillHints.password],
-                  onChanged: (val) => _controller.onPasswordChanged(val),
-                  onFieldSubmitted: (_) async {
-                    if (_formKey.currentState!.validate()) {
-                      await _controller.submitLogin();
-                    } else {
-                      _controller.changeIsFirstSubmit(true);
-                    }
-                  },
-                  validator: (val) =>
-                      AppValidators.validateLoginPassword(context, val),
-                ),
-              ],
-            ),
+              AppTextField(
+                controller: _controller.passwordController,
+                focusNode: _passwordFocusNode,
+                labelText: context.s.passwordHint,
+                hintText: context.s.passwordHint,
+                isSecure: true,
+                showClearButton: true,
+                autofillHints: const [AutofillHints.password],
+                onChanged: (val) => _controller.onPasswordChanged(val),
+                onFieldSubmitted: (_) async {
+                  if (_formKey.currentState!.validate()) {
+                    await _controller.submitLogin();
+                  } else {
+                    _controller.changeIsFirstSubmit(true);
+                  }
+                },
+                validator: (val) =>
+                    AppValidators.validateLoginPassword(context, val),
+              ),
+            ],
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildBottomUtilities(BuildContext context) {

@@ -29,8 +29,9 @@ class SplashController extends GetxController {
 
   Future<void> init() async {
     await Future.delayed(const Duration(seconds: 1));
-    
-    final Either<dynamic, bool> isFirstRunResult = await _settingRepository.isFirstRun();
+
+    final Either<dynamic, bool> isFirstRunResult = await _settingRepository
+        .isFirstRun();
     final isFirstRun = isFirstRunResult.fold(
       ifLeft: (_) => false,
       ifRight: (val) => val,

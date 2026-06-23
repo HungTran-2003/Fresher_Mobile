@@ -8,7 +8,11 @@ class CloudinaryService {
   static const String _cloudName = 'dhx0jghrl';
 
   /// Transforms any image URL to a Cloudinary-optimized URL using the Fetch API.
-  static String getOptimizedUrl(String? imageUrl, {int width = 120, int height = 120}) {
+  static String getOptimizedUrl(
+    String? imageUrl, {
+    int width = 120,
+    int height = 120,
+  }) {
     if (imageUrl == null || imageUrl.isEmpty) {
       return 'https://placehold.co/${width}x$height/png?text=No+Image';
     }
@@ -23,7 +27,10 @@ class CloudinaryService {
 
   /// Uploads an image file to Cloudinary.
   /// Returns the secure URL of the uploaded image, or null if failed.
-  static Future<String?> uploadImage(File file, {String uploadPreset = 'ml_default'}) async {
+  static Future<String?> uploadImage(
+    File file, {
+    String uploadPreset = 'ml_default',
+  }) async {
     try {
       final dio = Dio();
       final formData = FormData.fromMap({
@@ -40,7 +47,9 @@ class CloudinaryService {
         return response.data['secure_url'] as String?;
       }
     } on DioException catch (e) {
-      debugPrint('CloudinaryService: Upload failed: ${e.response?.data ?? e.message}');
+      debugPrint(
+        'CloudinaryService: Upload failed: ${e.response?.data ?? e.message}',
+      );
     } catch (e) {
       debugPrint('CloudinaryService: Unexpected error: $e');
     }

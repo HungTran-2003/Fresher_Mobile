@@ -22,7 +22,9 @@ class AppFilterDropdown<T> extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.colors.surfaceContainer,
         borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(color: context.colors.outline.withValues(alpha: 0.15)),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.15),
+        ),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(
@@ -31,7 +33,9 @@ class AppFilterDropdown<T> extends StatelessWidget {
           items: items,
           onChanged: onChanged,
           icon: const Icon(Icons.arrow_drop_down),
-          style: context.textThemes.bodySmall.copyWith(color: context.colors.onSurface),
+          style: context.textThemes.bodySmall.copyWith(
+            color: context.colors.onSurface,
+          ),
         ),
       ),
     );

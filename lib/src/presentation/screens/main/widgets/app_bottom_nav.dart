@@ -54,7 +54,10 @@ class AppBottomNav extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
-                margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 6.0),
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 4.0,
+                  vertical: 6.0,
+                ),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? colors.primary.withValues(alpha: 0.1)
@@ -75,7 +78,9 @@ class AppBottomNav extends StatelessWidget {
                       item.label,
                       style: context.textThemes.bodySmall.copyWith(
                         color: isSelected ? activeColor : inactiveColor,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                         fontSize: 11,
                       ),
                     ),

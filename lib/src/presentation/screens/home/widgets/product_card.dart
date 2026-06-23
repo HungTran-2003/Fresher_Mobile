@@ -20,8 +20,6 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-
     return Slidable(
       key: ValueKey(product.id),
       endActionPane: ActionPane(
@@ -33,6 +31,9 @@ class ProductCard extends StatelessWidget {
             foregroundColor: Colors.white,
             icon: Icons.delete,
             label: context.s.deleteButton,
+            borderRadius: const BorderRadius.horizontal(
+              right: Radius.circular(16),
+            ),
           ),
         ],
       ),
@@ -40,11 +41,11 @@ class ProductCard extends StatelessWidget {
         onPressed: onProductTap,
         child: Card(
           elevation: 2,
-          shadowColor: colors.outline.withValues(alpha: 0.1),
+          shadowColor: context.colors.outline.withValues(alpha: 0.1),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),
-          color: colors.surfaceContainer,
+          color: context.colors.surfaceContainer,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
@@ -140,14 +141,9 @@ class ProductCard extends StatelessWidget {
         // Category Tag
         if (product.category != null)
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8.0,
-              vertical: 4.0,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             decoration: BoxDecoration(
-              color: colors.primaryLight.withValues(
-                alpha: 0.15,
-              ),
+              color: colors.primaryLight.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(6.0),
             ),
             child: Text(
@@ -162,10 +158,7 @@ class ProductCard extends StatelessWidget {
           const SizedBox.shrink(),
         // Status Tag
         Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: 4.0,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           decoration: BoxDecoration(
             color: isActive ? colors.successContainer : colors.errorContainer,
             borderRadius: BorderRadius.circular(6.0),

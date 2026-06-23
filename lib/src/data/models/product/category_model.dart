@@ -21,15 +21,16 @@ class CategoryModel {
     required this.name,
   });
 
-  factory CategoryModel.fromJson(Map<String, dynamic> json) => _$CategoryModelFromJson(json);
+  factory CategoryModel.fromJson(Map<String, dynamic> json) =>
+      _$CategoryModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$CategoryModelToJson(this);
 
   CategoryEntity toEntity() => CategoryEntity(
-        id: id,
-        status: status,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        name: name,
-      );
+    id: id,
+    status: status,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+    name: name,
+  );
 }

@@ -40,7 +40,12 @@ class HiveService {
     }
   }
 
-  Future<void> updateFailedAttempts(String taxIdOrId, String username, int failedAttempts, DateTime? lockUntil) async {
+  Future<void> updateFailedAttempts(
+    String taxIdOrId,
+    String username,
+    int failedAttempts,
+    DateTime? lockUntil,
+  ) async {
     final key = "${taxIdOrId.trim()}_${username.trim()}";
     final localAccount = _box.get(key);
     if (localAccount != null) {

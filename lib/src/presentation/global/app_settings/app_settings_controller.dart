@@ -12,7 +12,7 @@ class AppSettingsController extends GetxController {
   final state = AppSettingsState();
 
   AppSettingsController({required SettingRepository settingRepository})
-      : _settingRepository = settingRepository;
+    : _settingRepository = settingRepository;
 
   @override
   void onInit() {

@@ -12,5 +12,4 @@ class AppVectors {
   static const icSearch = '$_path/ic_search_normal.svg';
 
   static const logoApp = '$_path/logo_app.svg';
-
 }

@@ -149,9 +149,7 @@ class _AppTextFieldState extends State<AppTextField> {
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               widget.labelText!,
-              style:
-                  widget.labelStyle ??
-                  context.textThemes.body16Bo,
+              style: widget.labelStyle ?? context.textThemes.body16Bo,
             ),
           ),
         },
@@ -168,9 +166,7 @@ class _AppTextFieldState extends State<AppTextField> {
               autofillHints: widget.autofillHints,
               maxLength: widget.maxLength,
               focusNode: _focusNode,
-              style:
-                  widget.style ??
-                  context.textThemes.body16Semi,
+              style: widget.style ?? context.textThemes.body16Semi,
               inputFormatters: [
                 ...(widget.inputFormatters ??
                     [LengthLimitingTextInputFormatter(255)]),
@@ -196,7 +192,7 @@ class _AppTextFieldState extends State<AppTextField> {
                   ),
                   borderSide: BorderSide(
                     color: context.colors.black0,
-                    width: 1
+                    width: 1,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -204,41 +200,39 @@ class _AppTextFieldState extends State<AppTextField> {
                     Radius.circular(widget.borderRadius ?? 6),
                   ),
                   borderSide: BorderSide(
-                      color: context.colors.grayLight7,
-                      width: 1
+                    color: context.colors.grayLight7,
+                    width: 1,
                   ),
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(widget.borderRadius ?? 6),
                   ),
-                  borderSide:  BorderSide(
-                      color: context.colors.grayLight7,
-                      width: 1
+                  borderSide: BorderSide(
+                    color: context.colors.grayLight7,
+                    width: 1,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(widget.borderRadius ?? 6),
                   ),
-                  borderSide:  BorderSide(
-                      color: context.colors.grayLight7,
-                      width: 1
+                  borderSide: BorderSide(
+                    color: context.colors.grayLight7,
+                    width: 1,
                   ),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(widget.borderRadius ?? 6),
                   ),
-                  borderSide:  BorderSide(
-                      color: context.colors.primaryLight,
-                      width: 1
+                  borderSide: BorderSide(
+                    color: context.colors.primaryLight,
+                    width: 1,
                   ),
                 ),
                 prefixIcon: widget.prefixIcon,
-                suffixIcon:
-                    widget.suffixIcon ??
-                    _buildSuffixIcon(),
+                suffixIcon: widget.suffixIcon ?? _buildSuffixIcon(),
               ),
               keyboardType: widget.keyboardType,
               onFieldSubmitted: widget.onFieldSubmitted,
@@ -278,9 +272,12 @@ class _AppTextFieldState extends State<AppTextField> {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                _displayErrorMessage.isNotEmpty ? "ⓘ $_displayErrorMessage" : ' ',
+                _displayErrorMessage.isNotEmpty
+                    ? "ⓘ $_displayErrorMessage"
+                    : ' ',
                 textAlign: TextAlign.right,
-                style: widget.errorStyle ??
+                style:
+                    widget.errorStyle ??
                     context.textThemes.des12Re.copyWith(
                       color: context.colors.errorContainer,
                     ),
@@ -293,7 +290,8 @@ class _AppTextFieldState extends State<AppTextField> {
   }
 
   Widget? _buildSuffixIcon() {
-    final showClear = widget.showClearButton && widget.controller.text.isNotEmpty;
+    final showClear =
+        widget.showClearButton && widget.controller.text.isNotEmpty;
     final showSecure = widget.isSecure && widget.controller.text.isNotEmpty;
 
     if (!showClear && !showSecure) {
@@ -306,7 +304,7 @@ class _AppTextFieldState extends State<AppTextField> {
       children: [
         if (showClear)
           IconButton(
-            onPressed: (){
+            onPressed: () {
               widget.controller.clear();
               if (widget.onChanged != null) {
                 widget.onChanged!('');

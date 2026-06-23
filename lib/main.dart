@@ -26,7 +26,9 @@ Future<void> main() async {
     // Trigger any potential deserialization errors early to clear corrupt or incompatible boxes
     box.values.toList();
   } catch (e) {
-    debugPrint('Hive initialization error (possible migration/schema mismatch): $e. Recreating box...');
+    debugPrint(
+      'Hive initialization error (possible migration/schema mismatch): $e. Recreating box...',
+    );
     await Hive.deleteBoxFromDisk('accountsBox');
     box = await Hive.openBox<AccountModel>('accountsBox');
   }

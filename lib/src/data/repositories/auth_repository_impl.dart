@@ -83,7 +83,6 @@ class AuthRepositoryImpl implements AuthRepository {
     } catch (e) {
       return '';
     }
-
   }
 
   Future<Either<AppException, AccountModel>> _loginOnline({

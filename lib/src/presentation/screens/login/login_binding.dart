@@ -9,12 +9,14 @@ import 'login_navigator.dart';
 class LoginBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => LoginController(
-          authController: Get.find<AuthController>(),
-          userController: Get.find<UserController>(),
-          authRepository: Get.find<AuthRepository>(),
-          settingRepository: Get.find<SettingRepository>(),
-          navigator: LoginNavigator(),
-        ));
+    Get.lazyPut(
+      () => LoginController(
+        authController: Get.find<AuthController>(),
+        userController: Get.find<UserController>(),
+        authRepository: Get.find<AuthRepository>(),
+        settingRepository: Get.find<SettingRepository>(),
+        navigator: LoginNavigator(),
+      ),
+    );
   }
 }

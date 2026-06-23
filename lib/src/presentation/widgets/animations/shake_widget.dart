@@ -17,16 +17,14 @@ class ShakeWidget extends StatefulWidget {
   State<ShakeWidget> createState() => ShakeWidgetState();
 }
 
-class ShakeWidgetState extends State<ShakeWidget> with SingleTickerProviderStateMixin {
+class ShakeWidgetState extends State<ShakeWidget>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
   }
 
   @override
@@ -51,10 +49,7 @@ class ShakeWidgetState extends State<ShakeWidget> with SingleTickerProviderState
       child: widget.child,
       builder: (context, child) {
         final double tx = _getTranslationX(_controller.value);
-        return Transform.translate(
-          offset: Offset(tx, 0),
-          child: child,
-        );
+        return Transform.translate(offset: Offset(tx, 0), child: child);
       },
     );
   }

@@ -35,7 +35,8 @@ class HomeController extends GetxController {
   Future<void> fetchCategories() async {
     final result = await _productRepository.getCategories();
     result.foldResult(
-      onError: (e) => debugPrint('HomeController: Failed to fetch categories: $e'),
+      onError: (e) =>
+          debugPrint('HomeController: Failed to fetch categories: $e'),
       onSuccess: (list) => state.categories.assignAll(list),
     );
   }
@@ -78,11 +79,11 @@ class HomeController extends GetxController {
     ProductSortFilter? sort,
   }) {
     if (categoryId != null || state.filterCategoryId.value != null) {
-       state.filterCategoryId.value = categoryId;
+      state.filterCategoryId.value = categoryId;
     }
     if (status != null) state.filterStatus.value = status;
     if (sort != null) state.sortFilter.value = sort;
-    
+
     loadProducts(isRefresh: true);
   }
 
@@ -111,13 +112,15 @@ class HomeController extends GetxController {
     final result = await _productRepository.getProducts(
       page: page,
       limit: 10,
-      search: state.searchQuery.value.trim().isEmpty ? null : state.searchQuery.value.trim(),
+      search: state.searchQuery.value.trim().isEmpty
+          ? null
+          : state.searchQuery.value.trim(),
       categoryId: state.filterCategoryId.value,
     );
 
     result.foldResult(
       onError: (e) {
-        if(isRefresh){
+        if (isRefresh) {
           state.productStatus.value = LoadStatus.failure;
           state.errorLoadProduct.value = e.message;
         } else {
@@ -127,14 +130,17 @@ class HomeController extends GetxController {
       },
       onSuccess: (response) {
         final hasReached = response.length < 10;
-        final List<ProductEntity> processed = _processProducts(response, isRefresh: isRefresh);
+        final List<ProductEntity> processed = _processProducts(
+          response,
+          isRefresh: isRefresh,
+        );
 
         state.products.assignAll(processed);
         state.currentPage.value = page + (hasReached ? 0 : 1);
         state.hasReachedMax.value = hasReached;
         state.loadMoreStatus.value = LoadStatus.success;
         state.productStatus.value = LoadStatus.success;
-        if(isRefresh){
+        if (isRefresh) {
           state.errorLoadProduct.value = '';
         }
       },
@@ -151,16 +157,23 @@ class HomeController extends GetxController {
   }
 
   List<ProductEntity> _applyLocalFilters(List<ProductEntity> productsList) {
-    if (state.filterStatus.value == ProductStatusFilter.all) return productsList;
-    return productsList.where((p) => p.status == state.filterStatus.value.value).toList();
+    if (state.filterStatus.value == ProductStatusFilter.all)
+      return productsList;
+    return productsList
+        .where((p) => p.status == state.filterStatus.value.value)
+        .toList();
   }
 
   List<ProductEntity> _sortProducts(List<ProductEntity> productsList) {
     return List<ProductEntity>.from(productsList)..sort((a, b) {
       final filter = state.sortFilter.value;
       return switch (filter) {
-        ProductSortFilter.nameAsc => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-        ProductSortFilter.nameDesc => b.name.toLowerCase().compareTo(a.name.toLowerCase()),
+        ProductSortFilter.nameAsc => a.name.toLowerCase().compareTo(
+          b.name.toLowerCase(),
+        ),
+        ProductSortFilter.nameDesc => b.name.toLowerCase().compareTo(
+          a.name.toLowerCase(),
+        ),
         ProductSortFilter.priceAsc => a.price.compareTo(b.price),
         ProductSortFilter.priceDesc => b.price.compareTo(a.price),
         ProductSortFilter.stockAsc => a.stock.compareTo(b.stock),
