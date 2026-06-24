@@ -6,6 +6,7 @@ class LoginState extends Equatable {
   final String taxIdOrId;
   final String username;
   final String password;
+  final bool useBiometrics;
 
   const LoginState({
     this.status = LoadStatus.initial,
@@ -13,6 +14,7 @@ class LoginState extends Equatable {
     this.taxIdOrId = '',
     this.username = '',
     this.password = '',
+    this.useBiometrics = false,
   });
 
   LoginState copyWith({
@@ -21,6 +23,7 @@ class LoginState extends Equatable {
     String? taxIdOrId,
     String? username,
     String? password,
+    bool? useBiometrics,
   }) {
     return LoginState(
       status: status ?? this.status,
@@ -28,6 +31,7 @@ class LoginState extends Equatable {
       taxIdOrId: taxIdOrId ?? this.taxIdOrId,
       username: username ?? this.username,
       password: password ?? this.password,
+      useBiometrics: useBiometrics ?? this.useBiometrics,
     );
   }
 
@@ -38,5 +42,6 @@ class LoginState extends Equatable {
         taxIdOrId,
         username,
         password,
+        useBiometrics,
       ];
 }

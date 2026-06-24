@@ -55,11 +55,11 @@ class SplashCubit extends Cubit<SplashState> {
     try{
       final parts = token.split('_');
       final username = parts.first;
-      final taxIdOrId = parts[2];
+      final taxIdOrId = parts[1];
       final timestampStr = parts.last;
       final timestamp = int.tryParse(timestampStr) ?? 0;
       final sessionTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-      final isExpired = DateTime.now().difference(sessionTime) > const Duration(minutes: 30);
+      final isExpired = DateTime.now().difference(sessionTime) > const Duration(seconds: 30);
 
 
       if (!isExpired) {

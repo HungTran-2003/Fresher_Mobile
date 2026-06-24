@@ -22,9 +22,6 @@ class LoginCubit extends Cubit<LoginState> {
   final SettingRepository _settingRepository;
   final LoginNavigator navigator;
 
-  bool _isBiometricEnabled = false;
-  bool get useBiometrics => _isBiometricEnabled;
-
   LoginCubit({
     required AuthCubit authCubit,
     required UserCubit userCubit,
@@ -51,6 +48,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> init() async {
     final result = await _authRepository.getLastLogin();
+    final useBio = await _settingRepository.getUseBiometrics();
     await result.foldResult(
       onError: (_) {},
       onSuccess: (data) {
@@ -60,12 +58,14 @@ class LoginCubit extends Cubit<LoginState> {
           state.copyWith(
             taxIdOrId: data['taxIdOrId'] ?? '',
             username: data['username'] ?? '',
+            useBiometrics: useBio,
           ),
         );
       },
     );
-    final useBio = await _settingRepository.getUseBiometrics();
-    _isBiometricEnabled = useBio;
+    if(useBio){
+      await loginWithBiometrics();
+    }
   }
 
   void onTaxIdOrIdChanged(String value) {

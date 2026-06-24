@@ -63,7 +63,6 @@ class _LoginChildPageState extends State<LoginChildPage> {
     _passwordFocusNode = FocusNode();
 
     _cubit = context.read<LoginCubit>();
-    _loadLastLogin();
     _cubit.init();
   }
 
@@ -73,16 +72,6 @@ class _LoginChildPageState extends State<LoginChildPage> {
     _usernameFocusNode.dispose();
     _passwordFocusNode.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadLastLogin() async {
-    if (context.read<LoginCubit>().useBiometrics) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _cubit.loginWithBiometrics();
-        }
-      });
-    }
   }
 
   @override
@@ -132,55 +121,60 @@ class _LoginChildPageState extends State<LoginChildPage> {
   }
 
   Widget _buildLoginButton(BuildContext context) {
-      return Row(
-        spacing: 12,
-        children: [
-          Expanded(
-            child: AppFilledButton(
-              title: context.s.logIn,
-              color: context.colors.primaryLight,
-              borderRadius: 12.0,
-              titleStyle: context.textThemes.body16Semi.copyWith(
-                color: Colors.white,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: context.colors.btnShadow.withValues(alpha: 0.4),
-                  offset: const Offset(1, 1),
-                  blurRadius: 23.3,
-                  spreadRadius: 0,
+      return BlocBuilder<LoginCubit, LoginState>(
+        buildWhen: (prev, current) => prev.useBiometrics != current.useBiometrics,
+        builder: (context, state) {
+          return Row(
+            spacing: 12,
+            children: [
+              Expanded(
+                child: AppFilledButton(
+                  title: context.s.logIn,
+                  color: context.colors.primaryLight,
+                  borderRadius: 12.0,
+                  titleStyle: context.textThemes.body16Semi.copyWith(
+                    color: Colors.white,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: context.colors.btnShadow.withValues(alpha: 0.4),
+                      offset: const Offset(1, 1),
+                      blurRadius: 23.3,
+                      spreadRadius: 0,
+                    ),
+                  ],
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      await _cubit.submitLogin();
+                    } else {
+                      _cubit.changeIsFirstSubmit(true);
+                    }
+                  },
                 ),
-              ],
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  await _cubit.submitLogin();
-                } else {
-                  _cubit.changeIsFirstSubmit(true);
-                }
-              },
-            ),
-          ),
-          if (context.read<LoginCubit>().useBiometrics)
-          AppButtonWrapper(
-            onPressed: () async {
-              await _cubit.loginWithBiometrics();
-            },
-            child: Container(
-              height: 48,
-              width: 48,
-              decoration: BoxDecoration(
-                border: Border.all(color: context.colors.grayLight7),
-                borderRadius: BorderRadius.circular(12),
-                color: context.colors.surfaceContainer,
               ),
-              child: Icon(
-                Icons.fingerprint,
-                color: context.colors.primaryLight,
-                size: 28,
-              ),
-            ),
-          ),
-        ],
+              if (state.useBiometrics)
+                AppButtonWrapper(
+                  onPressed: () async {
+                    await _cubit.loginWithBiometrics();
+                  },
+                  child: Container(
+                    height: 48,
+                    width: 48,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: context.colors.grayLight7),
+                      borderRadius: BorderRadius.circular(12),
+                      color: context.colors.surfaceContainer,
+                    ),
+                    child: Icon(
+                      Icons.fingerprint,
+                      color: context.colors.primaryLight,
+                      size: 28,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
       );
   }
 
