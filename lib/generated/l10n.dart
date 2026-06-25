@@ -18,11 +18,7 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(
-      _current != null,
-      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
-    );
-    return _current!;
+    return _current ?? S();
   }
 
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
