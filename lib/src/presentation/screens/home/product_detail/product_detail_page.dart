@@ -2,6 +2,7 @@ import 'package:crud_app/src/core/utils/date_utils.dart';
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
 import 'package:crud_app/src/domain/models/entities/product_entity.dart';
 import 'package:crud_app/src/domain/repositories/product_repository.dart';
+import 'package:crud_app/src/domain/repositories/upload_repository.dart';
 import 'package:crud_app/src/presentation/screens/home/add_product/add_product_navigator.dart';
 import 'package:crud_app/src/presentation/screens/home/add_product/widgets/product_form.dart';
 import 'package:crud_app/src/presentation/screens/home/add_product/widgets/product_image_picker.dart';
@@ -29,6 +30,7 @@ class ProductDetailPage extends StatelessWidget {
       create: (context) {
         final cubit = ProductDetailCubit(
           productRepository: context.read<ProductRepository>(),
+          uploadRepository: context.read<UploadRepository>(),
           product: argument.product,
           navigator: AddProductNavigator(context),
         );

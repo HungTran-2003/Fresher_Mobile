@@ -16,12 +16,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/theme/app_theme.dart';
 import 'data/repositories/setting_repository_impl.dart';
+import 'data/repositories/upload_repository_impl.dart';
 import 'data/repositories/user_repository_impl.dart';
 import 'domain/models/enum/language.dart';
 import 'data/services/hive/auth/hive_service.dart';
 import 'data/services/firebase/auth/firebase_service.dart';
 import 'domain/repositories/auth_repository.dart';
 import 'domain/repositories/setting_repository.dart';
+import 'domain/repositories/upload_repository.dart';
 import 'domain/repositories/user_repository.dart';
 import 'data/repositories/product_repository_impl.dart';
 import 'domain/repositories/product_repository.dart';
@@ -66,6 +68,9 @@ class _MyAppState extends State<MyApp> {
           create: (context) {
             return SettingRepositoryImpl();
           },
+        ),
+        RepositoryProvider<UploadRepository>(
+          create: (context) => UploadRepositoryImpl(),
         ),
       ],
       child: MultiBlocProvider(

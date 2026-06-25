@@ -1,5 +1,6 @@
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
 import 'package:crud_app/src/domain/repositories/product_repository.dart';
+import 'package:crud_app/src/domain/repositories/upload_repository.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
 import 'package:crud_app/src/presentation/widgets/inputs/buttons/app_filled_button.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class AddProductPage extends StatelessWidget {
       create: (context) {
         final cubit = AddProductCubit(
           productRepository: context.read<ProductRepository>(),
+          uploadRepository: context.read<UploadRepository>(),
           navigator: AddProductNavigator(context),
         );
         return cubit..init();

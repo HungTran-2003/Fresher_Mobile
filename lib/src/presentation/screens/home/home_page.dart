@@ -5,6 +5,7 @@ import 'package:crud_app/src/domain/models/enum/product_sort_filter.dart';
 import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_circular_process_indicator.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
+import 'package:crud_app/src/presentation/widgets/inputs/text_field/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:crud_app/src/presentation/widgets/inputs/menu/app_filter_dropdown.dart';
@@ -132,19 +133,14 @@ class _HomeChildPageState extends State<HomeChildPage> {
   Widget _buildSearchInput(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0),
-      child: TextField(
+      child: AppTextField(
+        controller: TextEditingController(), // Note: Ideally should use a controller from Cubit or Local State
         onChanged: (val) => context.read<HomeCubit>().searchProducts(val),
-        decoration: InputDecoration(
-          hintText: context.s.searchProductHint,
-          prefixIcon: const Icon(Icons.search),
-          filled: true,
-          fillColor: context.colors.surfaceContainer,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
-        ),
+        hintText: context.s.searchProductHint,
+        prefixIcon: const Icon(Icons.search),
+        backgroundColor: context.colors.surfaceContainer,
+        borderRadius: 12.0,
+        isFilled: true,
       ),
     );
   }
