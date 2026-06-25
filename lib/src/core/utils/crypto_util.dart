@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 
@@ -30,10 +31,10 @@ class CryptoUtil {
   }
 
   /// Generates a random Base64 salt for creating new accounts.
-  static String generateSalt() {
-    // For local testing, we can use a random or pseudorandom string.
-    final rand = DateTime.now().microsecondsSinceEpoch.toString();
-    return base64.encode(utf8.encode(rand));
+  static String generateSalt([int length = 16]) {
+    final random = Random.secure();
+    final values = List<int>.generate(length, (i) => random.nextInt(256));
+    return base64.encode(values);
   }
 
   static Uint8List _pbkdf2(

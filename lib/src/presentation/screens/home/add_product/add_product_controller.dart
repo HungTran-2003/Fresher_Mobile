@@ -1,11 +1,11 @@
 import 'package:crud_app/generated/l10n.dart';
 import 'package:crud_app/src/core/exceptions/app_error_key.dart';
 import 'package:crud_app/src/core/utils/extensions/either_extension.dart';
-import 'package:crud_app/src/data/services/cloudinary/cloudinary_service.dart';
 import 'package:crud_app/src/domain/models/entities/category_entity.dart';
 import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
 import 'package:crud_app/src/domain/repositories/product_repository.dart';
+import 'package:crud_app/src/domain/repositories/upload_repository.dart';
 import 'package:get/get.dart';
 import 'add_product_navigator.dart';
 import 'add_product_state.dart';
@@ -13,13 +13,16 @@ import 'dart:io';
 
 class AddProductController extends GetxController {
   final ProductRepository _productRepository;
+  final UploadRepository _uploadRepository;
   final AddProductNavigator navigator;
   final state = AddProductState();
 
   AddProductController({
     required ProductRepository productRepository,
+    required UploadRepository uploadRepository,
     required this.navigator,
-  }) : _productRepository = productRepository;
+  }) : _productRepository = productRepository,
+       _uploadRepository = uploadRepository;
 
   @override
   void onInit() {
@@ -61,7 +64,7 @@ class AddProductController extends GetxController {
 
     String? imageUrl;
     if (state.imageFile.value != null) {
-      imageUrl = await CloudinaryService.uploadImage(state.imageFile.value!);
+      imageUrl = await _uploadRepository.uploadImage(state.imageFile.value!);
       if (imageUrl == null) {
         state.status.value = LoadStatus.failure;
         navigator.showErrorDialog(message: S.current.failedToUploadImage);

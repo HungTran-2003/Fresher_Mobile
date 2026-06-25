@@ -91,11 +91,11 @@ class ProductRepositoryImpl implements ProductRepository {
         'code': code,
         'price': price,
         'stock': stock,
-        'category_id': ?categoryId,
-        'status': ?status,
-        'tags': ?tags,
-        'description': ?description,
-        'image': ?image,
+        'category_id': categoryId,
+        'status': status,
+        'tags': tags,
+        'description': description,
+        'image': image,
       };
       await _dioClient.updateProduct(id, body);
       return const Either.right(null);

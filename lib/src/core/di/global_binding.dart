@@ -1,6 +1,7 @@
 import 'package:crud_app/src/data/repositories/auth_repository_impl.dart';
 import 'package:crud_app/src/data/repositories/product_repository_impl.dart';
 import 'package:crud_app/src/data/repositories/setting_repository_impl.dart';
+import 'package:crud_app/src/data/repositories/upload_repository_impl.dart';
 import 'package:crud_app/src/data/repositories/user_repository_impl.dart';
 import 'package:crud_app/src/data/services/firebase/auth/firebase_service.dart';
 import 'package:crud_app/src/data/services/hive/auth/hive_service.dart';
@@ -8,6 +9,7 @@ import 'package:crud_app/src/data/services/network/dio_client.dart';
 import 'package:crud_app/src/domain/repositories/auth_repository.dart';
 import 'package:crud_app/src/domain/repositories/product_repository.dart';
 import 'package:crud_app/src/domain/repositories/setting_repository.dart';
+import 'package:crud_app/src/domain/repositories/upload_repository.dart';
 import 'package:crud_app/src/domain/repositories/user_repository.dart';
 import 'package:crud_app/src/presentation/global/app_settings/app_settings_controller.dart';
 import 'package:crud_app/src/presentation/global/auth/auth_controller.dart';
@@ -34,6 +36,7 @@ class GlobalBinding extends Bindings {
       fenix: true,
     );
     Get.lazyPut<SettingRepository>(() => SettingRepositoryImpl(), fenix: true);
+    Get.lazyPut<UploadRepository>(() => UploadRepositoryImpl(), fenix: true);
 
     // Global Controllers
     Get.put(

@@ -77,10 +77,55 @@ class ExceptionMapper {
   static AppException map(dynamic error) {
     if (error is AppException) return error;
 
-    if (error is DioException && error.error is AppException) {
-      return error.error as AppException;
+    if (error is DioException) {
+      if (error.error is AppException) {
+        return error.error as AppException;
+      }
+
+      return switch (error.type) {
+        DioExceptionType.connectionTimeout ||
+        DioExceptionType.sendTimeout ||
+        DioExceptionType.receiveTimeout => NetworkException(
+          message: 'Connection timeout',
+          originalError: error,
+        ),
+        DioExceptionType.connectionError => NetworkException(
+          message: 'No internet connection',
+          originalError: error,
+        ),
+        DioExceptionType.badResponse => _handleBadResponse(error),
+        DioExceptionType.cancel => RequestCancelledException(
+          message: 'Request cancelled',
+          originalError: error,
+        ),
+        _ => UnknownException(message: error.message ?? 'Unknown error', originalError: error),
+      };
     }
 
     return UnknownException(message: error.toString(), originalError: error);
+  }
+
+  static AppException _handleBadResponse(DioException error) {
+    final statusCode = error.response?.statusCode;
+    final message = error.response?.data?['message']?.toString();
+
+    return switch (statusCode) {
+      401 => UnauthenticatedException(
+        message: message ?? 'Unauthenticated',
+        originalError: error,
+      ),
+      403 => UnauthorizedException(
+        message: message ?? 'Unauthorized',
+        originalError: error,
+      ),
+      500 => ServerException(
+        message: message ?? 'Internal server error',
+        originalError: error,
+      ),
+      _ => ServerException(
+        message: message ?? 'Server error: $statusCode',
+        originalError: error,
+      ),
+    };
   }
 }
