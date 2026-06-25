@@ -12,34 +12,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/theme/app_theme.dart';
 import 'data/repositories/setting_repository_impl.dart';
 import 'data/repositories/user_repository_impl.dart';
-import 'data/services/database/share_preferrences_data_source.dart';
 import 'domain/models/enum/language.dart';
+import 'data/services/hive/auth/hive_service.dart';
+import 'data/services/firebase/auth/firebase_service.dart';
 import 'domain/repositories/auth_repository.dart';
 import 'domain/repositories/setting_repository.dart';
 import 'domain/repositories/user_repository.dart';
-
 class MyApp extends StatefulWidget {
-  final SharedPreferences sharedPreferences;
-  const MyApp({super.key, required this.sharedPreferences});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  late SharedPreferencesDataSource _sharedPreferencesDataSource;
 
   @override
   void initState() {
     super.initState();
-    _sharedPreferencesDataSource = SharedPreferencesDataSource(
-      widget.sharedPreferences,
-    );
   }
 
   @override
@@ -47,17 +41,20 @@ class _MyAppState extends State<MyApp> {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthRepository>(
-          create: (context) => AuthRepositoryImpl(),
+          create: (context) => AuthRepositoryImpl(
+            hiveService: HiveService(),
+            firebaseService: FirebaseService(),
+          ),
         ),
         RepositoryProvider<UserRepository>(
-          create: (context) => UserRepositoryImpl(),
+          create: (context) => UserRepositoryImpl(
+            hiveService: HiveService(),
+          ),
         ),
 
         RepositoryProvider<SettingRepository>(
           create: (context) {
-            return SettingRepositoryImpl(
-              sharedPreferencesDataSource: _sharedPreferencesDataSource,
-            );
+            return SettingRepositoryImpl();
           },
         ),
       ],

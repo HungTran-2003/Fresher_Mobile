@@ -47,21 +47,16 @@ class AppFilledButton extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isEnabled ? color : disabledColor,
-        borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 100)),
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 6)),
         boxShadow: boxShadow,
       ),
       child: Material(
-        borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 100)),
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 6)),
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
         child: InkWell(
           onTap: isEnabled ? onPressed : null,
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(
-              Radius.circular(borderRadius ?? 100),
-            ),
-            child: _buildInk(context),
-          ),
+          child: _buildInk(context),
         ),
       ),
     );

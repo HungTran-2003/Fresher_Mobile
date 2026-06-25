@@ -10,4 +10,6 @@ abstract class SettingRepository {
   Future<Either<AppException, bool>> isFirstRun();
   Future<Either<AppException, ThemeMode>> getThemeMode();
   Future<Either<AppException, void>> setThemeMode(ThemeMode themeMode);
+  Future<Either<AppException, void>> setUseBiometrics(bool useBiometrics);
+  Future<bool> getUseBiometrics();
 }
