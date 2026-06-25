@@ -20,8 +20,6 @@ class LoginController extends GetxController {
   final LoginNavigator navigator;
 
   final state = LoginState();
-  bool _isBiometricEnabled = false;
-  bool get useBiometrics => _isBiometricEnabled;
 
   final TextEditingController taxIdOrIdController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
@@ -54,6 +52,7 @@ class LoginController extends GetxController {
 
   Future<void> init() async {
     final result = await _authRepository.getLastLogin();
+    final useBio = await _settingRepository.getUseBiometrics();
     await result.foldResult(
       onError: (_) {},
       onSuccess: (data) {
@@ -61,10 +60,12 @@ class LoginController extends GetxController {
         usernameController.text = data['username'] ?? '';
         state.taxIdOrId.value = data['taxIdOrId'] ?? '';
         state.username.value = data['username'] ?? '';
+        state.useBiometrics.value = useBio;
+        if (useBio) {
+          loginWithBiometrics();
+        }
       },
     );
-    final useBio = await _settingRepository.getUseBiometrics();
-    _isBiometricEnabled = useBio;
   }
 
   void onTaxIdOrIdChanged(String value) => state.taxIdOrId.value = value;

@@ -7,4 +7,5 @@ class LoginState {
   final username = ''.obs;
   final password = ''.obs;
   final isFirstSubmit = false.obs;
+  final useBiometrics = false.obs;
 }

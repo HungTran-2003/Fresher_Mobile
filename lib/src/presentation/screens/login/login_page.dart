@@ -47,7 +47,7 @@ class _LoginChildPageState extends State<LoginChildPage> {
     _passwordFocusNode = FocusNode();
 
     _controller = Get.find<LoginController>();
-    setup();
+    _triggerLoadingOverlay();
   }
 
   @override
@@ -56,19 +56,6 @@ class _LoginChildPageState extends State<LoginChildPage> {
     _usernameFocusNode.dispose();
     _passwordFocusNode.dispose();
     super.dispose();
-  }
-
-  void setup() async {
-    await _loadLastLogin();
-    _triggerLoadingOverlay();
-  }
-
-  Future<void> _loadLastLogin() async {
-    if (_controller.useBiometrics) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _controller.loginWithBiometrics();
-      });
-    }
   }
 
   void _triggerLoadingOverlay() {
@@ -115,56 +102,58 @@ class _LoginChildPageState extends State<LoginChildPage> {
   }
 
   Widget _buildLoginButton(BuildContext context) {
-    return Row(
-      spacing: 12,
-      children: [
-        Expanded(
-          child: AppFilledButton(
-            title: context.s.logIn,
-            color: context.colors.primaryLight,
-            borderRadius: 12.0,
-            titleStyle: context.textThemes.body16Semi.copyWith(
-              color: Colors.white,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: context.colors.btnShadow.withValues(alpha: 0.4),
-                offset: const Offset(1, 1),
-                blurRadius: 23.3,
-                spreadRadius: 0,
+    return Obx(() {
+      return Row(
+        spacing: 12,
+        children: [
+          Expanded(
+            child: AppFilledButton(
+              title: context.s.logIn,
+              color: context.colors.primaryLight,
+              borderRadius: 12.0,
+              titleStyle: context.textThemes.body16Semi.copyWith(
+                color: Colors.white,
               ),
-            ],
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                await _controller.submitLogin();
-              } else {
-                _controller.changeIsFirstSubmit(true);
-              }
-            },
-          ),
-        ),
-        if (_controller.useBiometrics)
-          AppButtonWrapper(
-            onPressed: () async {
-              await _controller.loginWithBiometrics();
-            },
-            child: Container(
-              height: 48,
-              width: 48,
-              decoration: BoxDecoration(
-                border: Border.all(color: context.colors.grayLight7),
-                borderRadius: BorderRadius.circular(12),
-                color: context.colors.surfaceContainer,
-              ),
-              child: Icon(
-                Icons.fingerprint,
-                color: context.colors.primaryLight,
-                size: 28,
-              ),
+              boxShadow: [
+                BoxShadow(
+                  color: context.colors.btnShadow.withValues(alpha: 0.4),
+                  offset: const Offset(1, 1),
+                  blurRadius: 23.3,
+                  spreadRadius: 0,
+                ),
+              ],
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  await _controller.submitLogin();
+                } else {
+                  _controller.changeIsFirstSubmit(true);
+                }
+              },
             ),
           ),
-      ],
-    );
+          if (_controller.state.useBiometrics.value)
+            AppButtonWrapper(
+              onPressed: () async {
+                await _controller.loginWithBiometrics();
+              },
+              child: Container(
+                height: 48,
+                width: 48,
+                decoration: BoxDecoration(
+                  border: Border.all(color: context.colors.grayLight7),
+                  borderRadius: BorderRadius.circular(12),
+                  color: context.colors.surfaceContainer,
+                ),
+                child: Icon(
+                  Icons.fingerprint,
+                  color: context.colors.primaryLight,
+                  size: 28,
+                ),
+              ),
+            ),
+        ],
+      );
+    });
   }
 
   Widget _buildFormLogin() {
