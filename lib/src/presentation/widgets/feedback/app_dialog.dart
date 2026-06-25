@@ -60,7 +60,6 @@ class AppDialog {
     final result = await showDialog<dynamic>(
       context: context,
       barrierDismissible: false,
-      barrierColor: context.colors.outline, // Light mode
       builder: (BuildContext context) {
         return AlertDialog(
           insetPadding: const EdgeInsets.symmetric(horizontal: 16),

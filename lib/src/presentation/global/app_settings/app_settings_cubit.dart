@@ -23,15 +23,22 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
     final results = await Future.wait([
       _settingRepository.getCurrentLanguage(),
       _settingRepository.getThemeMode(),
+      _settingRepository.getUseBiometrics(),
     ]);
 
     final languageResult = results[0] as Either<dynamic, Language?>;
     final themeModeResult = results[1] as Either<dynamic, ThemeMode>;
+    final useBiometricsResult = results[2] as bool;
 
-    languageResult.foldResult(
+    await languageResult.foldResult(
       onSuccess: (language) {
         if (language != null) {
-          emit(state.copyWith(language: language));
+          emit(
+            state.copyWith(
+              language: language,
+              useBiometrics: useBiometricsResult,
+            ),
+          );
         }
         return null;
       },
@@ -40,7 +47,7 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
       },
     );
 
-    themeModeResult.foldResult(
+    await themeModeResult.foldResult(
       onSuccess: (themeMode) {
         emit(state.copyWith(themeMode: themeMode));
       },
@@ -72,5 +79,10 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
         log("Error: $failure");
       },
     );
+  }
+
+  void changeUseBiometrics({required bool useBiometrics}) async {
+    await _settingRepository.setUseBiometrics(useBiometrics);
+    emit(state.copyWith(useBiometrics: useBiometrics));
   }
 }

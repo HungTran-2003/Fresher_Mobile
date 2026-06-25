@@ -1,0 +1,199 @@
+import 'dart:async';
+
+import 'package:crud_app/src/domain/models/entities/category_entity.dart';
+import 'package:crud_app/src/domain/models/entities/product_entity.dart';
+import 'package:crud_app/src/domain/models/enum/load_status.dart';
+import 'package:crud_app/src/domain/models/enum/product_sort_filter.dart';
+import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
+import 'package:crud_app/src/domain/repositories/product_repository.dart';
+import 'package:crud_app/src/core/utils/extensions/either_extension.dart';
+import 'package:crud_app/generated/l10n.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'home_navigator.dart';
+
+part 'home_state.dart';
+
+class HomeCubit extends Cubit<HomeState> {
+  final HomeNavigator navigator;
+  final ProductRepository _productRepository;
+  Timer? _searchDebounceTimer;
+
+  HomeCubit({
+    required this.navigator,
+    required ProductRepository productRepository,
+  }) : _productRepository = productRepository,
+       super(const HomeState());
+
+  Future<void> init() async {
+    await Future.wait([fetchCategories(), loadProducts(isRefresh: true)]);
+  }
+
+  Future<void> fetchCategories() async {
+    final result = await _productRepository.getCategories();
+    result.foldResult(
+      onError: (e) => debugPrint('HomeCubit: Failed to fetch categories: $e'),
+      onSuccess: (categories) => emit(state.copyWith(categories: categories)),
+    );
+  }
+
+  /// Refreshes or loads more products based on current filters and pagination.
+  Future<void> loadProducts({bool isRefresh = true}) async {
+    if (!isRefresh &&
+        (state.hasReachedMax ||
+            state.isProductsLoading ||
+            state.isLoadMoreLoading)) {
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        currentPage: isRefresh ? 1 : state.currentPage,
+        hasReachedMax: isRefresh ? false : state.hasReachedMax,
+        isProductsLoading: isRefresh,
+        isLoadMoreLoading: !isRefresh,
+        products: isRefresh ? [] : state.products,
+      ),
+    );
+
+    await _fetchProductsData(
+      page: isRefresh ? 1 : state.currentPage + 1,
+      isRefresh: isRefresh,
+    );
+  }
+
+  /// Handles search query updates with a 300ms debounce.
+  void searchProducts(String query) {
+    emit(state.copyWith(searchQuery: query));
+
+    _searchDebounceTimer?.cancel();
+    _searchDebounceTimer = Timer(const Duration(milliseconds: 300), () {
+      loadProducts(isRefresh: true);
+    });
+  }
+
+  /// Updates filter criteria and refreshes the product list.
+  void filterProducts({
+    int? categoryId,
+    ProductStatusFilter? status,
+    ProductSortFilter? sort,
+  }) {
+    emit(
+      state.copyWith(
+        filterCategoryId: categoryId ?? state.filterCategoryId,
+        filterStatus: status ?? state.filterStatus,
+        sortFilter: sort ?? state.sortFilter,
+      ),
+    );
+    loadProducts(isRefresh: true);
+  }
+
+  /// Deletes a product by ID.
+  Future<void> deleteProduct(int id) async {
+    emit(state.copyWith(status: LoadStatus.loading));
+
+    final result = await _productRepository.deleteProduct(id);
+
+    result.foldResult(
+      onError: (e) {
+        emit(state.copyWith(status: LoadStatus.failure));
+        navigator.showErrorDialog(message: e.message);
+      },
+      onSuccess: (_) {
+        final updatedProducts = state.products
+            .where((p) => p.id != id)
+            .toList();
+        emit(
+          state.copyWith(products: updatedProducts, status: LoadStatus.success),
+        );
+        navigator.showSuccessSnackBar(message: S.current.productDeletedSuccess);
+      },
+    );
+  }
+
+  /// Internal method to fetch, filter, and sort products.
+  Future<void> _fetchProductsData({
+    required int page,
+    required bool isRefresh,
+  }) async {
+    final result = await _productRepository.getProducts(
+      page: page,
+      limit: 10,
+      search: state.searchQuery.trim().isEmpty
+          ? null
+          : state.searchQuery.trim(),
+      categoryId: state.filterCategoryId == -1 ? null : state.filterCategoryId,
+    );
+
+    result.foldResult(
+      onError: (e) {
+        emit(
+          state.copyWith(isProductsLoading: false, isLoadMoreLoading: false),
+        );
+        navigator.showErrorDialog(message: e.message);
+      },
+      onSuccess: (response) {
+        final hasReachedMax = response.length < 10;
+        final processedProducts = _processProducts(
+          response,
+          isRefresh: isRefresh,
+        );
+
+        emit(
+          state.copyWith(
+            products: processedProducts,
+            currentPage: page,
+            hasReachedMax: hasReachedMax,
+            isProductsLoading: false,
+            isLoadMoreLoading: false,
+          ),
+        );
+      },
+    );
+  }
+
+  /// Processes raw products by applying local filters and sorting.
+  List<ProductEntity> _processProducts(
+    List<ProductEntity> rawProducts, {
+    required bool isRefresh,
+  }) {
+    final filtered = _applyLocalFilters(rawProducts);
+    final combined = isRefresh ? filtered : [...state.products, ...filtered];
+    return _sortProducts(combined);
+  }
+
+  /// Filters products locally based on status.
+  List<ProductEntity> _applyLocalFilters(List<ProductEntity> products) {
+    if (state.filterStatus == ProductStatusFilter.all) return products;
+    return products.where((p) => p.status == state.filterStatus.value).toList();
+  }
+
+  /// Sorts products locally based on the selected sort criteria.
+  List<ProductEntity> _sortProducts(List<ProductEntity> products) {
+    return List<ProductEntity>.from(products)..sort((a, b) {
+      final filter = state.sortFilter;
+      return switch (filter) {
+        ProductSortFilter.nameAsc => a.name.toLowerCase().compareTo(
+          b.name.toLowerCase(),
+        ),
+        ProductSortFilter.nameDesc => b.name.toLowerCase().compareTo(
+          a.name.toLowerCase(),
+        ),
+        ProductSortFilter.priceAsc => a.price.compareTo(b.price),
+        ProductSortFilter.priceDesc => b.price.compareTo(a.price),
+        ProductSortFilter.stockAsc => a.stock.compareTo(b.stock),
+        ProductSortFilter.stockDesc => b.stock.compareTo(a.stock),
+        ProductSortFilter.updatedAtDesc => b.updatedAt.compareTo(a.updatedAt),
+        ProductSortFilter.defaultSort => 0,
+      };
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _searchDebounceTimer?.cancel();
+    return super.close();
+  }
+}
