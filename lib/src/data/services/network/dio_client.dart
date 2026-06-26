@@ -13,7 +13,7 @@ abstract class DioClient {
   factory DioClient(Dio dio, {String baseUrl}) = _DioClient;
 
   static DioClient? _instance;
-  static DioClient get instance => _instance ??= _DioClient(NetworkUtil.dio);
+  static DioClient get instance => _instance ??= _DioClient(NetworkService.instance.dio);
 
   @POST('/login')
   Future<BaseResponse<TokenModel>> login(@Body() Map<String, dynamic> body);

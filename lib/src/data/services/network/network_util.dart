@@ -1,29 +1,29 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:crud_app/configs/app_config.dart';
 import 'dio_interceptor.dart';
 
-class NetworkUtil {
-  NetworkUtil._();
+class NetworkService extends GetxService {
+  late final Dio _dio;
 
-  static Dio? _dio;
+  Dio get dio => _dio;
 
-  static Dio get dio {
-    if (_dio == null) {
-      init();
-    }
-    return _dio!;
+  static NetworkService get instance => Get.find<NetworkService>();
+
+  @override
+  void onInit() {
+    super.onInit();
+    _init();
   }
 
   /// Initialize the global Dio instance with base URL, timeouts, and interceptors.
-  static void init({
+  void _init({
     String baseUrl = AppConfigs.baseUrl,
     Duration? timeout,
     List<Interceptor>? additionalInterceptors,
   }) {
-    if (_dio != null) return;
-
     final timeoutDuration = timeout ?? AppConfigs.timeOutDuration;
 
     _dio = Dio(
@@ -36,10 +36,10 @@ class NetworkUtil {
     );
 
     // Add custom interceptor for authentication and headers
-    _dio!.interceptors.add(CustomDioInterceptor());
+    _dio.interceptors.add(CustomDioInterceptor());
 
     // Add logger for request/response debugging
-    _dio!.interceptors.add(
+    _dio.interceptors.add(
       PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
@@ -53,12 +53,12 @@ class NetworkUtil {
 
     // Add any other additional interceptors
     if (additionalInterceptors != null) {
-      _dio!.interceptors.addAll(additionalInterceptors);
+      _dio.interceptors.addAll(additionalInterceptors);
     }
   }
 
   /// Checks if the device has an active internet connection.
-  static Future<bool> hasInternetConnection() async {
+  Future<bool> hasInternetConnection() async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult.contains(ConnectivityResult.none)) {
       return false;

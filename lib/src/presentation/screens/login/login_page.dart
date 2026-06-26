@@ -38,6 +38,8 @@ class _LoginChildPageState extends State<LoginChildPage> {
 
   late final LoginController _controller;
 
+  late final Worker _eventShowLoadingOverPlay;
+
   @override
   void initState() {
     super.initState();
@@ -55,11 +57,12 @@ class _LoginChildPageState extends State<LoginChildPage> {
     _taxIdOrIdFocusNode.dispose();
     _usernameFocusNode.dispose();
     _passwordFocusNode.dispose();
+    _eventShowLoadingOverPlay.dispose();
     super.dispose();
   }
 
   void _triggerLoadingOverlay() {
-    ever(_controller.state.status, (status) {
+    _eventShowLoadingOverPlay = ever(_controller.state.status, (status) {
       if (status == LoadStatus.loading) {
         AppLoadingOverlay.show(context);
       } else {

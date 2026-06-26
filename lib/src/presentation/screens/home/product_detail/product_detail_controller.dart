@@ -2,28 +2,36 @@ import 'dart:io';
 import 'package:crud_app/generated/l10n.dart';
 import 'package:crud_app/src/core/exceptions/app_error_key.dart';
 import 'package:crud_app/src/core/utils/extensions/either_extension.dart';
-import 'package:crud_app/src/data/services/cloudinary/cloudinary_service.dart';
 import 'package:crud_app/src/domain/models/entities/category_entity.dart';
 import 'package:crud_app/src/domain/models/entities/product_entity.dart';
 import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
-import 'package:crud_app/src/domain/repositories/product_repository.dart';
+import 'package:crud_app/src/domain/usecases/product/get_categories_use_case.dart';
+import 'package:crud_app/src/domain/usecases/product/update_product_use_case.dart';
+import 'package:crud_app/src/domain/usecases/upload/upload_image_use_case.dart';
+import 'package:crud_app/src/domain/usecases/use_case.dart';
 import 'package:get/get.dart';
 import '../add_product/add_product_navigator.dart';
 import 'product_detail_state.dart';
 
 class ProductDetailController extends GetxController {
-  final ProductRepository _productRepository;
+  final UpdateProductUseCase _updateProductUseCase;
+  final GetCategoriesUseCase _getCategoriesUseCase;
+  final UploadImageUseCase _uploadImageUseCase;
   final AddProductNavigator navigator;
   final ProductEntity? initialProduct;
   late final ProductEntity product;
   final state = ProductDetailState();
 
   ProductDetailController({
-    required ProductRepository productRepository,
+    required UpdateProductUseCase updateProductUseCase,
+    required GetCategoriesUseCase getCategoriesUseCase,
+    required UploadImageUseCase uploadImageUseCase,
     required this.navigator,
     this.initialProduct,
-  }) : _productRepository = productRepository;
+  }) : _updateProductUseCase = updateProductUseCase,
+       _getCategoriesUseCase = getCategoriesUseCase,
+       _uploadImageUseCase = uploadImageUseCase;
 
   @override
   void onInit() {
@@ -43,7 +51,7 @@ class ProductDetailController extends GetxController {
   }
 
   Future<void> init() async {
-    final result = await _productRepository.getCategories();
+    final result = await _getCategoriesUseCase(NoParams());
     result.foldResult(
       onError: (e) => navigator.showErrorDialog(message: e.message),
       onSuccess: (list) => state.categories.assignAll(list),
@@ -87,9 +95,7 @@ class ProductDetailController extends GetxController {
 
     String? finalImageUrl = state.imageUrl.value;
     if (state.imageFile.value != null) {
-      finalImageUrl = await CloudinaryService.uploadImage(
-        state.imageFile.value!,
-      );
+      finalImageUrl = await _uploadImageUseCase(state.imageFile.value!);
       if (finalImageUrl == null) {
         state.status.value = LoadStatus.failure;
         navigator.showErrorDialog(message: S.current.failedToUploadImage);
@@ -97,7 +103,7 @@ class ProductDetailController extends GetxController {
       }
     }
 
-    final result = await _productRepository.updateProduct(
+    final result = await _updateProductUseCase(UpdateProductParams(
       id: product.id,
       name: state.name.value,
       code: state.code.value,
@@ -108,7 +114,7 @@ class ProductDetailController extends GetxController {
       tags: state.tags,
       description: state.description.value,
       image: finalImageUrl,
-    );
+    ));
 
     result.foldResult(
       onError: (e) {

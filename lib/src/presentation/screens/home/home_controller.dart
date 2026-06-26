@@ -3,7 +3,11 @@ import 'package:crud_app/src/domain/models/entities/product_entity.dart';
 import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/models/enum/product_sort_filter.dart';
 import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
-import 'package:crud_app/src/domain/repositories/product_repository.dart';
+import 'package:crud_app/src/domain/usecases/product/delete_product_use_case.dart';
+import 'package:crud_app/src/domain/usecases/product/get_categories_use_case.dart';
+import 'package:crud_app/src/domain/usecases/product/get_products_use_case.dart';
+import 'package:crud_app/src/domain/usecases/product/process_products_use_case.dart';
+import 'package:crud_app/src/domain/usecases/use_case.dart';
 import 'package:crud_app/src/core/utils/extensions/either_extension.dart';
 import 'package:crud_app/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
@@ -12,19 +16,36 @@ import 'home_navigator.dart';
 import 'home_state.dart';
 
 class HomeController extends GetxController {
-  final ProductRepository _productRepository;
+  final GetProductsUseCase _getProductsUseCase;
+  final GetCategoriesUseCase _getCategoriesUseCase;
+  final DeleteProductUseCase _deleteProductUseCase;
+  final ProcessProductsUseCase _processProductsUseCase;
   final HomeNavigator navigator;
   final state = HomeState();
 
   HomeController({
-    required ProductRepository productRepository,
+    required GetProductsUseCase getProductsUseCase,
+    required GetCategoriesUseCase getCategoriesUseCase,
+    required DeleteProductUseCase deleteProductUseCase,
+    required ProcessProductsUseCase processProductsUseCase,
     required this.navigator,
-  }) : _productRepository = productRepository;
+  }) : _getProductsUseCase = getProductsUseCase,
+       _getCategoriesUseCase = getCategoriesUseCase,
+       _deleteProductUseCase = deleteProductUseCase,
+       _processProductsUseCase = processProductsUseCase;
+
+  String _lastSearchQuery = '';
 
   @override
   void onInit() {
     super.onInit();
     init();
+    debounce(state.searchQuery, (query) {
+      if (_lastSearchQuery != query) {
+        _lastSearchQuery = query;
+        loadProducts(isRefresh: true);
+      }
+    }, time: const Duration(milliseconds: 300));
   }
 
   Future<void> init() async {
@@ -32,7 +53,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetchCategories() async {
-    final result = await _productRepository.getCategories();
+    final result = await _getCategoriesUseCase(NoParams());
     result.foldResult(
       onError: (e) =>
           debugPrint('HomeController: Failed to fetch categories: $e'),
@@ -64,11 +85,11 @@ class HomeController extends GetxController {
   }
 
   void searchProducts(String query) {
-    state.searchQuery.value = query.trim();
-    debounce(state.searchQuery, (_){
-      loadProducts(isRefresh: true);
-    },
-    time: const Duration(milliseconds: 300));
+    final value = query.trim();
+    if (value == state.searchQuery.value) {
+      return;
+    }
+    state.searchQuery.value = value;
   }
 
   void filterProducts({
@@ -76,19 +97,32 @@ class HomeController extends GetxController {
     ProductStatusFilter? status,
     ProductSortFilter? sort,
   }) {
-    if (categoryId != null || state.filterCategoryId.value != null) {
-      state.filterCategoryId.value = categoryId;
-    }
-    if (status != null) state.filterStatus.value = status;
-    if (sort != null) state.sortFilter.value = sort;
+    var hasChanged = false;
 
-    loadProducts(isRefresh: true);
+    if (categoryId != state.filterCategoryId.value) {
+      state.filterCategoryId.value = categoryId;
+      hasChanged = true;
+    }
+
+    if (status != null && status != state.filterStatus.value) {
+      state.filterStatus.value = status;
+      hasChanged = true;
+    }
+
+    if (sort != null && sort != state.sortFilter.value) {
+      state.sortFilter.value = sort;
+      hasChanged = true;
+    }
+
+    if (hasChanged) {
+      loadProducts(isRefresh: true);
+    }
   }
 
   Future<void> deleteProduct(int id) async {
     state.status.value = LoadStatus.loading;
 
-    final result = await _productRepository.deleteProduct(id);
+    final result = await _deleteProductUseCase(id);
 
     result.foldResult(
       onError: (e) {
@@ -107,13 +141,15 @@ class HomeController extends GetxController {
     required int page,
     required bool isRefresh,
   }) async {
-    final result = await _productRepository.getProducts(
-      page: page,
-      limit: 10,
-      search: state.searchQuery.value.isEmpty
-          ? null
-          : state.searchQuery.value,
-      categoryId: state.filterCategoryId.value,
+    final result = await _getProductsUseCase(
+      GetProductsParams(
+        page: page,
+        limit: 10,
+        search: state.searchQuery.value.isEmpty
+            ? null
+            : state.searchQuery.value,
+        categoryId: state.filterCategoryId.value,
+      ),
     );
 
     result.foldResult(
@@ -128,9 +164,14 @@ class HomeController extends GetxController {
       },
       onSuccess: (response) {
         final hasReached = response.length < 10;
-        final List<ProductEntity> processed = _processProducts(
-          response,
-          isRefresh: isRefresh,
+        final List<ProductEntity> processed = _processProductsUseCase(
+          ProcessProductsParams(
+            rawProducts: response,
+            currentProducts: state.products,
+            filterStatus: state.filterStatus.value,
+            sortFilter: state.sortFilter.value,
+            isRefresh: isRefresh,
+          ),
         );
 
         state.products.assignAll(processed);
@@ -143,43 +184,5 @@ class HomeController extends GetxController {
         }
       },
     );
-  }
-
-  List<ProductEntity> _processProducts(
-    List<ProductEntity> rawProducts, {
-    required bool isRefresh,
-  }) {
-    final filtered = _applyLocalFilters(rawProducts);
-    final combined = isRefresh ? filtered : [...state.products, ...filtered];
-    return _sortProducts(combined);
-  }
-
-  List<ProductEntity> _applyLocalFilters(List<ProductEntity> productsList) {
-    if (state.filterStatus.value == ProductStatusFilter.all) {
-      return productsList;
-    }
-    return productsList
-        .where((p) => p.status == state.filterStatus.value.value)
-        .toList();
-  }
-
-  List<ProductEntity> _sortProducts(List<ProductEntity> productsList) {
-    return List<ProductEntity>.from(productsList)..sort((a, b) {
-      final filter = state.sortFilter.value;
-      return switch (filter) {
-        ProductSortFilter.nameAsc => a.name.toLowerCase().compareTo(
-          b.name.toLowerCase(),
-        ),
-        ProductSortFilter.nameDesc => b.name.toLowerCase().compareTo(
-          a.name.toLowerCase(),
-        ),
-        ProductSortFilter.priceAsc => a.price.compareTo(b.price),
-        ProductSortFilter.priceDesc => b.price.compareTo(a.price),
-        ProductSortFilter.stockAsc => a.stock.compareTo(b.stock),
-        ProductSortFilter.stockDesc => b.stock.compareTo(a.stock),
-        ProductSortFilter.updatedAtDesc => b.updatedAt.compareTo(a.updatedAt),
-        ProductSortFilter.defaultSort => 0,
-      };
-    });
   }
 }

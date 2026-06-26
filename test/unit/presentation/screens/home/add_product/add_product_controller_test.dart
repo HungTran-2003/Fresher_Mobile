@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:crud_app/src/domain/repositories/product_repository.dart';
-import 'package:crud_app/src/domain/repositories/upload_repository.dart';
+import 'package:crud_app/src/domain/usecases/product/add_product_use_case.dart';
+import 'package:crud_app/src/domain/usecases/product/get_categories_use_case.dart';
+import 'package:crud_app/src/domain/usecases/upload/upload_image_use_case.dart';
 import 'package:crud_app/src/presentation/screens/home/add_product/add_product_controller.dart';
 import 'package:crud_app/src/presentation/screens/home/add_product/add_product_navigator.dart';
 import 'package:dart_either/dart_either.dart';
@@ -8,25 +9,42 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:crud_app/src/domain/models/enum/load_status.dart';
 
-class MockProductRepository extends Mock implements ProductRepository {}
-class MockUploadRepository extends Mock implements UploadRepository {}
+class MockAddProductUseCase extends Mock implements AddProductUseCase {}
+
+class MockGetCategoriesUseCase extends Mock implements GetCategoriesUseCase {}
+
+class MockUploadImageUseCase extends Mock implements UploadImageUseCase {}
+
 class MockAddProductNavigator extends Mock implements AddProductNavigator {}
+
 class MockFile extends Mock implements File {}
 
 void main() {
   late AddProductController controller;
-  late MockProductRepository mockProductRepository;
-  late MockUploadRepository mockUploadRepository;
+  late MockAddProductUseCase mockAddProductUseCase;
+  late MockGetCategoriesUseCase mockGetCategoriesUseCase;
+  late MockUploadImageUseCase mockUploadImageUseCase;
   late MockAddProductNavigator mockAddProductNavigator;
 
+  setUpAll(() {
+    registerFallbackValue(AddProductParams(
+      name: '',
+      code: '',
+      price: 0,
+      stock: 0,
+    ));
+  });
+
   setUp(() {
-    mockProductRepository = MockProductRepository();
-    mockUploadRepository = MockUploadRepository();
+    mockAddProductUseCase = MockAddProductUseCase();
+    mockGetCategoriesUseCase = MockGetCategoriesUseCase();
+    mockUploadImageUseCase = MockUploadImageUseCase();
     mockAddProductNavigator = MockAddProductNavigator();
 
     controller = AddProductController(
-      productRepository: mockProductRepository,
-      uploadRepository: mockUploadRepository,
+      addProductUseCase: mockAddProductUseCase,
+      getCategoriesUseCase: mockGetCategoriesUseCase,
+      uploadImageUseCase: mockUploadImageUseCase,
       navigator: mockAddProductNavigator,
     );
   });
@@ -37,7 +55,8 @@ void main() {
       expect(controller.state.name.value, 'New Name');
     });
 
-    test('submit should upload image if present and then add product', () async {
+    test('submit should upload image if present and then add product',
+        () async {
       // Arrange
       final file = MockFile();
       controller.onImageChanged(file);
@@ -46,24 +65,22 @@ void main() {
       controller.onPriceChanged('100');
       controller.onStockChanged('10');
 
-      when(() => mockUploadRepository.uploadImage(file))
-          .thenAnswer((_) async => 'http://image.url');
-      when(() => mockProductRepository.addProduct(
-            name: 'Product',
-            code: 'CODE',
-            price: 100.0,
-            stock: 10,
-            image: 'http://image.url',
-            categoryId: any(named: 'categoryId'),
-            tags: any(named: 'tags'),
-            status: any(named: 'status'),
-            description: any(named: 'description'),
-          )).thenAnswer((_) async => const Either.right(null));
-      
+      when(() => mockUploadImageUseCase.call(file)).thenAnswer(
+        (_) async => 'http://image.url',
+      );
+      when(() => mockAddProductUseCase.call(any())).thenAnswer(
+        (_) async => const Either.right(null),
+      );
+
       // Fixed: Using thenAnswer for Future<void> return types
-      when(() => mockAddProductNavigator.showSuccessSnackBar(message: any(named: 'message')))
-          .thenAnswer((_) async => null);
-      when(() => mockAddProductNavigator.pop(any())).thenAnswer((_) async => null);
+      when(
+        () => mockAddProductNavigator.showSuccessSnackBar(
+          message: any(named: 'message'),
+        ),
+      ).thenAnswer((_) async => null);
+      when(() => mockAddProductNavigator.pop(any())).thenAnswer(
+        (_) async => null,
+      );
 
       // Act
       await controller.submit();
@@ -76,10 +93,14 @@ void main() {
       // Arrange
       final file = MockFile();
       controller.onImageChanged(file);
-      when(() => mockUploadRepository.uploadImage(file))
-          .thenAnswer((_) async => null);
-      when(() => mockAddProductNavigator.showErrorDialog(message: any(named: 'message')))
-          .thenAnswer((_) async => null);
+      when(() => mockUploadImageUseCase.call(file)).thenAnswer(
+        (_) async => null,
+      );
+      when(
+        () => mockAddProductNavigator.showErrorDialog(
+          message: any(named: 'message'),
+        ),
+      ).thenAnswer((_) async => null);
 
       // Act
       await controller.submit();

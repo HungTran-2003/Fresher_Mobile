@@ -1,7 +1,8 @@
 import 'package:crud_app/src/domain/models/enum/language.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPreferencesDataSource {
+class SharedPreferencesDataSource extends GetxService {
   static const _firstRunKey = 'first_run';
   static const _isOnboardedKey = 'is_onboarded';
   static const _currentLanguageKey = 'current_language';
@@ -12,22 +13,9 @@ class SharedPreferencesDataSource {
 
   final SharedPreferences _prefs;
 
-  SharedPreferencesDataSource._(this._prefs);
+  SharedPreferencesDataSource(this._prefs);
 
-  static SharedPreferencesDataSource? _instance;
-
-  static SharedPreferencesDataSource get instance {
-    if (_instance == null) {
-      throw StateError(
-        'SharedPreferencesDataSource has not been initialized. Call init() first.',
-      );
-    }
-    return _instance!;
-  }
-
-  static void init(SharedPreferences prefs) {
-    _instance = SharedPreferencesDataSource._(prefs);
-  }
+  static SharedPreferencesDataSource get instance => Get.find<SharedPreferencesDataSource>();
 
   bool isFirstRun() {
     return _prefs.getBool(_firstRunKey) ?? true;

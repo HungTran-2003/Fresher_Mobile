@@ -1,18 +1,15 @@
 import 'package:crud_app/src/data/services/database/share_preferrences_data_source.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 
-class SecureStorageDataSource {
+class SecureStorageDataSource extends GetxService {
   static const _keySessionToken = 'session_token';
 
   final FlutterSecureStorage _secureStorage;
 
-  SecureStorageDataSource._(this._secureStorage);
+  SecureStorageDataSource(this._secureStorage);
 
-  static final SecureStorageDataSource _instance = SecureStorageDataSource._(
-    const FlutterSecureStorage(),
-  );
-
-  static SecureStorageDataSource get instance => _instance;
+  static SecureStorageDataSource get instance => Get.find<SecureStorageDataSource>();
 
   /// Saves the session token securely.
   Future<void> saveSession({

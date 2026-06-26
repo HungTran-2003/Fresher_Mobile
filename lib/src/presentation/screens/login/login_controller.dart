@@ -2,8 +2,11 @@ import 'package:crud_app/generated/l10n.dart';
 import 'package:crud_app/src/core/utils/extensions/either_extension.dart';
 import 'package:crud_app/src/domain/models/entities/user_entity.dart';
 import 'package:crud_app/src/domain/models/enum/load_status.dart';
-import 'package:crud_app/src/domain/repositories/auth_repository.dart';
-import 'package:crud_app/src/domain/repositories/setting_repository.dart';
+import 'package:crud_app/src/domain/usecases/auth/get_last_login_use_case.dart';
+import 'package:crud_app/src/domain/usecases/auth/login_use_case.dart';
+import 'package:crud_app/src/domain/usecases/auth/relogin_use_case.dart';
+import 'package:crud_app/src/domain/usecases/setting/setting_use_cases.dart';
+import 'package:crud_app/src/domain/usecases/use_case.dart';
 import 'package:crud_app/src/presentation/global/auth/auth_controller.dart';
 import 'package:crud_app/src/presentation/global/user/user_controller.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +18,10 @@ import 'login_state.dart';
 class LoginController extends GetxController {
   final AuthController _authController;
   final UserController _userController;
-  final AuthRepository _authRepository;
-  final SettingRepository _settingRepository;
+  final LoginUseCase _loginUseCase;
+  final GetLastLoginUseCase _getLastLoginUseCase;
+  final GetBiometricsUseCase _getBiometricsUseCase;
+  final ReloginUseCase _reloginUseCase;
   final LoginNavigator navigator;
 
   final state = LoginState();
@@ -28,13 +33,17 @@ class LoginController extends GetxController {
   LoginController({
     required AuthController authController,
     required UserController userController,
-    required AuthRepository authRepository,
-    required SettingRepository settingRepository,
+    required LoginUseCase loginUseCase,
+    required GetLastLoginUseCase getLastLoginUseCase,
+    required GetBiometricsUseCase getBiometricsUseCase,
+    required ReloginUseCase reloginUseCase,
     required this.navigator,
   }) : _authController = authController,
        _userController = userController,
-       _authRepository = authRepository,
-       _settingRepository = settingRepository;
+       _loginUseCase = loginUseCase,
+       _getLastLoginUseCase = getLastLoginUseCase,
+       _reloginUseCase = reloginUseCase,
+       _getBiometricsUseCase = getBiometricsUseCase;
 
   @override
   void onInit() {
@@ -51,8 +60,8 @@ class LoginController extends GetxController {
   }
 
   Future<void> init() async {
-    final result = await _authRepository.getLastLogin();
-    final useBio = await _settingRepository.getUseBiometrics();
+    final result = await _getLastLoginUseCase(NoParams());
+    final useBio = await _getBiometricsUseCase();
     await result.foldResult(
       onError: (_) {},
       onSuccess: (data) {
@@ -75,11 +84,11 @@ class LoginController extends GetxController {
 
   Future<void> submitLogin() async {
     state.status.value = LoadStatus.loading;
-    final result = await _authRepository.login(
+    final result = await _loginUseCase(LoginParams(
       taxIdOrId: state.taxIdOrId.value.trim(),
       username: state.username.value.trim(),
       password: state.password.value,
-    );
+    ));
 
     result.fold(
       ifLeft: (failure) {
@@ -126,6 +135,7 @@ class LoginController extends GetxController {
         }
 
         await _userController.getUser(taxId, username);
+        await _reloginUseCase();
         _authController.setAuthenticated(true);
       }
     }

@@ -1,15 +1,21 @@
 import 'dart:developer';
 import 'package:crud_app/src/core/routes/router.dart';
 import 'package:crud_app/src/data/services/network/dio_interceptor.dart';
-import 'package:crud_app/src/domain/repositories/auth_repository.dart';
+import 'package:crud_app/src/domain/usecases/auth/logout_use_case.dart';
+import 'package:crud_app/src/domain/usecases/auth/relogin_use_case.dart';
 import 'package:get/get.dart';
 import 'auth_state.dart';
 
 class AuthController extends GetxController {
-  final AuthRepository authRepo;
+  final LogoutUseCase _logoutUseCase;
+  final ReloginUseCase _reloginUseCase;
   final state = AuthState();
 
-  AuthController({required this.authRepo}) {
+  AuthController({
+    required LogoutUseCase logoutUseCase,
+    required ReloginUseCase reloginUseCase,
+  }) : _logoutUseCase = logoutUseCase,
+       _reloginUseCase = reloginUseCase {
     CustomDioInterceptor.onUnauthorized = () async {
       return await relogin();
     };
@@ -37,11 +43,11 @@ class AuthController extends GetxController {
   }
 
   void logout() {
-    authRepo.logout();
+    _logoutUseCase();
     setAuthenticated(false);
   }
 
   Future<String> relogin() async {
-    return authRepo.relogin();
+    return _reloginUseCase();
   }
 }

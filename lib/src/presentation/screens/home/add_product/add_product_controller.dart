@@ -4,25 +4,30 @@ import 'package:crud_app/src/core/utils/extensions/either_extension.dart';
 import 'package:crud_app/src/domain/models/entities/category_entity.dart';
 import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
-import 'package:crud_app/src/domain/repositories/product_repository.dart';
-import 'package:crud_app/src/domain/repositories/upload_repository.dart';
+import 'package:crud_app/src/domain/usecases/product/add_product_use_case.dart';
+import 'package:crud_app/src/domain/usecases/product/get_categories_use_case.dart';
+import 'package:crud_app/src/domain/usecases/upload/upload_image_use_case.dart';
+import 'package:crud_app/src/domain/usecases/use_case.dart';
 import 'package:get/get.dart';
 import 'add_product_navigator.dart';
 import 'add_product_state.dart';
 import 'dart:io';
 
 class AddProductController extends GetxController {
-  final ProductRepository _productRepository;
-  final UploadRepository _uploadRepository;
+  final AddProductUseCase _addProductUseCase;
+  final GetCategoriesUseCase _getCategoriesUseCase;
+  final UploadImageUseCase _uploadImageUseCase;
   final AddProductNavigator navigator;
   final state = AddProductState();
 
   AddProductController({
-    required ProductRepository productRepository,
-    required UploadRepository uploadRepository,
+    required AddProductUseCase addProductUseCase,
+    required GetCategoriesUseCase getCategoriesUseCase,
+    required UploadImageUseCase uploadImageUseCase,
     required this.navigator,
-  }) : _productRepository = productRepository,
-       _uploadRepository = uploadRepository;
+  }) : _addProductUseCase = addProductUseCase,
+       _getCategoriesUseCase = getCategoriesUseCase,
+       _uploadImageUseCase = uploadImageUseCase;
 
   @override
   void onInit() {
@@ -31,7 +36,7 @@ class AddProductController extends GetxController {
   }
 
   Future<void> init() async {
-    final result = await _productRepository.getCategories();
+    final result = await _getCategoriesUseCase(NoParams());
     result.foldResult(
       onError: (e) => navigator.showErrorDialog(message: e.message),
       onSuccess: (list) => state.categories.assignAll(list),
@@ -64,7 +69,7 @@ class AddProductController extends GetxController {
 
     String? imageUrl;
     if (state.imageFile.value != null) {
-      imageUrl = await _uploadRepository.uploadImage(state.imageFile.value!);
+      imageUrl = await _uploadImageUseCase(state.imageFile.value!);
       if (imageUrl == null) {
         state.status.value = LoadStatus.failure;
         navigator.showErrorDialog(message: S.current.failedToUploadImage);
@@ -72,7 +77,7 @@ class AddProductController extends GetxController {
       }
     }
 
-    final result = await _productRepository.addProduct(
+    final result = await _addProductUseCase(AddProductParams(
       name: state.name.value,
       code: state.code.value,
       price: double.tryParse(state.price.value) ?? 0.0,
@@ -82,7 +87,7 @@ class AddProductController extends GetxController {
       status: state.statusFilter.value.value,
       description: state.description.value,
       image: imageUrl,
-    );
+    ));
 
     result.foldResult(
       onError: (e) {
