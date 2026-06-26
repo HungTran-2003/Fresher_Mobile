@@ -1,3 +1,4 @@
+import 'package:crud_app/configs/app_config.dart';
 import 'package:flutter/material.dart';
 
 enum Language { english, vietnamese }
@@ -27,7 +28,7 @@ extension LanguageExt on Language {
     } else if (code == Language.vietnamese.code) {
       return Language.vietnamese;
     } else {
-      return Language.english;
+      return AppConfigs.defaultLanguage;
     }
   }
 }

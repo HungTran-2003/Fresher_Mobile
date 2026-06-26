@@ -20,202 +20,162 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(count) => "Stock: ${count}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "accept": MessageLookupByLibrary.simpleMessage("Accept"),
-    "addTransaction": MessageLookupByLibrary.simpleMessage("Add Transaction"),
-    "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
-      "Already have an account? ",
+    "accountLockedError": MessageLookupByLibrary.simpleMessage(
+      "Your account has been temporarily locked for 5 minutes due to multiple failed login attempts.",
     ),
-    "amount": MessageLookupByLibrary.simpleMessage("Amount"),
-    "analytics": MessageLookupByLibrary.simpleMessage("Analytics"),
-    "andWord": MessageLookupByLibrary.simpleMessage(" and "),
-    "appName": MessageLookupByLibrary.simpleMessage("FinanceFlow"),
-    "aprilExpenses": MessageLookupByLibrary.simpleMessage("April Expenses"),
-    "biometricSignIn": MessageLookupByLibrary.simpleMessage(
-      "Biometric Sign In",
+    "active": MessageLookupByLibrary.simpleMessage("Active"),
+    "addNewProduct": MessageLookupByLibrary.simpleMessage("Add New Product"),
+    "addProduct": MessageLookupByLibrary.simpleMessage("Add product"),
+    "adjustSearchOrFilters": MessageLookupByLibrary.simpleMessage(
+      "Try adjusting your search query or filters.",
     ),
-    "biometrics": MessageLookupByLibrary.simpleMessage(
-      "Biometric Authentication",
+    "allCategories": MessageLookupByLibrary.simpleMessage("All Categories"),
+    "allStatuses": MessageLookupByLibrary.simpleMessage("All Statuses"),
+    "biometricAuthReason": MessageLookupByLibrary.simpleMessage(
+      "Authenticate to enable biometric login",
     ),
-    "budget": MessageLookupByLibrary.simpleMessage("Budget"),
-    "budgets": MessageLookupByLibrary.simpleMessage("Budgets"),
-    "byContinuingAgree": MessageLookupByLibrary.simpleMessage(
-      "By continuing, you agree to ",
+    "biometricLoginSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Use Face ID / Fingerprint to log in next time",
     ),
-    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "biometricLoginTitle": MessageLookupByLibrary.simpleMessage(
+      "Biometric Login",
+    ),
+    "biometricSetupFailed": MessageLookupByLibrary.simpleMessage(
+      "Biometric authentication is not supported or not set up on this device.",
+    ),
+    "cancelButton": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "cancelButtonLabel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "category": MessageLookupByLibrary.simpleMessage("Category"),
-    "changePassword": MessageLookupByLibrary.simpleMessage("Change Password"),
-    "confirmDelete": MessageLookupByLibrary.simpleMessage(
-      "Are you sure you want to delete this transaction?",
+    "closeButton": MessageLookupByLibrary.simpleMessage("Close"),
+    "codeRequired": MessageLookupByLibrary.simpleMessage(
+      "Product code is required",
     ),
-    "confirmNewPassword": MessageLookupByLibrary.simpleMessage(
-      "Confirm New Password",
+    "createdAtLabel": MessageLookupByLibrary.simpleMessage("Created at"),
+    "defaultSort": MessageLookupByLibrary.simpleMessage("Default Sort"),
+    "deleteButton": MessageLookupByLibrary.simpleMessage("Delete"),
+    "deleteProductConfirmMessage": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to delete this product?",
     ),
-    "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),
-    "createAccount": MessageLookupByLibrary.simpleMessage("Create Account"),
-    "daily": MessageLookupByLibrary.simpleMessage("Daily"),
-    "darkLoc": MessageLookupByLibrary.simpleMessage("Dark Mode"),
-    "date": MessageLookupByLibrary.simpleMessage("Date"),
-    "dateHint": MessageLookupByLibrary.simpleMessage("DD / MM / YYYY"),
-    "dateOfBirth": MessageLookupByLibrary.simpleMessage("Date Of Birth"),
-    "delete": MessageLookupByLibrary.simpleMessage("Delete"),
-    "dontHaveAccount": MessageLookupByLibrary.simpleMessage(
-      "Don\'t have an account? ",
+    "deleteProductConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "Delete Product",
     ),
-    "editProfile": MessageLookupByLibrary.simpleMessage("Edit Profile"),
-    "editTransaction": MessageLookupByLibrary.simpleMessage("Edit Transaction"),
-    "email": MessageLookupByLibrary.simpleMessage("Email"),
-    "emailHint": MessageLookupByLibrary.simpleMessage("example@example.com"),
-    "emptyTransactions": MessageLookupByLibrary.simpleMessage(
-      "No transactions yet. Start by adding one!",
+    "descriptionHint": MessageLookupByLibrary.simpleMessage(
+      "Enter product description",
     ),
-    "english": MessageLookupByLibrary.simpleMessage("English"),
-    "enterAmount": MessageLookupByLibrary.simpleMessage("Enter Amount"),
-    "enterConfirmPasswordError": MessageLookupByLibrary.simpleMessage(
-      "Please confirm your password",
+    "descriptionLabel": MessageLookupByLibrary.simpleMessage("Description"),
+    "failedToAddProduct": MessageLookupByLibrary.simpleMessage(
+      "Failed to add product",
     ),
-    "enterDobError": MessageLookupByLibrary.simpleMessage(
-      "Please enter your date of birth",
+    "failedToLoadProducts": MessageLookupByLibrary.simpleMessage(
+      "Failed to load products",
     ),
-    "enterEmailAddress": MessageLookupByLibrary.simpleMessage(
-      "Enter Email Address",
+    "failedToUploadImage": MessageLookupByLibrary.simpleMessage(
+      "Failed to upload image",
     ),
-    "enterEmailError": MessageLookupByLibrary.simpleMessage(
-      "Please enter your email",
-    ),
-    "enterFullNameError": MessageLookupByLibrary.simpleMessage(
-      "Please enter your full name",
-    ),
-    "enterMobileNumberError": MessageLookupByLibrary.simpleMessage(
-      "Please enter your mobile number",
-    ),
-    "enterPasswordError": MessageLookupByLibrary.simpleMessage(
-      "Please enter your password",
-    ),
-    "enterSecurityPin": MessageLookupByLibrary.simpleMessage(
-      "Enter Security Pin",
-    ),
-    "enterUsernameOrEmailError": MessageLookupByLibrary.simpleMessage(
-      "Please enter your username or email",
-    ),
-    "enterValidEmailError": MessageLookupByLibrary.simpleMessage(
-      "Please enter a valid email address",
-    ),
-    "error": MessageLookupByLibrary.simpleMessage("Error"),
-    "expense": MessageLookupByLibrary.simpleMessage("Expense"),
-    "expensesLooksGood": MessageLookupByLibrary.simpleMessage(
-      "30% Of Your Expenses, Looks Good.",
-    ),
-    "foodLastWeek": MessageLookupByLibrary.simpleMessage("Food Last Week"),
-    "forgotPassword": MessageLookupByLibrary.simpleMessage("Forgot Password?"),
-    "fullName": MessageLookupByLibrary.simpleMessage("Full Name"),
-    "fullNameHint": MessageLookupByLibrary.simpleMessage("example@example.com"),
-    "goodMorning": MessageLookupByLibrary.simpleMessage("Good Morning"),
-    "groceries": MessageLookupByLibrary.simpleMessage("Groceries"),
+    "group": MessageLookupByLibrary.simpleMessage("Group"),
     "help": MessageLookupByLibrary.simpleMessage("Help"),
-    "hiWelcomeBack": MessageLookupByLibrary.simpleMessage("Hi, Welcome Back"),
-    "income": MessageLookupByLibrary.simpleMessage("Income"),
-    "invalidPinError": MessageLookupByLibrary.simpleMessage(
-      "Invalid PIN code. Please try again.",
+    "inactive": MessageLookupByLibrary.simpleMessage("Inactive"),
+    "logIn": MessageLookupByLibrary.simpleMessage("Login"),
+    "loginErrorTitle": MessageLookupByLibrary.simpleMessage(
+      "Invalid login credentials",
     ),
-    "language": MessageLookupByLibrary.simpleMessage("Language"),
-    "limitWarning": MessageLookupByLibrary.simpleMessage(
-      "Budget limit exceeded!",
-    ),
-    "logIn": MessageLookupByLibrary.simpleMessage("Log In"),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
-    "mobileNumber": MessageLookupByLibrary.simpleMessage("Mobile Number"),
-    "monthly": MessageLookupByLibrary.simpleMessage("Monthly"),
-    "monthlyReport": MessageLookupByLibrary.simpleMessage(
-      "Monthly Spend Overview",
+    "logoutConfirmMessage": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to log out?",
     ),
-    "newPasswordTitle": MessageLookupByLibrary.simpleMessage("New Password"),
-    "next": MessageLookupByLibrary.simpleMessage("Next"),
-    "nextStep": MessageLookupByLibrary.simpleMessage("Next Step"),
-    "note": MessageLookupByLibrary.simpleMessage("Note (Optional)"),
-    "onboardingTitle1": MessageLookupByLibrary.simpleMessage(
-      "Welcome To Expense Manager",
+    "logoutConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "Logout Confirmation",
     ),
-    "onboardingTitle2": MessageLookupByLibrary.simpleMessage(
-      "Are You Ready To Take Control Of Your Finances?",
+    "lookup": MessageLookupByLibrary.simpleMessage("Search"),
+    "nameAsc": MessageLookupByLibrary.simpleMessage("Name A→Z"),
+    "nameDesc": MessageLookupByLibrary.simpleMessage("Name Z→A"),
+    "nameRequired": MessageLookupByLibrary.simpleMessage(
+      "Product name is required",
     ),
-    "orSignUpWith": MessageLookupByLibrary.simpleMessage("or sign up with"),
-    "pantry": MessageLookupByLibrary.simpleMessage("Pantry"),
-    "password": MessageLookupByLibrary.simpleMessage("Password"),
-    "passwordChangedSuccess": MessageLookupByLibrary.simpleMessage(
-      "Password changed successfully! Please log in with your new password.",
+    "noProductsFound": MessageLookupByLibrary.simpleMessage(
+      "No products found",
     ),
-    "passwordHint": MessageLookupByLibrary.simpleMessage("••••••••"),
+    "notificationTitle": MessageLookupByLibrary.simpleMessage("Notification"),
+    "okButton": MessageLookupByLibrary.simpleMessage("OK"),
+    "passwordHint": MessageLookupByLibrary.simpleMessage("Password"),
     "passwordLengthError": MessageLookupByLibrary.simpleMessage(
-      "Password must be at least 6 characters",
+      "Password must be between 6 and 50 characters.",
     ),
-    "passwordsDoNotMatchError": MessageLookupByLibrary.simpleMessage(
-      "Passwords do not match",
+    "pickImage": MessageLookupByLibrary.simpleMessage("Pick Image"),
+    "priceAsc": MessageLookupByLibrary.simpleMessage("Price ↑"),
+    "priceDesc": MessageLookupByLibrary.simpleMessage("Price ↓"),
+    "priceHint": MessageLookupByLibrary.simpleMessage("Enter price"),
+    "priceLabel": MessageLookupByLibrary.simpleMessage("Price"),
+    "pricePositive": MessageLookupByLibrary.simpleMessage(
+      "Price must be greater than 0",
     ),
-    "phoneHint": MessageLookupByLibrary.simpleMessage("+ 123 456 789"),
-    "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy."),
-    "profile": MessageLookupByLibrary.simpleMessage("Profile"),
-    "quicklyAnalysis": MessageLookupByLibrary.simpleMessage("Quickly Analysis"),
-    "recentTransactions": MessageLookupByLibrary.simpleMessage(
-      "Recent Transactions",
+    "priceRequired": MessageLookupByLibrary.simpleMessage("Price is required"),
+    "productAddedSuccess": MessageLookupByLibrary.simpleMessage(
+      "Product added successfully",
     ),
-    "remaining": MessageLookupByLibrary.simpleMessage("Remaining"),
-    "rent": MessageLookupByLibrary.simpleMessage("Rent"),
-    "resendPinSuccess": MessageLookupByLibrary.simpleMessage(
-      "A new verification PIN has been sent to your email.",
+    "productCodeHint": MessageLookupByLibrary.simpleMessage(
+      "Enter unique code",
     ),
-    "resetPassword": MessageLookupByLibrary.simpleMessage("Reset Password?"),
-    "resetPasswordDescription": MessageLookupByLibrary.simpleMessage(
-      "Please enter your email address to receive a verification pin to reset your password.",
+    "productCodeLabel": MessageLookupByLibrary.simpleMessage("Product Code"),
+    "productDeletedSuccess": MessageLookupByLibrary.simpleMessage(
+      "Product deleted successfully",
     ),
-    "revenueLastWeek": MessageLookupByLibrary.simpleMessage(
-      "Revenue Last Week",
+    "productManagement": MessageLookupByLibrary.simpleMessage(
+      "Product Management",
     ),
-    "salary": MessageLookupByLibrary.simpleMessage("Salary"),
-    "save": MessageLookupByLibrary.simpleMessage("Save"),
-    "savingsOnGoals": MessageLookupByLibrary.simpleMessage("Savings On Goals"),
-    "security": MessageLookupByLibrary.simpleMessage("Security"),
-    "securityPin": MessageLookupByLibrary.simpleMessage("Security Pin"),
-    "selectCategory": MessageLookupByLibrary.simpleMessage("Select Category"),
-    "sendAgain": MessageLookupByLibrary.simpleMessage("Send Again"),
-    "settings": MessageLookupByLibrary.simpleMessage("Settings"),
-    "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
-    "success": MessageLookupByLibrary.simpleMessage("Success"),
-    "termsOfUse": MessageLookupByLibrary.simpleMessage("Terms of Use"),
-    "theme": MessageLookupByLibrary.simpleMessage("Theme"),
-    "totalBalance": MessageLookupByLibrary.simpleMessage("Total Balance"),
-    "totalExpense": MessageLookupByLibrary.simpleMessage("Total Expense"),
-    "touchSensorToLogIn": MessageLookupByLibrary.simpleMessage(
-      "Touch the sensor to log in",
+    "productNameHint": MessageLookupByLibrary.simpleMessage(
+      "Enter product name",
     ),
-    "transactionAdded": MessageLookupByLibrary.simpleMessage(
-      "Transaction added successfully",
+    "productNameLabel": MessageLookupByLibrary.simpleMessage("Product Name"),
+    "productUpdateSuccess": MessageLookupByLibrary.simpleMessage(
+      "Product updated successfully",
     ),
-    "transactionDeleted": MessageLookupByLibrary.simpleMessage(
-      "Transaction deleted successfully",
+    "removeImage": MessageLookupByLibrary.simpleMessage("Remove Image"),
+    "retryButton": MessageLookupByLibrary.simpleMessage("Retry"),
+    "saveButton": MessageLookupByLibrary.simpleMessage("Save"),
+    "searchProductHint": MessageLookupByLibrary.simpleMessage(
+      "Search products by name...",
     ),
-    "useFingerprintScanner": MessageLookupByLibrary.simpleMessage(
-      "Use your fingerprint scanner to verify your identity",
+    "sku": MessageLookupByLibrary.simpleMessage("SKU"),
+    "sortBy": MessageLookupByLibrary.simpleMessage("Sort by"),
+    "status": MessageLookupByLibrary.simpleMessage("Status"),
+    "stockAsc": MessageLookupByLibrary.simpleMessage("Stock ↑"),
+    "stockCount": m0,
+    "stockDesc": MessageLookupByLibrary.simpleMessage("Stock ↓"),
+    "stockHint": MessageLookupByLibrary.simpleMessage("Enter stock quantity"),
+    "stockLabel": MessageLookupByLibrary.simpleMessage("Stock"),
+    "stockNonNegative": MessageLookupByLibrary.simpleMessage(
+      "Stock cannot be negative",
     ),
-    "useFingerprintToAccess": MessageLookupByLibrary.simpleMessage(
-      "Use Fingerprint To Access",
+    "stockOnlyInteger": MessageLookupByLibrary.simpleMessage(
+      "Stock must be an integer",
     ),
-    "usernameOrEmail": MessageLookupByLibrary.simpleMessage(
-      "Username Or Email",
+    "stockRequired": MessageLookupByLibrary.simpleMessage("Stock is required"),
+    "support": MessageLookupByLibrary.simpleMessage("Support"),
+    "tagsHint": MessageLookupByLibrary.simpleMessage(
+      "Enter tags (comma separated)",
     ),
-    "verificationSuccessful": MessageLookupByLibrary.simpleMessage(
-      "Verification successful!",
+    "tagsLabel": MessageLookupByLibrary.simpleMessage("Tags"),
+    "taxIdOrIdError": MessageLookupByLibrary.simpleMessage(
+      "Please enter a valid 12-digit Citizen ID or 10-digit Tax Code (optional -XXX suffix).",
     ),
-    "verifyingFingerprint": MessageLookupByLibrary.simpleMessage(
-      "Verifying fingerprint...",
+    "taxIdOrIdHint": MessageLookupByLibrary.simpleMessage(
+      "Tax Code / Citizen ID",
     ),
-    "vietnamese": MessageLookupByLibrary.simpleMessage("Tiếng Việt"),
-    "viewAll": MessageLookupByLibrary.simpleMessage("View All"),
-    "weekly": MessageLookupByLibrary.simpleMessage("Weekly"),
-    "weeklySpend": MessageLookupByLibrary.simpleMessage(
-      "Weekly Spending Trend",
+    "taxIdOrIdLabel": MessageLookupByLibrary.simpleMessage(
+      "Tax Code / Citizen ID",
     ),
-    "welcome": MessageLookupByLibrary.simpleMessage("Welcome"),
+    "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
+    "updatedAtDesc": MessageLookupByLibrary.simpleMessage("Newest Updated"),
+    "updatedAtLabel": MessageLookupByLibrary.simpleMessage("Updated at"),
+    "usernameError": MessageLookupByLibrary.simpleMessage(
+      "Username cannot be empty.",
+    ),
+    "usernameHint": MessageLookupByLibrary.simpleMessage("Username"),
+    "usernameLabel": MessageLookupByLibrary.simpleMessage("Username"),
   };
 }

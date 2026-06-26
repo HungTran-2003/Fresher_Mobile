@@ -79,6 +79,22 @@ abstract class AppColorScheme {
 
   //Text
   Color get textField;
+
+  Color get primaryLight;
+
+  Color get black0;
+
+  Color get grayLight1;
+
+  Color get grayLight2;
+
+  Color get grayLight3;
+
+  Color get grayLight6;
+
+  Color get grayLight7;
+
+  Color get btnShadow;
 }
 
 abstract class AppTextTheme {
@@ -101,4 +117,12 @@ abstract class AppTextTheme {
   TextStyle get headlineMedium;
 
   TextStyle get headlineLarge;
+
+  TextStyle get body16Bo;
+
+  TextStyle get body16Semi;
+
+  TextStyle get des12Re;
+
+  TextStyle get des12Semi;
 }

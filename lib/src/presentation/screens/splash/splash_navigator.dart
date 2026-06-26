@@ -1,18 +1,19 @@
 import 'package:crud_app/src/core/routes/base_navigator.dart';
 import 'package:crud_app/src/core/routes/router.dart';
+import 'package:get/get.dart';
 
 class SplashNavigator extends BaseNavigator {
-  SplashNavigator(super.context);
+  SplashNavigator([super.context]);
 
   Future<void> navigateToOnboard() async {
-    goNamed(AppRouters.onboarding);
+    Get.offAllNamed(AppRouters.onboarding);
   }
 
   void toHome() {
-    goNamed(AppRouters.home);
+    Get.offAllNamed(AppRouters.home);
   }
 
   void toWelcome() {
-    goNamed(AppRouters.welcome);
+    Get.offAllNamed(AppRouters.welcome);
   }
 }

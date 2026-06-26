@@ -116,6 +116,30 @@ class LightColorScheme extends AppColorScheme {
 
   @override
   Color get filterBar => AppColor.filterBarLight;
+
+  @override
+  Color get primaryLight => AppColor.primaryLight2;
+
+  @override
+  Color get black0 => AppColor.black0;
+
+  @override
+  Color get grayLight3 => AppColor.grayLight3;
+
+  @override
+  Color get grayLight1 => AppColor.grayLight1;
+
+  @override
+  Color get grayLight2 => AppColor.grayLight2;
+
+  @override
+  Color get grayLight6 => AppColor.grayLight6;
+
+  @override
+  Color get grayLight7 => AppColor.grayLight7;
+
+  @override
+  Color get btnShadow => AppColor.btnShadow;
 }
 
 // DARK THEME
@@ -234,6 +258,30 @@ class DarkColorScheme extends AppColorScheme {
 
   @override
   Color get filterBar => AppColor.filterBarDark;
+
+  @override
+  Color get primaryLight => AppColor.primary;
+
+  @override
+  Color get black0 => Colors.white;
+
+  @override
+  Color get grayLight3 => AppColor.grayLight7;
+
+  @override
+  Color get grayLight1 => AppColor.grayLight1;
+
+  @override
+  Color get grayLight6 => AppColor.grayLight6;
+
+  @override
+  Color get grayLight2 => AppColor.grayLight2;
+
+  @override
+  Color get grayLight7 => AppColor.grayLight7;
+
+  @override
+  Color get btnShadow => AppColor.btnShadow;
 }
 
 // SHARED TEXT THEME IMPLEMENTATION
@@ -281,4 +329,20 @@ class BaseAppTextTheme extends AppTextTheme {
   @override
   TextStyle get titleSmall =>
       AppTypography.titleSmall.copyWith(color: colorScheme.onSurface);
+
+  @override
+  TextStyle get body16Bo =>
+      AppTypography.body16Bo.copyWith(color: colorScheme.onSurface);
+
+  @override
+  TextStyle get body16Semi =>
+      AppTypography.body16Semi.copyWith(color: colorScheme.onSurface);
+
+  @override
+  TextStyle get des12Re =>
+      AppTypography.des12Re.copyWith(color: colorScheme.onSurface);
+
+  @override
+  TextStyle get des12Semi =>
+      AppTypography.des12Semi.copyWith(color: colorScheme.onSurface);
 }

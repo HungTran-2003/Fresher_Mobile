@@ -1,14 +1,6 @@
-part of 'user_cubit.dart';
+import 'package:crud_app/src/domain/models/entities/user_entity.dart';
+import 'package:get/get.dart';
 
-class UserState extends Equatable {
-  final UserEntity? user;
-
-  const UserState({this.user});
-
-  @override
-  List<Object?> get props => [user];
-
-  UserState copyWith({UserEntity? user}) {
-    return UserState(user: user ?? this.user);
-  }
+class UserState {
+  final user = Rxn<UserEntity>();
 }

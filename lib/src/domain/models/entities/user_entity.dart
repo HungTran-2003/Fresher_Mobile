@@ -16,6 +16,8 @@ class UserEntity {
   final String? phoneNumber;
   @JsonKey(name: 'date_of_birth')
   final String? dateOfBirth;
+  @JsonKey(name: 'full_name')
+  final String? fullName;
 
   const UserEntity({
     required this.id,
@@ -24,6 +26,7 @@ class UserEntity {
     this.avatarUrl,
     this.phoneNumber,
     this.dateOfBirth,
+    this.fullName,
   });
 
   UserEntity copyWith({
@@ -33,6 +36,7 @@ class UserEntity {
     String? avatarUrl,
     String? phoneNumber,
     String? dateOfBirth,
+    String? fullName,
   }) {
     return UserEntity(
       id: id ?? this.id,
@@ -41,6 +45,7 @@ class UserEntity {
       avatarUrl: avatarUrl ?? this.avatarUrl,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      fullName: fullName ?? this.fullName,
     );
   }
 
