@@ -62,7 +62,7 @@ Việc sử dụng GetX với mô hình **State-Controller-Binding** mang lại 
 
 2. **Chạy Unit Test**:
    ```bash
-   flutter test test/unit/presentation/
+   flutter test test/unit/
    ```
 
 3. **Chạy ứng dụng**:

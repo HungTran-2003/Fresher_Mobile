@@ -15,7 +15,6 @@ class HomeController extends GetxController {
   final ProductRepository _productRepository;
   final HomeNavigator navigator;
   final state = HomeState();
-  Timer? _searchDebounceTimer;
 
   HomeController({
     required ProductRepository productRepository,
@@ -65,12 +64,11 @@ class HomeController extends GetxController {
   }
 
   void searchProducts(String query) {
-    state.searchQuery.value = query;
-
-    _searchDebounceTimer?.cancel();
-    _searchDebounceTimer = Timer(const Duration(milliseconds: 300), () {
+    state.searchQuery.value = query.trim();
+    debounce(state.searchQuery, (_){
       loadProducts(isRefresh: true);
-    });
+    },
+    time: const Duration(milliseconds: 300));
   }
 
   void filterProducts({
@@ -112,9 +110,9 @@ class HomeController extends GetxController {
     final result = await _productRepository.getProducts(
       page: page,
       limit: 10,
-      search: state.searchQuery.value.trim().isEmpty
+      search: state.searchQuery.value.isEmpty
           ? null
-          : state.searchQuery.value.trim(),
+          : state.searchQuery.value,
       categoryId: state.filterCategoryId.value,
     );
 
@@ -157,8 +155,9 @@ class HomeController extends GetxController {
   }
 
   List<ProductEntity> _applyLocalFilters(List<ProductEntity> productsList) {
-    if (state.filterStatus.value == ProductStatusFilter.all)
+    if (state.filterStatus.value == ProductStatusFilter.all) {
       return productsList;
+    }
     return productsList
         .where((p) => p.status == state.filterStatus.value.value)
         .toList();
@@ -182,11 +181,5 @@ class HomeController extends GetxController {
         ProductSortFilter.defaultSort => 0,
       };
     });
-  }
-
-  @override
-  void onClose() {
-    _searchDebounceTimer?.cancel();
-    super.onClose();
   }
 }
