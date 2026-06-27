@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:crud_app/src/data/models/account/account_model.dart';
+import 'hive_registrar.g.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +15,7 @@ Future<void> main() async {
   }
 
   await Hive.initFlutter();
-  Hive.registerAdapter(AccountModelAdapter());
+  Hive.registerAdapters();
 
   Box<AccountModel>? box;
   try {

@@ -34,9 +34,18 @@ class ProductRepositoryImpl implements ProductRepository {
       );
 
       final remoteProducts = response.data;
+      await _updateProductsToHive(remoteProducts);
+
+      return Either.right(_mapModelsToEntities(remoteProducts));
+    } catch (e) {
+      return Either.left(ExceptionMapper.map(e));
+    }
+  }
+
+  Future<void> _updateProductsToHive(List<ProductModel> remoteProducts) async {
+    try {
       final localProducts = await _hiveService.getProducts();
 
-      // Sync logic: Only update if updatedAt is different or new
       final List<ProductModel> toUpdate = [];
       for (var remote in remoteProducts) {
         final local = localProducts.firstWhere(
@@ -61,11 +70,8 @@ class ProductRepositoryImpl implements ProductRepository {
       if (toUpdate.isNotEmpty) {
         await _hiveService.saveProducts(toUpdate);
       }
-
-      return Either.right(_mapModelsToEntities(remoteProducts));
     } catch (e) {
-      // Always return the error for remote fetching
-      return Either.left(ExceptionMapper.map(e));
+      debugPrint('ProductRepository: Failed to update products to Hive: $e');
     }
   }
 
@@ -76,10 +82,12 @@ class ProductRepositoryImpl implements ProductRepository {
   }) async {
     try {
       final localProducts = await _hiveService.getProducts();
-      
+
       var filtered = localProducts;
       if (search != null && search.isNotEmpty) {
-        filtered = filtered.where((p) => p.name.toLowerCase().contains(search.toLowerCase())).toList();
+        filtered = filtered
+            .where((p) => p.name.toLowerCase().contains(search.toLowerCase()))
+            .toList();
       }
       if (categoryId != null) {
         filtered = filtered.where((p) => p.category?.id == categoryId).toList();

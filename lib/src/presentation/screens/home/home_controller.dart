@@ -46,7 +46,6 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    init();
     _listenToConnectivity();
     debounce(state.searchQuery, (query) {
       if (_lastSearchQuery != query) {
@@ -54,6 +53,7 @@ class HomeController extends GetxController {
         loadProducts(isRefresh: true);
       }
     }, time: const Duration(milliseconds: 300));
+    init();
   }
 
   @override
@@ -89,6 +89,8 @@ class HomeController extends GetxController {
   }
 
   Future<void> init() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    state.isOffline.value = connectivityResult.contains(ConnectivityResult.none);
     await Future.wait([fetchCategories(), loadProducts(isRefresh: true)]);
   }
 
@@ -115,6 +117,10 @@ class HomeController extends GetxController {
       state.productStatus.value = LoadStatus.loading;
       state.products.clear();
     } else {
+      if (state.isOffline.value) {
+        state.hasReachedMax.value = true;
+        return;
+      }
       state.loadMoreStatus.value = LoadStatus.loading;
     }
 

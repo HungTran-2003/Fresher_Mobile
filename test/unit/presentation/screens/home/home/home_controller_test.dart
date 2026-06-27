@@ -22,6 +22,8 @@ class MockProcessProductsUseCase extends Mock implements ProcessProductsUseCase 
 class MockHomeNavigator extends Mock implements HomeNavigator {}
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late HomeController controller;
   late MockGetRemoteProductsUseCase mockGetRemoteProductsUseCase;
   late MockGetLocalProductsUseCase mockGetLocalProductsUseCase;
