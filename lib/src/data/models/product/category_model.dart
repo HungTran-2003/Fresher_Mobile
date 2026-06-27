@@ -1,16 +1,23 @@
 import 'package:crud_app/src/domain/models/entities/category_entity.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'category_model.g.dart';
 
+@HiveType(typeId: 2)
 @JsonSerializable()
 class CategoryModel {
+  @HiveField(0)
   final int id;
+  @HiveField(1)
   final int status;
+  @HiveField(2)
   @JsonKey(name: 'created_at')
   final String createdAt;
+  @HiveField(3)
   @JsonKey(name: 'updated_at')
   final String updatedAt;
+  @HiveField(4)
   final String name;
 
   CategoryModel({

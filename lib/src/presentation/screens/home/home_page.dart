@@ -1,4 +1,3 @@
-import 'package:crud_app/src/core/routes/router.dart';
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
 import 'package:crud_app/src/domain/models/enum/load_status.dart';
 import 'package:crud_app/src/domain/models/enum/product_sort_filter.dart';
@@ -96,6 +95,7 @@ class _HomeChildPageState extends State<HomeChildPage> {
         body: SafeArea(
           child: Column(
             children: [
+              _buildOfflineBanner(context),
               _buildSearchInput(context),
               _buildFilters(context),
               Expanded(child: _buildProductsList(context)),
@@ -103,20 +103,32 @@ class _HomeChildPageState extends State<HomeChildPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final result = await _controller.navigator.pushNamed(
-              AppRouters.addProduct,
-            );
-            if (result == true) {
-              _controller.loadProducts(isRefresh: true);
-            }
-          },
+          onPressed: () => _controller.goToAddProduct(),
           backgroundColor: context.colors.primary,
           foregroundColor: context.colors.onPrimary,
           child: const Icon(Icons.add),
         ),
       ),
     );
+  }
+
+  Widget _buildOfflineBanner(BuildContext context) {
+    return Obx(() {
+      if (_controller.state.isOffline.value) {
+        return Container(
+          width: double.infinity,
+          color: Colors.orange.shade100,
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: const Center(
+            child: Text(
+              'Đang xem dữ liệu ngoại tuyến',
+              style: TextStyle(color: Colors.orange, fontSize: 12),
+            ),
+          ),
+        );
+      }
+      return const SizedBox.shrink();
+    });
   }
 
   Widget _buildSearchInput(BuildContext context) {
@@ -260,15 +272,7 @@ class _HomeChildPageState extends State<HomeChildPage> {
             final product = _controller.state.products[index];
             return ProductCard(
               product: product,
-              onProductTap: () async {
-                final result = await _controller.navigator.pushNamed(
-                  AppRouters.productDetail,
-                  arguments: product,
-                );
-                if (result == true) {
-                  _controller.loadProducts(isRefresh: true);
-                }
-              },
+              onProductTap: () => _controller.goToProductDetail(product),
               onDeleteTap: () => _confirmDelete(product.id),
             );
           } else {

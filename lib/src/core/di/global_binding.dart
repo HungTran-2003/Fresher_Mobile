@@ -1,3 +1,4 @@
+import 'package:crud_app/src/data/services/hive/product/hive_product_service.dart';
 import 'package:crud_app/src/data/services/database/secure_storage_data_source.dart';
 import 'package:crud_app/src/data/services/database/share_preferrences_data_source.dart';
 import 'package:crud_app/src/data/services/network/network_util.dart';
@@ -18,6 +19,8 @@ import 'package:crud_app/src/domain/repositories/upload_repository.dart';
 import 'package:crud_app/src/domain/repositories/user_repository.dart';
 import 'package:crud_app/src/domain/usecases/auth/logout_use_case.dart';
 import 'package:crud_app/src/domain/usecases/auth/relogin_use_case.dart';
+import 'package:crud_app/src/domain/usecases/product/get_local_products_use_case.dart';
+import 'package:crud_app/src/domain/usecases/product/get_products_use_case.dart';
 import 'package:crud_app/src/domain/usecases/setting/setting_use_cases.dart';
 import 'package:crud_app/src/domain/usecases/user/get_current_user_use_case.dart';
 import 'package:crud_app/src/presentation/global/app_settings/app_settings_controller.dart';
@@ -35,6 +38,7 @@ class GlobalBinding extends Bindings {
     });
     Get.put(NetworkService());
     Get.put(SecureStorageDataSource(const FlutterSecureStorage()));
+    Get.put(HiveProductService());
 
     // Repositories
     Get.lazyPut<AuthRepository>(
@@ -49,7 +53,10 @@ class GlobalBinding extends Bindings {
       fenix: true,
     );
     Get.lazyPut<ProductRepository>(
-      () => ProductRepositoryImpl(dioClient: DioClient.instance),
+      () => ProductRepositoryImpl(
+        dioClient: DioClient.instance,
+        hiveService: Get.find<HiveProductService>(),
+      ),
       fenix: true,
     );
     Get.lazyPut<SettingRepository>(() => SettingRepositoryImpl(), fenix: true);
@@ -58,6 +65,10 @@ class GlobalBinding extends Bindings {
     // UseCases
     Get.lazyPut(() => LogoutUseCase(Get.find<AuthRepository>()), fenix: true);
     Get.lazyPut(() => ReloginUseCase(Get.find<AuthRepository>()), fenix: true);
+    Get.lazyPut(() => GetRemoteProductsUseCase(Get.find<ProductRepository>()),
+        fenix: true);
+    Get.lazyPut(() => GetLocalProductsUseCase(Get.find<ProductRepository>()),
+        fenix: true);
     Get.lazyPut(() => GetCurrentUserUseCase(Get.find<UserRepository>()),
         fenix: true);
     Get.lazyPut(() => GetLanguageUseCase(Get.find<SettingRepository>()),

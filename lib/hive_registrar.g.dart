@@ -4,15 +4,21 @@
 
 import 'package:hive_ce/hive_ce.dart';
 import 'package:crud_app/src/data/models/account/account_model.dart';
+import 'package:crud_app/src/data/models/product/category_model.dart';
+import 'package:crud_app/src/data/models/product/product_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AccountModelAdapter());
+    registerAdapter(CategoryModelAdapter());
+    registerAdapter(ProductModelAdapter());
   }
 }
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AccountModelAdapter());
+    registerAdapter(CategoryModelAdapter());
+    registerAdapter(ProductModelAdapter());
   }
 }

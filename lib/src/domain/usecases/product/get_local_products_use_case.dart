@@ -4,31 +4,25 @@ import 'package:crud_app/src/domain/repositories/product_repository.dart';
 import 'package:crud_app/src/domain/usecases/use_case.dart';
 import 'package:dart_either/dart_either.dart';
 
-class GetRemoteProductsUseCase extends UseCase<List<ProductEntity>, GetProductsParams> {
+class GetLocalProductsUseCase extends UseCase<List<ProductEntity>, GetLocalProductsParams> {
   final ProductRepository _repository;
 
-  GetRemoteProductsUseCase(this._repository);
+  GetLocalProductsUseCase(this._repository);
 
   @override
-  Future<Either<AppException, List<ProductEntity>>> call(GetProductsParams params) {
-    return _repository.getRemoteProducts(
-      page: params.page,
-      limit: params.limit,
+  Future<Either<AppException, List<ProductEntity>>> call(GetLocalProductsParams params) {
+    return _repository.getLocalProducts(
       search: params.search,
       categoryId: params.categoryId,
     );
   }
 }
 
-class GetProductsParams {
-  final int page;
-  final int limit;
+class GetLocalProductsParams {
   final String? search;
   final int? categoryId;
 
-  GetProductsParams({
-    required this.page,
-    required this.limit,
+  GetLocalProductsParams({
     this.search,
     this.categoryId,
   });
