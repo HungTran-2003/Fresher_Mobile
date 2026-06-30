@@ -1,4 +1,6 @@
+import 'package:crud_app/generated/l10n.dart';
 import 'package:crud_app/src/core/routes/router.dart';
+import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -88,11 +90,42 @@ abstract class BaseNavigator {
     await AppDialog.show(
       dialogType: DialogType.errorAlert,
       context: context,
-      titleText: title ?? "error",
+      titleText: title ?? S.current.titleErrorDialog,
       messageText: message,
-      confirmButtonText: "close",
+      confirmButtonText: S.current.buttonClose,
       declineButtonText: 'cancel',
     );
     closeAction?.call();
+  }
+
+  Future<void> showSuccessSnackBar({
+    String? title,
+    required String message,
+  }) async {
+    if (message == '') return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Container(
+          height: 40,
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.green,
+          ),
+          child: Center(
+            child: Text(
+              message,
+              style: context.textThemes.body16Semi.copyWith(
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+    );
   }
 }

@@ -4,6 +4,7 @@ import 'package:crud_app/configs/app_config.dart';
 import 'package:crud_app/generated/l10n.dart';
 import 'package:crud_app/src/core/routes/router.dart';
 import 'package:crud_app/src/data/repositories/auth_repository_impl.dart';
+import 'package:crud_app/src/data/services/network/dio_client.dart';
 import 'package:crud_app/src/presentation/global/app_settings/app_settings_cubit.dart';
 import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
 import 'package:crud_app/src/presentation/global/user/user_cubit.dart';
@@ -12,34 +13,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/theme/app_theme.dart';
 import 'data/repositories/setting_repository_impl.dart';
+import 'data/repositories/upload_repository_impl.dart';
 import 'data/repositories/user_repository_impl.dart';
-import 'data/services/database/share_preferrences_data_source.dart';
 import 'domain/models/enum/language.dart';
+import 'data/services/hive/auth/hive_service.dart';
+import 'data/services/firebase/auth/firebase_service.dart';
 import 'domain/repositories/auth_repository.dart';
 import 'domain/repositories/setting_repository.dart';
+import 'domain/repositories/upload_repository.dart';
 import 'domain/repositories/user_repository.dart';
+import 'data/repositories/product_repository_impl.dart';
+import 'domain/repositories/product_repository.dart';
 
 class MyApp extends StatefulWidget {
-  final SharedPreferences sharedPreferences;
-  const MyApp({super.key, required this.sharedPreferences});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  late SharedPreferencesDataSource _sharedPreferencesDataSource;
+  late final DioClient dioClient;
 
   @override
   void initState() {
     super.initState();
-    _sharedPreferencesDataSource = SharedPreferencesDataSource(
-      widget.sharedPreferences,
-    );
+    dioClient = DioClient.instance;
   }
 
   @override
@@ -47,18 +49,28 @@ class _MyAppState extends State<MyApp> {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthRepository>(
-          create: (context) => AuthRepositoryImpl(),
+          create: (context) => AuthRepositoryImpl(
+            hiveService: HiveService(),
+            firebaseService: FirebaseService(),
+          ),
         ),
         RepositoryProvider<UserRepository>(
-          create: (context) => UserRepositoryImpl(),
+          create: (context) => UserRepositoryImpl(
+            hiveService: HiveService(),
+          ),
         ),
-
+        RepositoryProvider<ProductRepository>(
+          create: (context) => ProductRepositoryImpl(
+            dioClient: DioClient.instance,
+          ),
+        ),
         RepositoryProvider<SettingRepository>(
           create: (context) {
-            return SettingRepositoryImpl(
-              sharedPreferencesDataSource: _sharedPreferencesDataSource,
-            );
+            return SettingRepositoryImpl();
           },
+        ),
+        RepositoryProvider<UploadRepository>(
+          create: (context) => UploadRepositoryImpl(),
         ),
       ],
       child: MultiBlocProvider(
@@ -152,26 +164,26 @@ class _AppContentState extends State<AppContent> {
 
     return AppTheme(
       theme: currentAppTheme,
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: currentAppTheme.systemOverlayStyle,
-        child: MaterialApp.router(
-          title: AppConfigs.appName,
-          theme: lightTheme.themeData,
-          darkTheme: darkTheme.themeData,
-          themeMode: themeMode,
-          routerConfig: AppRouters.router,
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            S.delegate,
-          ],
-          locale: locale,
-          supportedLocales: S.delegate.supportedLocales,
-          builder: (context, child) {
-            return child!;
-          },
-        ),
+      child: MaterialApp.router(
+        title: AppConfigs.appName,
+        theme: lightTheme.themeData,
+        darkTheme: darkTheme.themeData,
+        themeMode: themeMode,
+        routerConfig: AppRouters.router,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          S.delegate,
+        ],
+        locale: locale,
+        supportedLocales: S.delegate.supportedLocales,
+        builder: (context, child) {
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: currentAppTheme.systemOverlayStyle,
+            child: child!,
+          );
+        },
       ),
     );
   }
