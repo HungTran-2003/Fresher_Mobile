@@ -96,7 +96,7 @@ void main() {
         when(() => mockHiveService.getProducts()).thenAnswer((_) async => [localProduct]);
 
         // Act
-        final result = await repository.getLocalProducts();
+        final result = await repository.getLocalProducts(page: 1, limit: 10);
 
         // Assert
         expect(result.isRight, true);

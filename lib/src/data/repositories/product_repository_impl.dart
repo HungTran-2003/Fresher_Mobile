@@ -77,6 +77,8 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Either<AppException, List<ProductEntity>>> getLocalProducts({
+    required int page,
+    required int limit,
     String? search,
     int? categoryId,
   }) async {
@@ -93,7 +95,19 @@ class ProductRepositoryImpl implements ProductRepository {
         filtered = filtered.where((p) => p.category?.id == categoryId).toList();
       }
 
-      return Either.right(_mapModelsToEntities(filtered));
+      // Local Pagination logic
+      final startIndex = (page - 1) * limit;
+      if (startIndex >= filtered.length) {
+        return const Either.right([]);
+      }
+
+      final endIndex = (startIndex + limit) > filtered.length
+          ? filtered.length
+          : (startIndex + limit);
+
+      final paginated = filtered.sublist(startIndex, endIndex);
+
+      return Either.right(_mapModelsToEntities(paginated));
     } catch (e) {
       return Either.left(ExceptionMapper.map(e));
     }

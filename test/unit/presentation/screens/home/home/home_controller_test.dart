@@ -34,7 +34,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(GetProductsParams(page: 1, limit: 10));
-    registerFallbackValue(GetLocalProductsParams());
+    registerFallbackValue(GetLocalProductsParams(page: 1, limit: 10));
     registerFallbackValue(NoParams());
     registerFallbackValue(ProcessProductsParams(
       rawProducts: [],
@@ -70,6 +70,9 @@ void main() {
       when(() => mockGetCategoriesUseCase.call(any())).thenAnswer(
         (_) async => const Either.right([]),
       );
+      when(() => mockGetLocalProductsUseCase.call(any())).thenAnswer(
+        (_) async => const Either.right([]),
+      );
       when(() => mockGetRemoteProductsUseCase.call(any())).thenAnswer(
         (_) async => const Either.right([]),
       );
@@ -81,7 +84,7 @@ void main() {
       // Assert
       expect(controller.state.productStatus.value, LoadStatus.success);
       verify(() => mockGetRemoteProductsUseCase.call(any())).called(1);
-      verifyNever(() => mockGetLocalProductsUseCase.call(any()));
+      verify(() => mockGetLocalProductsUseCase.call(any())).called(1);
     });
 
     test('loadProducts should call getLocalProducts when offline', () async {

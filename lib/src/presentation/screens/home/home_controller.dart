@@ -73,6 +73,7 @@ class HomeController extends GetxController {
             navigator.showInfoSnackBar(
               message: 'Đã kết nối lại. Đang cập nhật dữ liệu...',
             );
+            state.isRemotePrioritized.value = false;
             loadProducts(isRefresh: true);
           }
         });
@@ -89,8 +90,12 @@ class HomeController extends GetxController {
   }
 
   Future<void> init() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    state.isOffline.value = connectivityResult.contains(ConnectivityResult.none);
+    try {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      state.isOffline.value = connectivityResult.contains(ConnectivityResult.none);
+    } catch (e) {
+      state.isOffline.value = false;
+    }
     await Future.wait([fetchCategories(), loadProducts(isRefresh: true)]);
   }
 
@@ -115,12 +120,9 @@ class HomeController extends GetxController {
       state.currentPage.value = 1;
       state.hasReachedMax.value = false;
       state.productStatus.value = LoadStatus.loading;
+      state.isRemotePrioritized.value = false;
       state.products.clear();
     } else {
-      if (state.isOffline.value) {
-        state.hasReachedMax.value = true;
-        return;
-      }
       state.loadMoreStatus.value = LoadStatus.loading;
     }
 
@@ -201,37 +203,99 @@ class HomeController extends GetxController {
     required int page,
     required bool isRefresh,
   }) async {
-    final result = state.isOffline.value 
-      ? await _getLocalProductsUseCase(
-          GetLocalProductsParams(
-            search: state.searchQuery.value.isEmpty ? null : state.searchQuery.value,
-            categoryId: state.filterCategoryId.value,
-          ),
-        )
-      : await _getRemoteProductsUseCase(
-          GetProductsParams(
-            page: page,
-            limit: 10,
-            search: state.searchQuery.value.isEmpty ? null : state.searchQuery.value,
-            categoryId: state.filterCategoryId.value,
-          ),
-        );
+    // 1. If Offline, just fetch local and return
+    if (state.isOffline.value) {
+      await _fetchLocalData(page: page, isRefresh: isRefresh);
+      return;
+    }
 
-    result.foldResult(
+    // 2. If Online and not already pivoted to remote-only for this session
+    if (!state.isRemotePrioritized.value) {
+      // Load local data first for instant UI response (Offline-First)
+      await _fetchLocalData(page: page, isRefresh: isRefresh);
+    }
+
+    // 3. Always call API in parallel if online
+    final remoteResult = await _getRemoteProductsUseCase(
+      GetProductsParams(
+        page: page,
+        limit: 10,
+        search: state.searchQuery.value.isEmpty ? null : state.searchQuery.value,
+        categoryId: state.filterCategoryId.value,
+      ),
+    );
+
+    remoteResult.foldResult(
       onError: (e) {
-        if (isRefresh) {
+        if (isRefresh && state.products.isEmpty) {
           state.productStatus.value = LoadStatus.failure;
           state.errorLoadProduct.value = e.message;
-        } else {
+        } else if (!isRefresh) {
           state.loadMoreStatus.value = LoadStatus.failure;
           navigator.showErrorDialog(message: e.message);
         }
       },
-      onSuccess: (response) {
-        final hasReached = response.length < 10;
+      onSuccess: (remoteItems) {
+        // Compare Logic
+        final startIndex = (page - 1) * 10;
+        final currentLocalItems = state.products.skip(startIndex).take(10).toList();
+
+        bool isSame = _isSameData(currentLocalItems, remoteItems);
+
+        if (!isSame) {
+          // Divergence detected: Prioritize remote and mark for subsequent fetches
+          state.isRemotePrioritized.value = true;
+
+          final List<ProductEntity> processed = _processProductsUseCase(
+            ProcessProductsParams(
+              rawProducts: remoteItems,
+              currentProducts: state.products.take(startIndex).toList(),
+              filterStatus: state.filterStatus.value,
+              sortFilter: state.sortFilter.value,
+              isRefresh: isRefresh,
+            ),
+          );
+
+          if (isRefresh) {
+             state.products.assignAll(processed);
+          } else {
+             // Replace only the current page range
+             state.products.removeRange(startIndex, state.products.length);
+             state.products.addAll(processed);
+          }
+        }
+
+        final hasReached = remoteItems.length < 10;
+        state.currentPage.value = page + (hasReached ? 0 : 1);
+        state.hasReachedMax.value = hasReached;
+        state.loadMoreStatus.value = LoadStatus.success;
+        state.productStatus.value = LoadStatus.success;
+        state.errorLoadProduct.value = '';
+      },
+    );
+  }
+
+  Future<void> _fetchLocalData({required int page, required bool isRefresh}) async {
+    final localResult = await _getLocalProductsUseCase(
+      GetLocalProductsParams(
+        page: page,
+        limit: 10,
+        search: state.searchQuery.value.isEmpty ? null : state.searchQuery.value,
+        categoryId: state.filterCategoryId.value,
+      ),
+    );
+
+    localResult.foldResult(
+      onError: (e) => debugPrint('HomeController: Local fetch failed: $e'),
+      onSuccess: (localItems) {
+        if (localItems.isEmpty && isRefresh) {
+          // If local is empty, keep loading status for remote
+          return;
+        }
+
         final List<ProductEntity> processed = _processProductsUseCase(
           ProcessProductsParams(
-            rawProducts: response,
+            rawProducts: localItems,
             currentProducts: state.products,
             filterStatus: state.filterStatus.value,
             sortFilter: state.sortFilter.value,
@@ -240,14 +304,26 @@ class HomeController extends GetxController {
         );
 
         state.products.assignAll(processed);
-        state.currentPage.value = page + (hasReached ? 0 : 1);
-        state.hasReachedMax.value = hasReached;
-        state.loadMoreStatus.value = LoadStatus.success;
+        
+        // Sync productStatus with local fetch completion if offline or first load
         state.productStatus.value = LoadStatus.success;
-        if (isRefresh) {
-          state.errorLoadProduct.value = '';
+
+        if (state.isOffline.value) {
+          final hasReached = localItems.length < 10;
+          state.currentPage.value = page + (hasReached ? 0 : 1);
+          state.hasReachedMax.value = hasReached;
         }
       },
     );
+  }
+
+  bool _isSameData(List<ProductEntity> local, List<ProductEntity> remote) {
+    if (local.length != remote.length) return false;
+    for (int i = 0; i < local.length; i++) {
+      if (local[i].id != remote[i].id || local[i].updatedAt != remote[i].updatedAt) {
+        return false;
+      }
+    }
+    return true;
   }
 }

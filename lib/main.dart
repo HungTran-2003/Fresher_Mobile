@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:crud_app/src/data/models/account/account_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
+import 'package:crud_app/src/data/services/database/share_preferrences_data_source.dart';
 import 'hive_registrar.g.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final sharedPreferences = await SharedPreferences.getInstance();
+  Get.put(SharedPreferencesDataSource(sharedPreferences));
 
   try {
     await Firebase.initializeApp();

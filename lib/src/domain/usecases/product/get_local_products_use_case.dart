@@ -12,6 +12,8 @@ class GetLocalProductsUseCase extends UseCase<List<ProductEntity>, GetLocalProdu
   @override
   Future<Either<AppException, List<ProductEntity>>> call(GetLocalProductsParams params) {
     return _repository.getLocalProducts(
+      page: params.page,
+      limit: params.limit,
       search: params.search,
       categoryId: params.categoryId,
     );
@@ -19,10 +21,14 @@ class GetLocalProductsUseCase extends UseCase<List<ProductEntity>, GetLocalProdu
 }
 
 class GetLocalProductsParams {
+  final int page;
+  final int limit;
   final String? search;
   final int? categoryId;
 
   GetLocalProductsParams({
+    required this.page,
+    required this.limit,
     this.search,
     this.categoryId,
   });

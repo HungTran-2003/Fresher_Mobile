@@ -20,4 +20,5 @@ class HomeState {
   final filterStatus = ProductStatusFilter.all.obs;
   final sortFilter = ProductSortFilter.defaultSort.obs;
   final isOffline = false.obs;
+  final isRemotePrioritized = false.obs;
 }

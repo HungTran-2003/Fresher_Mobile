@@ -33,32 +33,36 @@ void main() {
   test('should get products from the local repository', () async {
     // arrange
     when(() => mockRepository.getLocalProducts(
+          page: any(named: 'page'),
+          limit: any(named: 'limit'),
           search: any(named: 'search'),
           categoryId: any(named: 'categoryId'),
         )).thenAnswer((_) async => Either.right(tProducts));
 
     // act
-    final result = await useCase(GetLocalProductsParams());
+    final result = await useCase(GetLocalProductsParams(page: 1, limit: 10));
 
     // assert
     expect(result, Either.right(tProducts));
-    verify(() => mockRepository.getLocalProducts()).called(1);
+    verify(() => mockRepository.getLocalProducts(page: 1, limit: 10)).called(1);
   });
 
   test('should return AppException when local repository fails', () async {
     // arrange
     final tException = UnknownException(message: 'Hive error');
     when(() => mockRepository.getLocalProducts(
+          page: any(named: 'page'),
+          limit: any(named: 'limit'),
           search: any(named: 'search'),
           categoryId: any(named: 'categoryId'),
         )).thenAnswer((_) async => Either.left(tException));
 
     // act
-    final result = await useCase(GetLocalProductsParams());
+    final result = await useCase(GetLocalProductsParams(page: 1, limit: 10));
 
     // assert
     expect(result, Either.left(tException));
-    verify(() => mockRepository.getLocalProducts()).called(1);
+    verify(() => mockRepository.getLocalProducts(page: 1, limit: 10)).called(1);
     verifyNoMoreInteractions(mockRepository);
   });
 }

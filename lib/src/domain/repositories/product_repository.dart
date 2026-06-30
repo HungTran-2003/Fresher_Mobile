@@ -12,6 +12,8 @@ abstract class ProductRepository {
   });
 
   Future<Either<AppException, List<ProductEntity>>> getLocalProducts({
+    required int page,
+    required int limit,
     String? search,
     int? categoryId,
   });

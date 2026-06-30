@@ -1,9 +1,7 @@
 import 'package:crud_app/src/data/services/hive/product/hive_product_service.dart';
 import 'package:crud_app/src/data/services/database/secure_storage_data_source.dart';
-import 'package:crud_app/src/data/services/database/share_preferrences_data_source.dart';
 import 'package:crud_app/src/data/services/network/network_util.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:crud_app/src/data/repositories/auth_repository_impl.dart';
 import 'package:crud_app/src/data/repositories/product_repository_impl.dart';
 import 'package:crud_app/src/data/repositories/setting_repository_impl.dart';
@@ -32,10 +30,6 @@ class GlobalBinding extends Bindings {
   @override
   void dependencies() {
     // Services
-    Get.putAsync<SharedPreferencesDataSource>(() async {
-      final prefs = await SharedPreferences.getInstance();
-      return SharedPreferencesDataSource(prefs);
-    });
     Get.put(NetworkService());
     Get.put(SecureStorageDataSource(const FlutterSecureStorage()));
     Get.put(HiveProductService());
