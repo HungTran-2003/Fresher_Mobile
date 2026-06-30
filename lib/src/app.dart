@@ -47,12 +47,9 @@ class MyApp extends StatelessWidget {
 
           return AppTheme(
             theme: currentAppTheme,
-            child: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: currentAppTheme.systemOverlayStyle,
-              child: GestureDetector(
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: child ?? const SizedBox.shrink(),
-              ),
+            child: GestureDetector(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: child ?? const SizedBox.shrink(),
             ),
           );
         });
