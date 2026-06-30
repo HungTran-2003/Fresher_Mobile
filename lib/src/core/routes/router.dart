@@ -1,27 +1,5 @@
-
-import 'package:crud_app/src/presentation/screens/splash/splash_page.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
 class AppRouters {
   AppRouters._();
-
-  static final navigationKey = GlobalKey<NavigatorState>();
-
-  static final GoRouter router = GoRouter(
-    routes: _routes,
-    debugLogDiagnostics: true,
-    navigatorKey: navigationKey,
-    errorBuilder: (context, state) => const SplashPage(),
-  );
-
-  static String? _pendingDeepLink;
-
-  static String? consumePendingDeepLink() {
-    final pending = _pendingDeepLink;
-    _pendingDeepLink = null;
-    return pending;
-  }
 
   static const String splash = '/';
   static const String onboarding = '/onboarding';
@@ -31,16 +9,7 @@ class AppRouters {
 
   // Main Tabs
   static const String home = '/home';
-  static const String quickAnalysis = '/quick-analysis';
-  static const String transfer = '/transfer';
-  static const String layers = '/layers';
-  static const String profile = '/profile';
-
-  static final _routes = <RouteBase>[
-    GoRoute(
-      path: splash,
-      name: splash,
-      builder: (context, state) => const SplashPage(),
-    ),
-  ];
+  static const String addProduct = '/add-product';
+  static const String productDetail = '/product-detail';
+  static const String profile = '/setting';
 }

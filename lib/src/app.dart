@@ -1,185 +1,59 @@
-import 'dart:developer';
-
 import 'package:crud_app/configs/app_config.dart';
 import 'package:crud_app/generated/l10n.dart';
+import 'package:crud_app/src/core/di/global_binding.dart';
+import 'package:crud_app/src/core/routes/get_pages.dart';
 import 'package:crud_app/src/core/routes/router.dart';
-import 'package:crud_app/src/data/repositories/auth_repository_impl.dart';
-import 'package:crud_app/src/presentation/global/app_settings/app_settings_cubit.dart';
-import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
-import 'package:crud_app/src/presentation/global/user/user_cubit.dart';
-import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
+import 'package:crud_app/src/core/theme/app_theme.dart';
+import 'package:crud_app/src/presentation/global/app_settings/app_settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
-import 'core/theme/app_theme.dart';
-import 'data/repositories/setting_repository_impl.dart';
-import 'data/repositories/user_repository_impl.dart';
-import 'data/services/database/share_preferrences_data_source.dart';
-import 'domain/models/enum/language.dart';
-import 'domain/repositories/auth_repository.dart';
-import 'domain/repositories/setting_repository.dart';
-import 'domain/repositories/user_repository.dart';
+class MyApp extends StatelessWidget {
+  MyApp({super.key});
 
-class MyApp extends StatefulWidget {
-  final SharedPreferences sharedPreferences;
-  const MyApp({super.key, required this.sharedPreferences});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late SharedPreferencesDataSource _sharedPreferencesDataSource;
-
-  @override
-  void initState() {
-    super.initState();
-    _sharedPreferencesDataSource = SharedPreferencesDataSource(
-      widget.sharedPreferences,
-    );
-  }
+  final _lightTheme = LightThemeData();
+  final _darkTheme = DarkThemeData();
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider<AuthRepository>(
-          create: (context) => AuthRepositoryImpl(),
-        ),
-        RepositoryProvider<UserRepository>(
-          create: (context) => UserRepositoryImpl(),
-        ),
-
-        RepositoryProvider<SettingRepository>(
-          create: (context) {
-            return SettingRepositoryImpl(
-              sharedPreferencesDataSource: _sharedPreferencesDataSource,
-            );
-          },
-        ),
+    return GetMaterialApp(
+      title: AppConfigs.appName,
+      theme: _lightTheme.themeData,
+      darkTheme: _darkTheme.themeData,
+      themeMode: ThemeMode.light,
+      initialRoute: AppRouters.splash,
+      getPages: GetAppPages.routes,
+      initialBinding: GlobalBinding(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        S.delegate,
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<AppSettingsCubit>(
-            create: (context) {
-              final settingRepository =
-                  RepositoryProvider.of<SettingRepository>(context);
-              return AppSettingsCubit(settingRepository: settingRepository)
-                ..getInitialSetting();
-            },
-          ),
+      supportedLocales: S.delegate.supportedLocales,
+      builder: (context, child) {
+        return Obx(() {
+          final appSettingsController = Get.find<AppSettingsController>();
+          final themeMode = appSettingsController.state.themeMode.value;
 
-          BlocProvider<AuthCubit>(
-            create: (context) {
-              return AuthCubit(authRepo: context.read<AuthRepository>());
-            },
-          ),
+          final isDark =
+              themeMode == ThemeMode.dark ||
+              (themeMode == ThemeMode.system &&
+                  MediaQuery.platformBrightnessOf(context) == Brightness.dark);
 
-          BlocProvider<UserCubit>(
-            create: (context) {
-              return UserCubit(context.read<UserRepository>());
-            },
-          ),
-        ],
-        child: const AppContent(),
-      ),
-    );
-  }
-}
+          final currentAppTheme = isDark ? _darkTheme : _lightTheme;
 
-class AppContent extends StatefulWidget {
-  const AppContent({super.key});
-
-  @override
-  State<AppContent> createState() => _AppContentState();
-}
-
-class _AppContentState extends State<AppContent> {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<AppSettingsCubit, AppSettingsState>(
-      buildWhen: (prev, current) {
-        return prev.language != current.language ||
-            prev.themeMode != current.themeMode;
-      },
-      builder: (context, state) {
-        log('Language: ${state.language.code}, ThemeMode: ${state.themeMode}');
-
-        return BlocListener<AuthCubit, AuthState>(
-          listenWhen: (prev, current) =>
-              prev.isAuthenticated != current.isAuthenticated,
-          listener: (context, state) {
-            if (state.isAuthenticated) {
-              AppLoadingOverlay.hide();
-              AppRouters.router.go(AppRouters.home);
-            } else {
-              AppLoadingOverlay.hide();
-              AppRouters.router.go(AppRouters.welcome);
-            }
-          },
-          child: GestureDetector(
-            onTap: () {
-              _hideKeyboard(context);
-            },
-            child: _buildMaterialApp(
-              locale: state.language.local,
-              themeMode: state.themeMode,
+          return AppTheme(
+            theme: currentAppTheme,
+            child: GestureDetector(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: child ?? const SizedBox.shrink(),
             ),
-          ),
-        );
+          );
+        });
       },
     );
-  }
-
-  Widget _buildMaterialApp({
-    required Locale locale,
-    required ThemeMode themeMode,
-  }) {
-    final lightTheme = LightThemeData();
-    final darkTheme = DarkThemeData();
-
-    // Select which custom theme to provide via AppTheme
-    // If system, we'd ideally want to match platform brightness
-    final isDark =
-        themeMode == ThemeMode.dark ||
-        (themeMode == ThemeMode.system &&
-            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
-
-    final currentAppTheme = isDark ? darkTheme : lightTheme;
-
-    return AppTheme(
-      theme: currentAppTheme,
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: currentAppTheme.systemOverlayStyle,
-        child: MaterialApp.router(
-          title: AppConfigs.appName,
-          theme: lightTheme.themeData,
-          darkTheme: darkTheme.themeData,
-          themeMode: themeMode,
-          routerConfig: AppRouters.router,
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            S.delegate,
-          ],
-          locale: locale,
-          supportedLocales: S.delegate.supportedLocales,
-          builder: (context, child) {
-            return child!;
-          },
-        ),
-      ),
-    );
-  }
-
-  void _hideKeyboard(BuildContext context) {
-    final FocusScopeNode currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-      FocusManager.instance.primaryFocus?.unfocus();
-    }
   }
 }

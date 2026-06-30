@@ -1,22 +1,20 @@
-import 'package:flutter/material.dart';
+import 'package:crud_app/src/core/dimensions/app_color.dart';
 import 'package:flutter/services.dart';
 
 class AppSystemUi {
   const AppSystemUi._();
 
-  static SystemUiOverlayStyle get light => const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
-    statusBarBrightness: Brightness.dark,
-    systemNavigationBarColor: Colors.transparent,
-    systemNavigationBarIconBrightness: Brightness.light,
+  static SystemUiOverlayStyle get light => SystemUiOverlayStyle(
+    statusBarColor: AppColor.surfaceLight,
+    statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarColor: AppColor.surfaceLight,
+    systemNavigationBarIconBrightness: Brightness.dark,
   );
 
   static SystemUiOverlayStyle get dark => const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
+    statusBarColor: AppColor.surfaceDark,
     statusBarIconBrightness: Brightness.light,
-    statusBarBrightness: Brightness.dark,
-    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarColor: AppColor.surfaceDark,
     systemNavigationBarIconBrightness: Brightness.light,
   );
 }

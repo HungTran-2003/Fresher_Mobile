@@ -20,206 +20,156 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'vi';
 
+  static String m0(count) => "Kho: ${count}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "accept": MessageLookupByLibrary.simpleMessage("Xác nhận"),
-    "addTransaction": MessageLookupByLibrary.simpleMessage("Thêm giao dịch"),
-    "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
-      "Đã có tài khoản? ",
+    "accountLockedError": MessageLookupByLibrary.simpleMessage(
+      "Tài khoản của bạn đã bị tạm khoá trong 5 phút do nhập sai nhiều lần.",
     ),
-    "amount": MessageLookupByLibrary.simpleMessage("Số tiền"),
-    "analytics": MessageLookupByLibrary.simpleMessage("Báo cáo thống kê"),
-    "andWord": MessageLookupByLibrary.simpleMessage(" và "),
-    "appName": MessageLookupByLibrary.simpleMessage("FinanceFlow"),
-    "aprilExpenses": MessageLookupByLibrary.simpleMessage("Chi tiêu tháng 4"),
-    "biometricSignIn": MessageLookupByLibrary.simpleMessage(
-      "Đăng nhập bằng sinh trắc học",
+    "active": MessageLookupByLibrary.simpleMessage("Hoạt động"),
+    "addNewProduct": MessageLookupByLibrary.simpleMessage("Thêm sản phẩm mới"),
+    "addProduct": MessageLookupByLibrary.simpleMessage("Thêm sản phẩm"),
+    "adjustSearchOrFilters": MessageLookupByLibrary.simpleMessage(
+      "Hãy thử điều chỉnh từ khóa hoặc bộ lọc.",
     ),
-    "biometrics": MessageLookupByLibrary.simpleMessage("Mở khóa sinh trắc học"),
-    "budget": MessageLookupByLibrary.simpleMessage("Ngân sách"),
-    "budgets": MessageLookupByLibrary.simpleMessage("Hạn mức chi tiêu"),
-    "byContinuingAgree": MessageLookupByLibrary.simpleMessage(
-      "Bằng việc tiếp tục, bạn đồng ý với ",
+    "allCategories": MessageLookupByLibrary.simpleMessage("Tất cả danh mục"),
+    "allStatuses": MessageLookupByLibrary.simpleMessage("Tất cả trạng thái"),
+    "biometricAuthReason": MessageLookupByLibrary.simpleMessage(
+      "Xác thực để bật đăng nhập sinh trắc học",
     ),
-    "cancel": MessageLookupByLibrary.simpleMessage("Hủy bỏ"),
+    "biometricLoginSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Sử dụng vân tay / Face ID cho lần đăng nhập sau",
+    ),
+    "biometricLoginTitle": MessageLookupByLibrary.simpleMessage(
+      "Đăng nhập sinh trắc học",
+    ),
+    "biometricSetupFailed": MessageLookupByLibrary.simpleMessage(
+      "Thiết bị không hỗ trợ hoặc chưa cài đặt sinh trắc học.",
+    ),
+    "cancelButton": MessageLookupByLibrary.simpleMessage("Hủy"),
+    "cancelButtonLabel": MessageLookupByLibrary.simpleMessage("Hủy"),
     "category": MessageLookupByLibrary.simpleMessage("Danh mục"),
-    "changePassword": MessageLookupByLibrary.simpleMessage("Thay đổi mật khẩu"),
-    "confirmDelete": MessageLookupByLibrary.simpleMessage(
-      "Bạn có chắc chắn muốn xóa giao dịch này không?",
+    "closeButton": MessageLookupByLibrary.simpleMessage("Đóng"),
+    "codeRequired": MessageLookupByLibrary.simpleMessage(
+      "Mã sản phẩm không được để trống",
     ),
-    "confirmNewPassword": MessageLookupByLibrary.simpleMessage(
-      "Xác nhận mật khẩu mới",
+    "createdAtLabel": MessageLookupByLibrary.simpleMessage("Ngày tạo"),
+    "defaultSort": MessageLookupByLibrary.simpleMessage("Mặc định"),
+    "deleteButton": MessageLookupByLibrary.simpleMessage("Xóa"),
+    "deleteProductConfirmMessage": MessageLookupByLibrary.simpleMessage(
+      "Bạn có chắc chắn muốn xóa sản phẩm này không?",
     ),
-    "confirmPassword": MessageLookupByLibrary.simpleMessage(
-      "Xác nhận mật khẩu",
+    "deleteProductConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "Xóa sản phẩm",
     ),
-    "createAccount": MessageLookupByLibrary.simpleMessage("Tạo tài khoản"),
-    "daily": MessageLookupByLibrary.simpleMessage("Hàng ngày"),
-    "darkLoc": MessageLookupByLibrary.simpleMessage("Chế độ tối"),
-    "date": MessageLookupByLibrary.simpleMessage("Ngày"),
-    "dateHint": MessageLookupByLibrary.simpleMessage("DD / MM / YYYY"),
-    "dateOfBirth": MessageLookupByLibrary.simpleMessage("Ngày sinh"),
-    "delete": MessageLookupByLibrary.simpleMessage("Xóa"),
-    "dontHaveAccount": MessageLookupByLibrary.simpleMessage(
-      "Chưa có tài khoản? ",
+    "descriptionHint": MessageLookupByLibrary.simpleMessage(
+      "Nhập mô tả sản phẩm",
     ),
-    "editProfile": MessageLookupByLibrary.simpleMessage("Chỉnh sửa hồ sơ"),
-    "editTransaction": MessageLookupByLibrary.simpleMessage("Sửa giao dịch"),
-    "email": MessageLookupByLibrary.simpleMessage("Email"),
-    "emailHint": MessageLookupByLibrary.simpleMessage("example@example.com"),
-    "emptyTransactions": MessageLookupByLibrary.simpleMessage(
-      "Chưa có giao dịch nào. Hãy bắt đầu thêm giao dịch đầu tiên!",
+    "descriptionLabel": MessageLookupByLibrary.simpleMessage("Mô tả"),
+    "failedToAddProduct": MessageLookupByLibrary.simpleMessage(
+      "Thêm sản phẩm thất bại",
     ),
-    "english": MessageLookupByLibrary.simpleMessage("English"),
-    "enterAmount": MessageLookupByLibrary.simpleMessage("Nhập số tiền"),
-    "enterConfirmPasswordError": MessageLookupByLibrary.simpleMessage(
-      "Vui lòng xác nhận mật khẩu",
+    "failedToLoadProducts": MessageLookupByLibrary.simpleMessage(
+      "Tải sản phẩm thất bại",
     ),
-    "enterDobError": MessageLookupByLibrary.simpleMessage(
-      "Vui lòng nhập ngày sinh",
+    "failedToUploadImage": MessageLookupByLibrary.simpleMessage(
+      "Tải ảnh thất bại",
     ),
-    "enterEmailAddress": MessageLookupByLibrary.simpleMessage(
-      "Nhập địa chỉ Email",
-    ),
-    "enterEmailError": MessageLookupByLibrary.simpleMessage(
-      "Vui lòng nhập email",
-    ),
-    "enterFullNameError": MessageLookupByLibrary.simpleMessage(
-      "Vui lòng nhập họ và tên",
-    ),
-    "enterMobileNumberError": MessageLookupByLibrary.simpleMessage(
-      "Vui lòng nhập số điện thoại",
-    ),
-    "enterPasswordError": MessageLookupByLibrary.simpleMessage(
-      "Vui lòng nhập mật khẩu",
-    ),
-    "enterSecurityPin": MessageLookupByLibrary.simpleMessage("Nhập mã bảo mật"),
-    "enterUsernameOrEmailError": MessageLookupByLibrary.simpleMessage(
-      "Vui lòng nhập tên đăng nhập hoặc email",
-    ),
-    "enterValidEmailError": MessageLookupByLibrary.simpleMessage(
-      "Vui lòng nhập địa chỉ email hợp lệ",
-    ),
-    "error": MessageLookupByLibrary.simpleMessage("Lỗi"),
-    "expense": MessageLookupByLibrary.simpleMessage("Chi tiêu"),
-    "expensesLooksGood": MessageLookupByLibrary.simpleMessage(
-      "30% chi tiêu của bạn, Trông ổn.",
-    ),
-    "foodLastWeek": MessageLookupByLibrary.simpleMessage("Ăn uống tuần trước"),
-    "forgotPassword": MessageLookupByLibrary.simpleMessage("Quên mật khẩu?"),
-    "fullName": MessageLookupByLibrary.simpleMessage("Họ và tên"),
-    "fullNameHint": MessageLookupByLibrary.simpleMessage("example@example.com"),
-    "goodMorning": MessageLookupByLibrary.simpleMessage("Chào buổi sáng"),
-    "groceries": MessageLookupByLibrary.simpleMessage("Tạp hóa"),
+    "group": MessageLookupByLibrary.simpleMessage("Group"),
     "help": MessageLookupByLibrary.simpleMessage("Trợ giúp"),
-    "hiWelcomeBack": MessageLookupByLibrary.simpleMessage("Chào mừng trở lại"),
-    "income": MessageLookupByLibrary.simpleMessage("Thu nhập"),
-    "invalidPinError": MessageLookupByLibrary.simpleMessage(
-      "Mã PIN không hợp lệ. Vui lòng thử lại.",
-    ),
-    "language": MessageLookupByLibrary.simpleMessage("Ngôn ngữ"),
-    "limitWarning": MessageLookupByLibrary.simpleMessage(
-      "Đã vượt quá hạn mức ngân sách!",
-    ),
+    "inactive": MessageLookupByLibrary.simpleMessage("Không hoạt động"),
     "logIn": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
+    "loginErrorTitle": MessageLookupByLibrary.simpleMessage(
+      "Thông tin đăng nhập không hợp lệ",
+    ),
     "logout": MessageLookupByLibrary.simpleMessage("Đăng xuất"),
-    "mobileNumber": MessageLookupByLibrary.simpleMessage("Số điện thoại"),
-    "monthly": MessageLookupByLibrary.simpleMessage("Hàng tháng"),
-    "monthlyReport": MessageLookupByLibrary.simpleMessage(
-      "Tổng quan chi tiêu tháng",
+    "logoutConfirmMessage": MessageLookupByLibrary.simpleMessage(
+      "Bạn có chắc chắn muốn đăng xuất?",
     ),
-    "newPasswordTitle": MessageLookupByLibrary.simpleMessage("Mật khẩu mới"),
-    "next": MessageLookupByLibrary.simpleMessage("Tiếp tục"),
-    "nextStep": MessageLookupByLibrary.simpleMessage("Bước tiếp theo"),
-    "note": MessageLookupByLibrary.simpleMessage("Ghi chú (Tùy chọn)"),
-    "onboardingTitle1": MessageLookupByLibrary.simpleMessage(
-      "Chào mừng đến với Expense Manager",
+    "logoutConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "Xác nhận đăng xuất",
     ),
-    "onboardingTitle2": MessageLookupByLibrary.simpleMessage(
-      "Bạn đã sẵn sàng kiểm soát tài chính chưa?",
+    "lookup": MessageLookupByLibrary.simpleMessage("Tra cứu"),
+    "nameAsc": MessageLookupByLibrary.simpleMessage("Tên A→Z"),
+    "nameDesc": MessageLookupByLibrary.simpleMessage("Tên Z→A"),
+    "nameRequired": MessageLookupByLibrary.simpleMessage(
+      "Tên sản phẩm không được để trống",
     ),
-    "orSignUpWith": MessageLookupByLibrary.simpleMessage("hoặc đăng ký bằng"),
-    "pantry": MessageLookupByLibrary.simpleMessage("Thực phẩm"),
-    "password": MessageLookupByLibrary.simpleMessage("Mật khẩu"),
-    "passwordChangedSuccess": MessageLookupByLibrary.simpleMessage(
-      "Đổi mật khẩu thành công! Vui lòng đăng nhập bằng mật khẩu mới.",
+    "noProductsFound": MessageLookupByLibrary.simpleMessage(
+      "Không tìm thấy sản phẩm nào",
     ),
-    "passwordHint": MessageLookupByLibrary.simpleMessage("••••••••"),
+    "notificationTitle": MessageLookupByLibrary.simpleMessage("Thông báo"),
+    "okButton": MessageLookupByLibrary.simpleMessage("OK"),
+    "passwordHint": MessageLookupByLibrary.simpleMessage("Mật khẩu"),
     "passwordLengthError": MessageLookupByLibrary.simpleMessage(
-      "Mật khẩu phải dài ít nhất 6 ký tự",
+      "Mật khẩu phải từ 6–50 ký tự",
     ),
-    "passwordsDoNotMatchError": MessageLookupByLibrary.simpleMessage(
-      "Mật khẩu không khớp",
+    "pickImage": MessageLookupByLibrary.simpleMessage("Chọn ảnh"),
+    "priceAsc": MessageLookupByLibrary.simpleMessage("Giá ↑"),
+    "priceDesc": MessageLookupByLibrary.simpleMessage("Giá ↓"),
+    "priceHint": MessageLookupByLibrary.simpleMessage("Nhập giá bán"),
+    "priceLabel": MessageLookupByLibrary.simpleMessage("Giá"),
+    "pricePositive": MessageLookupByLibrary.simpleMessage("Giá phải lớn hơn 0"),
+    "priceRequired": MessageLookupByLibrary.simpleMessage("Vui lòng nhập giá"),
+    "productAddedSuccess": MessageLookupByLibrary.simpleMessage(
+      "Thêm sản phẩm thành công",
     ),
-    "phoneHint": MessageLookupByLibrary.simpleMessage("+ 123 456 789"),
-    "privacyPolicy": MessageLookupByLibrary.simpleMessage(
-      "Chính sách Bảo mật.",
+    "productCodeHint": MessageLookupByLibrary.simpleMessage("Nhập mã duy nhất"),
+    "productCodeLabel": MessageLookupByLibrary.simpleMessage("Mã sản phẩm"),
+    "productDeletedSuccess": MessageLookupByLibrary.simpleMessage(
+      "Xóa sản phẩm thành công",
     ),
-    "profile": MessageLookupByLibrary.simpleMessage("Hồ sơ"),
-    "quicklyAnalysis": MessageLookupByLibrary.simpleMessage("Phân tích nhanh"),
-    "recentTransactions": MessageLookupByLibrary.simpleMessage(
-      "Giao dịch gần đây",
+    "productManagement": MessageLookupByLibrary.simpleMessage(
+      "Quản lý sản phẩm",
     ),
-    "remaining": MessageLookupByLibrary.simpleMessage("Còn lại"),
-    "rent": MessageLookupByLibrary.simpleMessage("Tiền thuê nhà"),
-    "resendPinSuccess": MessageLookupByLibrary.simpleMessage(
-      "Mã PIN xác minh mới đã được gửi tới email của bạn.",
+    "productNameHint": MessageLookupByLibrary.simpleMessage(
+      "Nhập tên sản phẩm",
     ),
-    "resetPassword": MessageLookupByLibrary.simpleMessage(
-      "Khôi phục mật khẩu?",
+    "productNameLabel": MessageLookupByLibrary.simpleMessage("Tên sản phẩm"),
+    "productUpdateSuccess": MessageLookupByLibrary.simpleMessage(
+      "Cập nhật thành công",
     ),
-    "resetPasswordDescription": MessageLookupByLibrary.simpleMessage(
-      "Vui lòng nhập địa chỉ email của bạn để nhận mã PIN xác minh đặt lại mật khẩu.",
+    "removeImage": MessageLookupByLibrary.simpleMessage("Xóa ảnh"),
+    "retryButton": MessageLookupByLibrary.simpleMessage("Thử lại"),
+    "saveButton": MessageLookupByLibrary.simpleMessage("Lưu"),
+    "searchProductHint": MessageLookupByLibrary.simpleMessage(
+      "Tìm sản phẩm theo tên...",
     ),
-    "revenueLastWeek": MessageLookupByLibrary.simpleMessage(
-      "Doanh thu tuần trước",
+    "sku": MessageLookupByLibrary.simpleMessage("SKU"),
+    "sortBy": MessageLookupByLibrary.simpleMessage("Sắp xếp theo"),
+    "status": MessageLookupByLibrary.simpleMessage("Trạng thái"),
+    "stockAsc": MessageLookupByLibrary.simpleMessage("Kho ↑"),
+    "stockCount": m0,
+    "stockDesc": MessageLookupByLibrary.simpleMessage("Kho ↓"),
+    "stockHint": MessageLookupByLibrary.simpleMessage("Nhập số lượng tồn kho"),
+    "stockLabel": MessageLookupByLibrary.simpleMessage("Tồn kho"),
+    "stockNonNegative": MessageLookupByLibrary.simpleMessage(
+      "Số lượng tồn kho không được âm",
     ),
-    "salary": MessageLookupByLibrary.simpleMessage("Lương"),
-    "save": MessageLookupByLibrary.simpleMessage("Lưu lại"),
-    "savingsOnGoals": MessageLookupByLibrary.simpleMessage(
-      "Tiết kiệm theo mục tiêu",
+    "stockOnlyInteger": MessageLookupByLibrary.simpleMessage(
+      "Kho phải là số nguyên",
     ),
-    "security": MessageLookupByLibrary.simpleMessage("Bảo mật"),
-    "securityPin": MessageLookupByLibrary.simpleMessage("Mã bảo mật"),
-    "selectCategory": MessageLookupByLibrary.simpleMessage("Chọn danh mục"),
-    "sendAgain": MessageLookupByLibrary.simpleMessage("Gửi lại"),
-    "settings": MessageLookupByLibrary.simpleMessage("Cài đặt"),
-    "signUp": MessageLookupByLibrary.simpleMessage("Đăng ký"),
-    "success": MessageLookupByLibrary.simpleMessage("Thành công"),
-    "termsOfUse": MessageLookupByLibrary.simpleMessage("Điều khoản Sử dụng"),
-    "theme": MessageLookupByLibrary.simpleMessage("Chủ đề"),
-    "totalBalance": MessageLookupByLibrary.simpleMessage("Tổng số dư"),
-    "totalExpense": MessageLookupByLibrary.simpleMessage("Tổng chi tiêu"),
-    "touchSensorToLogIn": MessageLookupByLibrary.simpleMessage(
-      "Chạm vào cảm biến để đăng nhập",
+    "stockRequired": MessageLookupByLibrary.simpleMessage(
+      "Vui lòng nhập số lượng tồn kho",
     ),
-    "transactionAdded": MessageLookupByLibrary.simpleMessage(
-      "Thêm giao dịch thành công",
+    "support": MessageLookupByLibrary.simpleMessage("Trợ giúp"),
+    "tagsHint": MessageLookupByLibrary.simpleMessage(
+      "Nhập các thẻ (phân cách bằng dấu phẩy)",
     ),
-    "transactionDeleted": MessageLookupByLibrary.simpleMessage(
-      "Đã xóa giao dịch",
+    "tagsLabel": MessageLookupByLibrary.simpleMessage("Thẻ (Tags)"),
+    "taxIdOrIdError": MessageLookupByLibrary.simpleMessage(
+      "Vui lòng nhập CCCD 12 số hoặc MST hợp lệ (10 số, có thể kèm ‘-XXX’).",
     ),
-    "useFingerprintScanner": MessageLookupByLibrary.simpleMessage(
-      "Sử dụng cảm biến vân tay của bạn để xác thực danh tính",
+    "taxIdOrIdHint": MessageLookupByLibrary.simpleMessage("Mã số thuế"),
+    "taxIdOrIdLabel": MessageLookupByLibrary.simpleMessage("Mã số thuế"),
+    "tryAgain": MessageLookupByLibrary.simpleMessage("Thử lại"),
+    "updatedAtDesc": MessageLookupByLibrary.simpleMessage("Mới cập nhật"),
+    "updatedAtLabel": MessageLookupByLibrary.simpleMessage("Cập nhật"),
+    "usernameError": MessageLookupByLibrary.simpleMessage(
+      "Tài khoản không được để trống.",
     ),
-    "useFingerprintToAccess": MessageLookupByLibrary.simpleMessage(
-      "Sử dụng vân tay để truy cập",
-    ),
-    "usernameOrEmail": MessageLookupByLibrary.simpleMessage(
-      "Tên đăng nhập hoặc Email",
-    ),
-    "verificationSuccessful": MessageLookupByLibrary.simpleMessage(
-      "Xác thực thành công!",
-    ),
-    "verifyingFingerprint": MessageLookupByLibrary.simpleMessage(
-      "Đang xác thực dấu vân tay...",
-    ),
-    "vietnamese": MessageLookupByLibrary.simpleMessage("Tiếng Việt"),
-    "viewAll": MessageLookupByLibrary.simpleMessage("Xem tất cả"),
-    "weekly": MessageLookupByLibrary.simpleMessage("Hàng tuần"),
-    "weeklySpend": MessageLookupByLibrary.simpleMessage(
-      "Xu hướng chi tiêu tuần",
-    ),
-    "welcome": MessageLookupByLibrary.simpleMessage("Chào mừng"),
+    "usernameHint": MessageLookupByLibrary.simpleMessage("Tài khoản"),
+    "usernameLabel": MessageLookupByLibrary.simpleMessage("Tài khoản"),
   };
 }
