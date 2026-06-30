@@ -1,3 +1,4 @@
+import 'package:crud_app/generated/l10n.dart';
 import 'package:crud_app/src/core/routes/router.dart';
 import 'package:crud_app/src/core/utils/extensions/context_extensions.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_dialog.dart';
@@ -89,9 +90,9 @@ abstract class BaseNavigator {
     await AppDialog.show(
       dialogType: DialogType.errorAlert,
       context: context,
-      titleText: title ?? "error",
+      titleText: title ?? S.current.titleErrorDialog,
       messageText: message,
-      confirmButtonText: "close",
+      confirmButtonText: S.current.buttonClose,
       declineButtonText: 'cancel',
     );
     closeAction?.call();

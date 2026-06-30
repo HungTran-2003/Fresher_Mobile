@@ -4,6 +4,7 @@ import 'package:crud_app/src/presentation/global/auth/auth_cubit.dart';
 import 'package:crud_app/src/presentation/global/user/user_cubit.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
 import 'package:crud_app/src/presentation/widgets/images/app_asset_image.dart';
+import 'package:crud_app/src/presentation/widgets/inputs/buttons/app_filled_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'setting_cubit.dart';
@@ -151,21 +152,9 @@ class _SettingPageContent extends StatelessWidget {
   }
 
   Widget _buildLogoutButton(BuildContext context) {
-    return ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: context.colors.errorContainer,
-        foregroundColor: context.colors.errorText,
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-      ),
-      icon: const Icon(Icons.logout),
-      label: Text(
-        context.s.logout,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-      ),
-      onPressed: () => context.read<SettingCubit>().logout(context),
+    return AppFilledButton(
+      title: context.s.logout,
+      onPressed: () => context.read<SettingCubit>().logout(context)
     );
   }
 }

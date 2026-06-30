@@ -5,6 +5,7 @@ import 'package:crud_app/src/domain/models/enum/product_sort_filter.dart';
 import 'package:crud_app/src/domain/models/enum/product_status_filter.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_circular_process_indicator.dart';
 import 'package:crud_app/src/presentation/widgets/feedback/app_loading_overlay.dart';
+import 'package:crud_app/src/presentation/widgets/inputs/buttons/app_button_wrapper.dart';
 import 'package:crud_app/src/presentation/widgets/inputs/text_field/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -260,6 +261,17 @@ class _HomeChildPageState extends State<HomeChildPage> {
           Text(
             context.s.adjustSearchOrFilters,
             style: context.textThemes.des12Re,
+          ),
+          const SizedBox(height: 16),
+          AppButtonWrapper(
+            onPressed: () => context.read<HomeCubit>().loadProducts(isRefresh: true),
+            width: 100,
+            child: Text(
+              context.s.refresh,
+              style: context.textThemes.body16Semi.copyWith(
+                color: context.colors.primary,
+              ),
+            ),
           ),
         ],
       ),

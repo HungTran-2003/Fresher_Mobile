@@ -23,6 +23,9 @@ class LightThemeData extends AppThemeData {
     brightness: Brightness.light,
     primaryColor: appColorScheme.primary,
     scaffoldBackgroundColor: appColorScheme.surface,
+    appBarTheme: AppBarTheme(
+      systemOverlayStyle: systemOverlayStyle,
+    ),
   );
 }
 
@@ -166,6 +169,9 @@ class DarkThemeData extends AppThemeData {
     brightness: Brightness.dark,
     primaryColor: appColorScheme.primary,
     scaffoldBackgroundColor: appColorScheme.surface,
+    appBarTheme: AppBarTheme(
+      systemOverlayStyle: systemOverlayStyle,
+    ),
   );
 }
 

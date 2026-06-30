@@ -88,29 +88,27 @@ class _ProductDetailChildPageState extends State<ProductDetailChildPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(context.s.productManagement),
-          backgroundColor: Colors.transparent,
-          scrolledUnderElevation: 0,
-        ),
-        body: BlocListener<ProductDetailCubit, ProductDetailState>(
-          listenWhen: (prev, current) =>
-              prev.status != current.status ||
-              prev.existingCodes != current.existingCodes,
-          listener: (context, state) {
-            if (state.status.isLoading) {
-              AppLoadingOverlay.show(context);
-            } else {
-              AppLoadingOverlay.hide();
-              if (state.existingCodes.isNotEmpty) {
-                _formKey.currentState?.validate();
-              }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.s.productManagement),
+        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+      ),
+      body: BlocListener<ProductDetailCubit, ProductDetailState>(
+        listenWhen: (prev, current) =>
+            prev.status != current.status ||
+            prev.existingCodes != current.existingCodes,
+        listener: (context, state) {
+          if (state.status.isLoading) {
+            AppLoadingOverlay.show(context);
+          } else {
+            AppLoadingOverlay.hide();
+            if (state.existingCodes.isNotEmpty) {
+              _formKey.currentState?.validate();
             }
-          },
-          child: _buildBodyPage(context),
-        ),
+          }
+        },
+        child: _buildBodyPage(context),
       ),
     );
   }

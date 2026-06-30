@@ -164,26 +164,26 @@ class _AppContentState extends State<AppContent> {
 
     return AppTheme(
       theme: currentAppTheme,
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: currentAppTheme.systemOverlayStyle,
-        child: MaterialApp.router(
-          title: AppConfigs.appName,
-          theme: lightTheme.themeData,
-          darkTheme: darkTheme.themeData,
-          themeMode: themeMode,
-          routerConfig: AppRouters.router,
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            S.delegate,
-          ],
-          locale: locale,
-          supportedLocales: S.delegate.supportedLocales,
-          builder: (context, child) {
-            return child!;
-          },
-        ),
+      child: MaterialApp.router(
+        title: AppConfigs.appName,
+        theme: lightTheme.themeData,
+        darkTheme: darkTheme.themeData,
+        themeMode: themeMode,
+        routerConfig: AppRouters.router,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          S.delegate,
+        ],
+        locale: locale,
+        supportedLocales: S.delegate.supportedLocales,
+        builder: (context, child) {
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: currentAppTheme.systemOverlayStyle,
+            child: child!,
+          );
+        },
       ),
     );
   }

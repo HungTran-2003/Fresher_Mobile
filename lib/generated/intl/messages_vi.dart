@@ -47,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "biometricSetupFailed": MessageLookupByLibrary.simpleMessage(
       "Thiết bị không hỗ trợ hoặc chưa cài đặt sinh trắc học.",
     ),
+    "buttonClose": MessageLookupByLibrary.simpleMessage("Close"),
     "cancelButton": MessageLookupByLibrary.simpleMessage("Hủy"),
     "cancelButtonLabel": MessageLookupByLibrary.simpleMessage("Hủy"),
     "category": MessageLookupByLibrary.simpleMessage("Danh mục"),
@@ -130,6 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "productUpdateSuccess": MessageLookupByLibrary.simpleMessage(
       "Cập nhật thành công",
     ),
+    "refresh": MessageLookupByLibrary.simpleMessage("Làm mới"),
     "removeImage": MessageLookupByLibrary.simpleMessage("Xóa ảnh"),
     "saveButton": MessageLookupByLibrary.simpleMessage("Lưu"),
     "searchProductHint": MessageLookupByLibrary.simpleMessage(
@@ -162,6 +164,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "taxIdOrIdHint": MessageLookupByLibrary.simpleMessage("Mã số thuế"),
     "taxIdOrIdLabel": MessageLookupByLibrary.simpleMessage("Mã số thuế"),
+    "titleErrorDialog": MessageLookupByLibrary.simpleMessage("Lỗi"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Thử lại"),
     "updatedAtDesc": MessageLookupByLibrary.simpleMessage("Mới cập nhật"),
     "updatedAtLabel": MessageLookupByLibrary.simpleMessage("Cập nhật"),
