@@ -77,19 +77,19 @@ class _AddProductChildPageState extends State<AddProductChildPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            context.s.addNewProduct,
-            style: context.textThemes.titleLarge.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          context.s.addNewProduct,
+          style: context.textThemes.titleLarge.copyWith(
+            fontWeight: FontWeight.bold,
           ),
-          backgroundColor: Colors.transparent,
-          scrolledUnderElevation: 0,
         ),
-        body: BlocListener<AddProductCubit, AddProductState>(
+        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+      ),
+      body: SafeArea(
+        child: BlocListener<AddProductCubit, AddProductState>(
           listenWhen: (prev, current) =>
               prev.status != current.status ||
               prev.existingCodes != current.existingCodes,

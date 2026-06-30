@@ -728,6 +728,21 @@ class S {
       args: [],
     );
   }
+
+  /// `Error`
+  String get titleErrorDialog {
+    return Intl.message('Error', name: 'titleErrorDialog', desc: '', args: []);
+  }
+
+  /// `Close`
+  String get buttonClose {
+    return Intl.message('Close', name: 'buttonClose', desc: '', args: []);
+  }
+
+  /// `Refresh`
+  String get refresh {
+    return Intl.message('Refresh', name: 'refresh', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

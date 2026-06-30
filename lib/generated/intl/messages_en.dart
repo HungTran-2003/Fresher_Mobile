@@ -47,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "biometricSetupFailed": MessageLookupByLibrary.simpleMessage(
       "Biometric authentication is not supported or not set up on this device.",
     ),
+    "buttonClose": MessageLookupByLibrary.simpleMessage("Close"),
     "cancelButton": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancelButtonLabel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "category": MessageLookupByLibrary.simpleMessage("Category"),
@@ -134,6 +135,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "productUpdateSuccess": MessageLookupByLibrary.simpleMessage(
       "Product updated successfully",
     ),
+    "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
     "removeImage": MessageLookupByLibrary.simpleMessage("Remove Image"),
     "saveButton": MessageLookupByLibrary.simpleMessage("Save"),
     "searchProductHint": MessageLookupByLibrary.simpleMessage(
@@ -168,6 +170,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "taxIdOrIdLabel": MessageLookupByLibrary.simpleMessage(
       "Tax Code / Citizen ID",
     ),
+    "titleErrorDialog": MessageLookupByLibrary.simpleMessage("Error"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
     "updatedAtDesc": MessageLookupByLibrary.simpleMessage("Newest Updated"),
     "updatedAtLabel": MessageLookupByLibrary.simpleMessage("Updated at"),

@@ -40,5 +40,5 @@ class AppConfigs {
   /// API Configs
   static const Duration timeOutDuration = Duration(seconds: 60);
 
-  static const baseUrl = "http://192.168.50.79:1997/api/v1";
+  static const baseUrl = "http://192.168.50.83:1997/api/v1";
 }
